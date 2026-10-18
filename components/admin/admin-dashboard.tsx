@@ -1,0 +1,1894 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import {
+  FolderKanban,
+  Briefcase,
+  User,
+  Trophy,
+  Users,
+  Share2,
+  Settings as SettingsIcon,
+  Database,
+  Plus,
+  Trash2,
+  Edit3,
+  ExternalLink,
+  Check,
+  AlertCircle,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Star,
+  StarOff,
+  X,
+  Upload,
+  Download,
+} from "lucide-react";
+import type {
+  Project,
+  Experience,
+  Profile,
+  Hackathon,
+  CommunityEvent,
+  ImageAsset,
+} from "@/lib/validators/schemas";
+import Logout from "@/components/admin/logout";
+
+type Tab =
+  | "projects"
+  | "experience"
+  | "profile"
+  | "hackathons"
+  | "events"
+  | "socials"
+  | "settings"
+  | "database";
+
+interface MongoStatus {
+  success: boolean;
+  message: string;
+  dbName: string;
+  uriMasked: string;
+  collections: string[];
+}
+
+export default function AdminDashboard({ userEmail }: { userEmail: string }) {
+  const [activeTab, setActiveTab] = useState<Tab>("projects");
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+
+  // Collections state
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [hackathons, setHackathons] = useState<Hackathon[]>([]);
+  const [events, setEvents] = useState<CommunityEvent[]>([]);
+  const [socials, setSocials] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
+
+  // Database connection status
+  const [dbStatus, setDbStatus] = useState<MongoStatus | null>(null);
+  const [testingDb, setTestingDb] = useState(false);
+
+  // Modals state
+  const [editingProject, setEditingProject] = useState<Partial<Project> | null>(null);
+  const [editingExperience, setEditingExperience] = useState<Partial<Experience> | null>(null);
+  const [editingHackathon, setEditingHackathon] = useState<Partial<Hackathon> | null>(null);
+  const [editingEvent, setEditingEvent] = useState<Partial<CommunityEvent> | null>(null);
+  const [editingSocial, setEditingSocial] = useState<any | null>(null);
+
+  // Temporary tag inputs
+  const [tempTag, setTempTag] = useState("");
+  const [tempAchievement, setTempAchievement] = useState("");
+
+  const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4500);
+  }, []);
+
+  // Fetch all collections
+  const loadAllData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [projRes, expRes, profRes, hackRes, evRes, socRes, setRes, dbRes] =
+        await Promise.all([
+          fetch("/api/admin/content?collection=projects"),
+          fetch("/api/admin/content?collection=experiences"),
+          fetch("/api/admin/content?collection=profile"),
+          fetch("/api/admin/content?collection=hackathons"),
+          fetch("/api/admin/content?collection=events"),
+          fetch("/api/admin/content?collection=socials"),
+          fetch("/api/admin/content?collection=settings"),
+          fetch("/api/admin/database"),
+        ]);
+
+      if (projRes.ok) setProjects(await projRes.json());
+      if (expRes.ok) setExperiences(await expRes.json());
+      if (profRes.ok) {
+        const p = await profRes.json();
+        setProfile(p[0] || null);
+      }
+      if (hackRes.ok) setHackathons(await hackRes.json());
+      if (evRes.ok) setEvents(await evRes.json());
+      if (socRes.ok) setSocials(await socRes.json());
+      if (setRes.ok) {
+        const s = await setRes.json();
+        setSettings(s[0] || null);
+      }
+      if (dbRes.ok) setDbStatus(await dbRes.json());
+    } catch (err) {
+      showToast("Error loading data from server", "error");
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast]);
+
+  useEffect(() => {
+    loadAllData();
+  }, [loadAllData]);
+
+  // Test MongoDB Connection
+  const checkMongoStatus = async () => {
+    setTestingDb(true);
+    try {
+      const res = await fetch("/api/admin/database");
+      const data = await res.json();
+      setDbStatus(data);
+      if (data.success) {
+        showToast("Connected to MongoDB successfully!");
+      } else {
+        showToast(data.message || "MongoDB connection failed", "error");
+      }
+    } catch {
+      showToast("Could not check MongoDB status", "error");
+    } finally {
+      setTestingDb(false);
+    }
+  };
+
+  // Generic Save (Create or Update)
+  const saveItem = async (collection: string, item: any, isNew: boolean) => {
+    setLoading(true);
+    try {
+      const method = isNew ? "POST" : "PATCH";
+      const body = isNew
+        ? { collection, item }
+        : { collection, id: item.id, patch: item };
+
+      const res = await fetch("/api/admin/content", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Save failed");
+      }
+
+      showToast("Saved! Live site updated instantly without redeployment.");
+      await loadAllData();
+      return true;
+    } catch (err: any) {
+      showToast(err.message || "Failed to save item", "error");
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Generic Delete
+  const deleteItem = async (collection: string, id: string, name: string) => {
+    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ collection, id }),
+      });
+      if (!res.ok) throw new Error("Delete failed");
+      showToast(`Deleted "${name}". Live site updated.`);
+      await loadAllData();
+    } catch {
+      showToast("Could not delete item", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Toggle boolean fields (e.g., isPublished, featured)
+  const toggleField = async (collection: string, id: string, field: string, currentValue: boolean) => {
+    await saveItem(collection, { id, [field]: !currentValue }, false);
+  };
+
+  return (
+    <main className="admin-shell-modern">
+      {/* FLOATING TOAST NOTIFICATION */}
+      {toast && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 24,
+            right: 24,
+            zIndex: 999,
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            backgroundColor: toast.type === "success" ? "#0a2e1d" : "#3b0c10",
+            border: `1px solid ${toast.type === "success" ? "#00ff88" : "var(--spidey-red)"}`,
+            color: toast.type === "success" ? "#00ff88" : "#ff9498",
+            padding: "14px 22px",
+            borderRadius: "var(--radius-pill)",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          {toast.type === "success" ? <Check size={18} /> : <AlertCircle size={18} />}
+          <span>{toast.message}</span>
+        </div>
+      )}
+
+      {/* HEADER CONTROL ROOM */}
+      <header className="admin-header-card">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 10 }}>
+            <span className="pulse-red" />
+            <span>PORTFOLIO COMMAND CENTER // SPIDER-TECH</span>
+          </div>
+          <h1 className="display" style={{ fontSize: "clamp(28px, 4vw, 48px)", margin: "4px 0" }}>
+            Welcome, <em>Admin.</em>
+          </h1>
+          <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: 0 }}>
+            Signed in as <strong style={{ color: "#ffffff" }}>{userEmail}</strong>
+          </p>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <Link href="/" target="_blank" className="button button-secondary" style={{ minHeight: 44 }}>
+            View Live Site <ExternalLink size={16} />
+          </Link>
+          <Link href="/secret-admin/media" className="button button-blue" style={{ minHeight: 44 }}>
+            Media Library <ExternalLink size={16} />
+          </Link>
+          <Logout />
+        </div>
+      </header>
+
+      {/* LIVE DATABASE & CLOUD SYNC BANNER */}
+      <div
+        className="timeline-card"
+        style={{
+          padding: "20px 28px",
+          marginBottom: 24,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 16,
+          borderColor: dbStatus?.success ? "#00ff8840" : "var(--line)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div
+            style={{
+              width: 42,
+              height: 42,
+              borderRadius: "50%",
+              backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 30, 39, 0.15)",
+              border: `1px solid ${dbStatus?.success ? "#00ff88" : "var(--spidey-red)"}`,
+              display: "grid",
+              placeItems: "center",
+              color: dbStatus?.success ? "#00ff88" : "var(--spidey-red)",
+            }}
+          >
+            <Database size={20} />
+          </div>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontWeight: 700, fontSize: 15, color: "#ffffff" }}>
+                Database: {dbStatus?.success ? `MongoDB (${dbStatus.dbName})` : "Local JSON Store"}
+              </span>
+              <span
+                className="tag-pill"
+                style={{
+                  backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.2)" : "rgba(255, 180, 0, 0.2)",
+                  color: dbStatus?.success ? "#00ff88" : "#ffb400",
+                  borderColor: "transparent",
+                  fontSize: 10,
+                }}
+              >
+                {dbStatus?.success ? "LIVE MONGODB ACTIVE" : "LOCAL BACKUP ACTIVE"}
+              </span>
+            </div>
+            <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--spidey-muted)" }}>
+              ⚡ Automatic Live Sync: Any edit, add, or delete applies to the live site immediately without redeployment.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <button
+            onClick={checkMongoStatus}
+            disabled={testingDb}
+            className="button button-secondary"
+            style={{ minHeight: 38, padding: "0 16px", fontSize: 11 }}
+          >
+            <RefreshCw size={13} className={testingDb ? "animate-spin" : ""} />
+            {testingDb ? "Testing..." : "Test Connection"}
+          </button>
+          <a
+            href="/api/admin/export"
+            className="button button-secondary"
+            style={{ minHeight: 38, padding: "0 16px", fontSize: 11 }}
+          >
+            <Download size={13} /> Export JSON
+          </a>
+        </div>
+      </div>
+
+      {/* NAVIGATION TABS */}
+      <nav className="admin-nav-tabs" aria-label="Admin Navigation Tabs">
+        <button
+          onClick={() => setActiveTab("projects")}
+          className={`admin-nav-tab ${activeTab === "projects" ? "active" : ""}`}
+        >
+          <FolderKanban size={16} /> Missions & Projects ({projects.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("experience")}
+          className={`admin-nav-tab ${activeTab === "experience" ? "active" : ""}`}
+        >
+          <Briefcase size={16} /> Experience ({experiences.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("profile")}
+          className={`admin-nav-tab ${activeTab === "profile" ? "active" : ""}`}
+        >
+          <User size={16} /> Profile & Hero
+        </button>
+        <button
+          onClick={() => setActiveTab("hackathons")}
+          className={`admin-nav-tab ${activeTab === "hackathons" ? "active" : ""}`}
+        >
+          <Trophy size={16} /> Hackathons ({hackathons.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("events")}
+          className={`admin-nav-tab ${activeTab === "events" ? "active" : ""}`}
+        >
+          <Users size={16} /> HackShastra Events ({events.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("socials")}
+          className={`admin-nav-tab ${activeTab === "socials" ? "active" : ""}`}
+        >
+          <Share2 size={16} /> Social Links ({socials.length})
+        </button>
+        <button
+          onClick={() => setActiveTab("settings")}
+          className={`admin-nav-tab ${activeTab === "settings" ? "active" : ""}`}
+        >
+          <SettingsIcon size={16} /> Settings
+        </button>
+      </nav>
+
+      {/* ==================== TAB 1: PROJECTS ==================== */}
+      {activeTab === "projects" && (
+        <section className="admin-content-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+                Missions & Projects
+              </h2>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+                Add, edit details, toggle publication status, or remove projects.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setTempTag("");
+                setEditingProject({
+                  title: "",
+                  slug: "",
+                  category: "Web Application",
+                  description: "",
+                  year: String(new Date().getFullYear()),
+                  cover: {
+                    url: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=85",
+                    alt: "Project cover",
+                  },
+                  gallery: [],
+                  tags: ["Next.js", "TypeScript"],
+                  featured: false,
+                  isPublished: true,
+                  liveUrl: "",
+                  githubUrl: "",
+                });
+              }}
+              className="button button-primary"
+            >
+              <Plus size={18} /> Add New Project
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gap: 16 }}>
+            {projects.map((p) => (
+              <div
+                key={p.id}
+                className="timeline-card"
+                style={{
+                  margin: 0,
+                  padding: 20,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 16,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 18, minWidth: 260 }}>
+                  <div
+                    style={{
+                      width: 72,
+                      height: 52,
+                      borderRadius: "var(--radius-sm)",
+                      overflow: "hidden",
+                      position: "relative",
+                      backgroundColor: "var(--spidey-dark-900)",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={p.cover.url}
+                      alt={p.title}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: 17, fontWeight: 700, margin: "0 0 4px", color: "#ffffff" }}>
+                      {p.title}
+                    </h3>
+                    <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>
+                      {p.category} · {p.year} · <span style={{ color: "var(--spidey-blue)" }}>/{p.slug}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  {/* Featured Toggle */}
+                  <button
+                    onClick={() => toggleField("projects", p.id, "featured", p.featured)}
+                    className="tag-pill"
+                    style={{
+                      backgroundColor: p.featured ? "rgba(255, 30, 39, 0.2)" : "var(--spidey-dark-700)",
+                      color: p.featured ? "var(--spidey-red)" : "var(--spidey-muted)",
+                      borderColor: p.featured ? "var(--spidey-red)" : "var(--line)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                    title="Toggle Featured on Homepage"
+                  >
+                    {p.featured ? <Star size={13} fill="currentColor" /> : <StarOff size={13} />}
+                    {p.featured ? "Featured" : "Regular"}
+                  </button>
+
+                  {/* Published Toggle */}
+                  <button
+                    onClick={() => toggleField("projects", p.id, "isPublished", p.isPublished !== false)}
+                    className="tag-pill"
+                    style={{
+                      backgroundColor: p.isPublished !== false ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 255, 255, 0.05)",
+                      color: p.isPublished !== false ? "#00ff88" : "var(--spidey-muted)",
+                      borderColor: p.isPublished !== false ? "#00ff88" : "var(--line)",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 4,
+                    }}
+                    title="Toggle Publish / Draft"
+                  >
+                    {p.isPublished !== false ? <Eye size={13} /> : <EyeOff size={13} />}
+                    {p.isPublished !== false ? "Published" : "Draft"}
+                  </button>
+
+                  {/* Edit button */}
+                  <button
+                    onClick={() => setEditingProject({ ...p })}
+                    className="button button-secondary"
+                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                  >
+                    <Edit3 size={14} /> Edit
+                  </button>
+
+                  {/* Delete button */}
+                  <button
+                    onClick={() => deleteItem("projects", p.id, p.title)}
+                    className="button button-secondary"
+                    style={{
+                      minHeight: 38,
+                      padding: "0 14px",
+                      fontSize: 12,
+                      borderColor: "rgba(255, 30, 39, 0.4)",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ==================== TAB 2: EXPERIENCE ==================== */}
+      {activeTab === "experience" && (
+        <section className="admin-content-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+                Work Experience Timeline
+              </h2>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+                Manage roles, achievements, timeline periods, and technologies.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setTempTag("");
+                setTempAchievement("");
+                setEditingExperience({
+                  role: "",
+                  company: "",
+                  period: "2024 — Present",
+                  location: "Mumbai, India",
+                  description: "",
+                  achievements: [],
+                  tech: ["Next.js", "TypeScript"],
+                  isPublished: true,
+                });
+              }}
+              className="button button-primary"
+            >
+              <Plus size={18} /> Add Experience
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gap: 16 }}>
+            {experiences.map((exp) => (
+              <div
+                key={exp.id}
+                className="timeline-card"
+                style={{
+                  margin: 0,
+                  padding: 24,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  flexWrap: "wrap",
+                  gap: 16,
+                }}
+              >
+                <div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 4px", color: "#ffffff" }}>
+                    {exp.role} <span style={{ color: "var(--spidey-red)" }}>@ {exp.company}</span>
+                  </h3>
+                  <div style={{ fontSize: 13, color: "var(--spidey-muted)", marginBottom: 8 }}>
+                    {exp.period} · {exp.location}
+                  </div>
+                  <p style={{ color: "var(--spidey-text-dim)", fontSize: 14, margin: "0 0 10px 0", maxWidth: 640 }}>
+                    {exp.description}
+                  </p>
+                  <div className="tags-row" style={{ marginTop: 8 }}>
+                    {exp.tech.map((t) => (
+                      <span className="tag-pill" key={t}>
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => {
+                      setTempTag("");
+                      setTempAchievement("");
+                      setEditingExperience({ ...exp });
+                    }}
+                    className="button button-secondary"
+                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                  >
+                    <Edit3 size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteItem("experiences", exp.id, `${exp.role} at ${exp.company}`)}
+                    className="button button-secondary"
+                    style={{
+                      minHeight: 38,
+                      padding: "0 14px",
+                      fontSize: 12,
+                      borderColor: "rgba(255, 30, 39, 0.4)",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ==================== TAB 3: PROFILE & HERO ==================== */}
+      {activeTab === "profile" && profile && (
+        <section className="admin-content-card">
+          <div style={{ marginBottom: 24 }}>
+            <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+              Profile & Hero Customization
+            </h2>
+            <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+              Edit your name, headline, bio, contact details, and hero metric numbers.
+            </p>
+          </div>
+
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await saveItem("profile", profile, false);
+            }}
+            style={{ display: "grid", gap: 20 }}
+          >
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+              <div>
+                <label className="form-label">Full Name</label>
+                <input
+                  value={profile.name}
+                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label">Professional Role</label>
+                <input
+                  value={profile.role}
+                  onChange={(e) => setProfile({ ...profile, role: e.target.value })}
+                  className="form-input"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="form-label">Hero Title Headline</label>
+              <input
+                value={profile.heroTitle}
+                onChange={(e) => setProfile({ ...profile, heroTitle: e.target.value })}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label">Short Tagline</label>
+              <input
+                value={profile.tagline}
+                onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label">About Bio</label>
+              <textarea
+                value={profile.bio}
+                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                className="form-textarea"
+                rows={4}
+                required
+              />
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
+              <div>
+                <label className="form-label">Location</label>
+                <input
+                  value={profile.location}
+                  onChange={(e) => setProfile({ ...profile, location: e.target.value })}
+                  className="form-input"
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label">Email Address</label>
+                <input
+                  value={profile.email}
+                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                  className="form-input"
+                  type="email"
+                  required
+                />
+              </div>
+              <div>
+                <label className="form-label">Resume URL (Optional)</label>
+                <input
+                  value={profile.resumeUrl || ""}
+                  onChange={(e) => setProfile({ ...profile, resumeUrl: e.target.value })}
+                  className="form-input"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
+            {/* Dynamic Hero Stats */}
+            <div style={{ marginTop: 12 }}>
+              <label className="form-label">Hero Metric Numbers</label>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
+                {profile.stats.map((stat, idx) => (
+                  <div key={idx} className="timeline-card" style={{ margin: 0, padding: 16 }}>
+                    <div style={{ fontSize: 12, color: "var(--spidey-muted)", marginBottom: 6 }}>
+                      Metric #{idx + 1}
+                    </div>
+                    <input
+                      type="number"
+                      value={stat.value}
+                      onChange={(e) => {
+                        const newStats = [...profile.stats];
+                        newStats[idx].value = Number(e.target.value);
+                        setProfile({ ...profile, stats: newStats });
+                      }}
+                      className="form-input"
+                      style={{ marginBottom: 8 }}
+                    />
+                    <input
+                      type="text"
+                      value={stat.label}
+                      onChange={(e) => {
+                        const newStats = [...profile.stats];
+                        newStats[idx].label = e.target.value;
+                        setProfile({ ...profile, stats: newStats });
+                      }}
+                      className="form-input"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 16 }}>
+              {loading ? "Saving..." : "Save Profile Details"} <Check size={18} />
+            </button>
+          </form>
+        </section>
+      )}
+
+      {/* ==================== TAB 4: HACKATHONS ==================== */}
+      {activeTab === "hackathons" && (
+        <section className="admin-content-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+                Hackathons & Mentorship
+              </h2>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+                Add or edit hackathons you have judged, mentored, or organized.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setEditingHackathon({
+                  name: "",
+                  role: "Judge",
+                  date: "2024",
+                  organizer: "",
+                  description: "",
+                  teams: 20,
+                  link: "",
+                  isPublished: true,
+                });
+              }}
+              className="button button-primary"
+            >
+              <Plus size={18} /> Add Hackathon
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gap: 16 }}>
+            {hackathons.map((h) => (
+              <div
+                key={h.id}
+                className="timeline-card"
+                style={{
+                  margin: 0,
+                  padding: 22,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 16,
+                }}
+              >
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <span className="tag-pill" style={{ backgroundColor: "var(--spidey-red)", color: "#fff" }}>
+                      {h.role}
+                    </span>
+                    <span style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{h.date}</span>
+                  </div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
+                    {h.name}
+                  </h3>
+                  <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
+                    Organizer: {h.organizer} · {h.teams} Teams
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => setEditingHackathon({ ...h })}
+                    className="button button-secondary"
+                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                  >
+                    <Edit3 size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteItem("hackathons", h.id, h.name)}
+                    className="button button-secondary"
+                    style={{
+                      minHeight: 38,
+                      padding: "0 14px",
+                      fontSize: 12,
+                      borderColor: "rgba(255, 30, 39, 0.4)",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ==================== TAB 5: HACKSHASTRA EVENTS ==================== */}
+      {activeTab === "events" && (
+        <section className="admin-content-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+                HackShastra Community Events
+              </h2>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+                Manage community gatherings, upcoming summits, and attendee statistics.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setEditingEvent({
+                  title: "",
+                  date: "2025",
+                  venue: "Mumbai",
+                  status: "upcoming",
+                  description: "",
+                  attendees: 50,
+                  link: "",
+                  isPublished: true,
+                });
+              }}
+              className="button button-primary"
+            >
+              <Plus size={18} /> Add Community Event
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gap: 16 }}>
+            {events.map((e) => (
+              <div
+                key={e.id}
+                className="timeline-card"
+                style={{
+                  margin: 0,
+                  padding: 22,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: 16,
+                }}
+              >
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <span
+                      className="tag-pill"
+                      style={{
+                        backgroundColor: e.status === "upcoming" ? "var(--spidey-red)" : "var(--spidey-dark-700)",
+                        color: "#fff",
+                      }}
+                    >
+                      {e.status.toUpperCase()}
+                    </span>
+                    <span style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{e.date} · {e.venue}</span>
+                  </div>
+                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
+                    {e.title}
+                  </h3>
+                  <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
+                    {e.attendees} Attendees
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => setEditingEvent({ ...e })}
+                    className="button button-secondary"
+                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                  >
+                    <Edit3 size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteItem("events", e.id, e.title)}
+                    className="button button-secondary"
+                    style={{
+                      minHeight: 38,
+                      padding: "0 14px",
+                      fontSize: 12,
+                      borderColor: "rgba(255, 30, 39, 0.4)",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ==================== TAB 6: SOCIAL LINKS ==================== */}
+      {activeTab === "socials" && (
+        <section className="admin-content-card">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+                Social Channels & Links
+              </h2>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+                Add or edit your GitHub, LinkedIn, Twitter/X, Instagram, and Discord links.
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setEditingSocial({
+                  label: "GitHub",
+                  href: "https://github.com/",
+                  handle: "@username",
+                  icon: "🐙",
+                  isPublished: true,
+                });
+              }}
+              className="button button-primary"
+            >
+              <Plus size={18} /> Add Social Link
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gap: 14 }}>
+            {socials.map((s) => (
+              <div
+                key={s.id}
+                className="timeline-card"
+                style={{
+                  margin: 0,
+                  padding: 18,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <span style={{ fontSize: 22 }}>{s.icon}</span>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: 16, color: "#fff" }}>{s.label}</div>
+                    <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{s.handle} — {s.href}</div>
+                  </div>
+                </div>
+
+                <div style={{ display: "flex", gap: 10 }}>
+                  <button
+                    onClick={() => setEditingSocial({ ...s })}
+                    className="button button-secondary"
+                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                  >
+                    <Edit3 size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteItem("socials", s.id, s.label)}
+                    className="button button-secondary"
+                    style={{
+                      minHeight: 38,
+                      padding: "0 14px",
+                      fontSize: 12,
+                      borderColor: "rgba(255, 30, 39, 0.4)",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ==================== TAB 7: SETTINGS ==================== */}
+      {activeTab === "settings" && settings && (
+        <section className="admin-content-card">
+          <div style={{ marginBottom: 24 }}>
+            <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+              Global Site Settings & SEO
+            </h2>
+            <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+              Update default page title, meta description, and theme accent.
+            </p>
+          </div>
+
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              await saveItem("settings", settings, false);
+            }}
+            style={{ display: "grid", gap: 20, maxWidth: 640 }}
+          >
+            <div>
+              <label className="form-label">Default Site Title</label>
+              <input
+                value={settings.title}
+                onChange={(e) => setSettings({ ...settings, title: e.target.value })}
+                className="form-input"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label">SEO Meta Description</label>
+              <textarea
+                value={settings.description}
+                onChange={(e) => setSettings({ ...settings, description: e.target.value })}
+                className="form-textarea"
+                rows={3}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="form-label">Theme Accent Hex Color</label>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <input
+                  type="color"
+                  value={settings.accent || "#ff1e27"}
+                  onChange={(e) => setSettings({ ...settings, accent: e.target.value })}
+                  style={{ width: 48, height: 48, borderRadius: "var(--radius-sm)", border: "none", cursor: "pointer", background: "none" }}
+                />
+                <input
+                  value={settings.accent || "#ff1e27"}
+                  onChange={(e) => setSettings({ ...settings, accent: e.target.value })}
+                  className="form-input"
+                  style={{ width: 140 }}
+                />
+              </div>
+            </div>
+
+            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 12 }}>
+              {loading ? "Saving..." : "Save Settings"} <Check size={18} />
+            </button>
+          </form>
+        </section>
+      )}
+
+      {/* ==================== PROJECT EDIT/CREATE MODAL ==================== */}
+      {editingProject && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal-box">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                {editingProject.id ? "Edit Mission / Project" : "Add New Mission"}
+              </h2>
+              <button
+                onClick={() => setEditingProject(null)}
+                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const isNew = !editingProject.id;
+                const success = await saveItem("projects", editingProject, isNew);
+                if (success) setEditingProject(null);
+              }}
+              style={{ display: "grid", gap: 16 }}
+            >
+              <div>
+                <label className="form-label">Project Title</label>
+                <input
+                  value={editingProject.title || ""}
+                  onChange={(e) => {
+                    const title = e.target.value;
+                    const slug = editingProject.slug || title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+                    setEditingProject({ ...editingProject, title, slug });
+                  }}
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">URL Slug</label>
+                  <input
+                    value={editingProject.slug || ""}
+                    onChange={(e) => setEditingProject({ ...editingProject, slug: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Year</label>
+                  <input
+                    value={editingProject.year || "2025"}
+                    onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="form-label">Category</label>
+                <input
+                  value={editingProject.category || ""}
+                  onChange={(e) => setEditingProject({ ...editingProject, category: e.target.value })}
+                  placeholder="Product design · 2025"
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Description</label>
+                <textarea
+                  value={editingProject.description || ""}
+                  onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
+                  className="form-textarea"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Cover Image URL</label>
+                <input
+                  value={editingProject.cover?.url || ""}
+                  onChange={(e) =>
+                    setEditingProject({
+                      ...editingProject,
+                      cover: {
+                        url: e.target.value,
+                        alt: editingProject.title || "Cover",
+                      },
+                    })
+                  }
+                  className="form-input"
+                  placeholder="https://images.unsplash.com/..."
+                  required
+                />
+                {editingProject.cover?.url && (
+                  <div style={{ marginTop: 10, width: "100%", height: 160, borderRadius: "var(--radius-md)", overflow: "hidden", position: "relative" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={editingProject.cover.url}
+                      alt="Cover Preview"
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Tags Manager */}
+              <div>
+                <label className="form-label">Tags / Technologies</label>
+                <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                  <input
+                    value={tempTag}
+                    onChange={(e) => setTempTag(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (tempTag.trim()) {
+                          const currentTags = editingProject.tags || [];
+                          if (!currentTags.includes(tempTag.trim())) {
+                            setEditingProject({
+                              ...editingProject,
+                              tags: [...currentTags, tempTag.trim()],
+                            });
+                          }
+                          setTempTag("");
+                        }
+                      }
+                    }}
+                    placeholder="Type a tag (e.g. Next.js, MongoDB) and press Enter"
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (tempTag.trim()) {
+                        const currentTags = editingProject.tags || [];
+                        if (!currentTags.includes(tempTag.trim())) {
+                          setEditingProject({
+                            ...editingProject,
+                            tags: [...currentTags, tempTag.trim()],
+                          });
+                        }
+                        setTempTag("");
+                      }
+                    }}
+                    className="button button-secondary"
+                    style={{ whiteSpace: "nowrap" }}
+                  >
+                    Add Tag
+                  </button>
+                </div>
+
+                <div className="tags-row">
+                  {(editingProject.tags || []).map((t, tidx) => (
+                    <span
+                      key={tidx}
+                      className="tag-pill"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                    >
+                      {t}
+                      <X
+                        size={12}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setEditingProject({
+                            ...editingProject,
+                            tags: (editingProject.tags || []).filter((_, i) => i !== tidx),
+                          });
+                        }}
+                      />
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Live Site URL (Optional)</label>
+                  <input
+                    value={editingProject.liveUrl || ""}
+                    onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
+                    placeholder="https://..."
+                    className="form-input"
+                  />
+                </div>
+                <div>
+                  <label className="form-label">GitHub URL (Optional)</label>
+                  <input
+                    value={editingProject.githubUrl || ""}
+                    onChange={(e) => setEditingProject({ ...editingProject, githubUrl: e.target.value })}
+                    placeholder="https://github.com/..."
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: 24, marginTop: 10 }}>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14 }}>
+                  <input
+                    type="checkbox"
+                    checked={editingProject.featured || false}
+                    onChange={(e) => setEditingProject({ ...editingProject, featured: e.target.checked })}
+                  />
+                  Feature on Homepage
+                </label>
+                <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14 }}>
+                  <input
+                    type="checkbox"
+                    checked={editingProject.isPublished !== false}
+                    onChange={(e) => setEditingProject({ ...editingProject, isPublished: e.target.checked })}
+                  />
+                  Published (Visible Live)
+                </label>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingProject(null)}
+                  className="button button-secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading} className="button button-primary">
+                  {loading ? "Saving..." : "Save Project"} <Check size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== EXPERIENCE EDIT/CREATE MODAL ==================== */}
+      {editingExperience && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal-box">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                {editingExperience.id ? "Edit Experience Entry" : "Add Experience Entry"}
+              </h2>
+              <button
+                onClick={() => setEditingExperience(null)}
+                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const isNew = !editingExperience.id;
+                const success = await saveItem("experiences", editingExperience, isNew);
+                if (success) setEditingExperience(null);
+              }}
+              style={{ display: "grid", gap: 16 }}
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Role Title</label>
+                  <input
+                    value={editingExperience.role || ""}
+                    onChange={(e) => setEditingExperience({ ...editingExperience, role: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Company Name</label>
+                  <input
+                    value={editingExperience.company || ""}
+                    onChange={(e) => setEditingExperience({ ...editingExperience, company: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Time Period</label>
+                  <input
+                    value={editingExperience.period || ""}
+                    onChange={(e) => setEditingExperience({ ...editingExperience, period: e.target.value })}
+                    placeholder="2023 — Present"
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Location</label>
+                  <input
+                    value={editingExperience.location || ""}
+                    onChange={(e) => setEditingExperience({ ...editingExperience, location: e.target.value })}
+                    placeholder="Mumbai, India"
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="form-label">Description</label>
+                <textarea
+                  value={editingExperience.description || ""}
+                  onChange={(e) => setEditingExperience({ ...editingExperience, description: e.target.value })}
+                  className="form-textarea"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              {/* Achievements Manager */}
+              <div>
+                <label className="form-label">Key Achievements / Bullet Points</label>
+                <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                  <input
+                    value={tempAchievement}
+                    onChange={(e) => setTempAchievement(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (tempAchievement.trim()) {
+                          const list = editingExperience.achievements || [];
+                          setEditingExperience({
+                            ...editingExperience,
+                            achievements: [...list, tempAchievement.trim()],
+                          });
+                          setTempAchievement("");
+                        }
+                      }
+                    }}
+                    placeholder="Add an achievement bullet point..."
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (tempAchievement.trim()) {
+                        const list = editingExperience.achievements || [];
+                        setEditingExperience({
+                          ...editingExperience,
+                          achievements: [...list, tempAchievement.trim()],
+                        });
+                        setTempAchievement("");
+                      }
+                    }}
+                    className="button button-secondary"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                <div style={{ display: "grid", gap: 8 }}>
+                  {(editingExperience.achievements || []).map((ach, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        backgroundColor: "var(--spidey-dark-850)",
+                        padding: "8px 14px",
+                        borderRadius: "var(--radius-sm)",
+                        fontSize: 13,
+                      }}
+                    >
+                      <span>{ach}</span>
+                      <X
+                        size={14}
+                        style={{ cursor: "pointer", color: "var(--spidey-red)" }}
+                        onClick={() => {
+                          setEditingExperience({
+                            ...editingExperience,
+                            achievements: (editingExperience.achievements || []).filter((_, i) => i !== idx),
+                          });
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tech Stack Manager */}
+              <div>
+                <label className="form-label">Technologies Used</label>
+                <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+                  <input
+                    value={tempTag}
+                    onChange={(e) => setTempTag(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (tempTag.trim()) {
+                          const list = editingExperience.tech || [];
+                          if (!list.includes(tempTag.trim())) {
+                            setEditingExperience({
+                              ...editingExperience,
+                              tech: [...list, tempTag.trim()],
+                            });
+                          }
+                          setTempTag("");
+                        }
+                      }
+                    }}
+                    placeholder="Type technology and press Enter"
+                    className="form-input"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (tempTag.trim()) {
+                        const list = editingExperience.tech || [];
+                        if (!list.includes(tempTag.trim())) {
+                          setEditingExperience({
+                            ...editingExperience,
+                            tech: [...list, tempTag.trim()],
+                          });
+                        }
+                        setTempTag("");
+                      }
+                    }}
+                    className="button button-secondary"
+                  >
+                    Add
+                  </button>
+                </div>
+
+                <div className="tags-row">
+                  {(editingExperience.tech || []).map((t, idx) => (
+                    <span key={idx} className="tag-pill" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                      {t}
+                      <X
+                        size={12}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setEditingExperience({
+                            ...editingExperience,
+                            tech: (editingExperience.tech || []).filter((_, i) => i !== idx),
+                          });
+                        }}
+                      />
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingExperience(null)}
+                  className="button button-secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading} className="button button-primary">
+                  {loading ? "Saving..." : "Save Experience"} <Check size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== HACKATHON EDIT/CREATE MODAL ==================== */}
+      {editingHackathon && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal-box">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                {editingHackathon.id ? "Edit Hackathon Entry" : "Add Hackathon"}
+              </h2>
+              <button
+                onClick={() => setEditingHackathon(null)}
+                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const isNew = !editingHackathon.id;
+                const success = await saveItem("hackathons", editingHackathon, isNew);
+                if (success) setEditingHackathon(null);
+              }}
+              style={{ display: "grid", gap: 16 }}
+            >
+              <div>
+                <label className="form-label">Hackathon Name</label>
+                <input
+                  value={editingHackathon.name || ""}
+                  onChange={(e) => setEditingHackathon({ ...editingHackathon, name: e.target.value })}
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Your Role</label>
+                  <select
+                    value={editingHackathon.role || "Judge"}
+                    onChange={(e) => setEditingHackathon({ ...editingHackathon, role: e.target.value as any })}
+                    className="form-select"
+                  >
+                    <option value="Judge">Judge</option>
+                    <option value="Mentor">Mentor</option>
+                    <option value="Organizer">Organizer</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label">Date / Year</label>
+                  <input
+                    value={editingHackathon.date || ""}
+                    onChange={(e) => setEditingHackathon({ ...editingHackathon, date: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Organizer</label>
+                  <input
+                    value={editingHackathon.organizer || ""}
+                    onChange={(e) => setEditingHackathon({ ...editingHackathon, organizer: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Teams Mentored / Evaluated</label>
+                  <input
+                    type="number"
+                    value={editingHackathon.teams ?? 15}
+                    onChange={(e) => setEditingHackathon({ ...editingHackathon, teams: Number(e.target.value) })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="form-label">Description</label>
+                <textarea
+                  value={editingHackathon.description || ""}
+                  onChange={(e) => setEditingHackathon({ ...editingHackathon, description: e.target.value })}
+                  className="form-textarea"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Link (Optional)</label>
+                <input
+                  value={editingHackathon.link || ""}
+                  onChange={(e) => setEditingHackathon({ ...editingHackathon, link: e.target.value })}
+                  placeholder="https://..."
+                  className="form-input"
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingHackathon(null)}
+                  className="button button-secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading} className="button button-primary">
+                  {loading ? "Saving..." : "Save Hackathon"} <Check size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== EVENT EDIT/CREATE MODAL ==================== */}
+      {editingEvent && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal-box">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                {editingEvent.id ? "Edit Community Event" : "Add Community Event"}
+              </h2>
+              <button
+                onClick={() => setEditingEvent(null)}
+                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const isNew = !editingEvent.id;
+                const success = await saveItem("events", editingEvent, isNew);
+                if (success) setEditingEvent(null);
+              }}
+              style={{ display: "grid", gap: 16 }}
+            >
+              <div>
+                <label className="form-label">Event Title</label>
+                <input
+                  value={editingEvent.title || ""}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Date</label>
+                  <input
+                    value={editingEvent.date || ""}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, date: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Status</label>
+                  <select
+                    value={editingEvent.status || "upcoming"}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, status: e.target.value as any })}
+                    className="form-select"
+                  >
+                    <option value="upcoming">Upcoming</option>
+                    <option value="past">Past</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Venue / City</label>
+                  <input
+                    value={editingEvent.venue || ""}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, venue: e.target.value })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Attendees Count</label>
+                  <input
+                    type="number"
+                    value={editingEvent.attendees ?? 60}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, attendees: Number(e.target.value) })}
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="form-label">Description</label>
+                <textarea
+                  value={editingEvent.description || ""}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
+                  className="form-textarea"
+                  rows={3}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Registration / Details Link (Optional)</label>
+                <input
+                  value={editingEvent.link || ""}
+                  onChange={(e) => setEditingEvent({ ...editingEvent, link: e.target.value })}
+                  placeholder="https://..."
+                  className="form-input"
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingEvent(null)}
+                  className="button button-secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading} className="button button-primary">
+                  {loading ? "Saving..." : "Save Event"} <Check size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ==================== SOCIAL EDIT/CREATE MODAL ==================== */}
+      {editingSocial && (
+        <div className="admin-modal-overlay">
+          <div className="admin-modal-box">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                {editingSocial.id ? "Edit Social Link" : "Add Social Link"}
+              </h2>
+              <button
+                onClick={() => setEditingSocial(null)}
+                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const isNew = !editingSocial.id;
+                const success = await saveItem("socials", editingSocial, isNew);
+                if (success) setEditingSocial(null);
+              }}
+              style={{ display: "grid", gap: 16 }}
+            >
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label className="form-label">Platform Label</label>
+                  <input
+                    value={editingSocial.label || ""}
+                    onChange={(e) => setEditingSocial({ ...editingSocial, label: e.target.value })}
+                    placeholder="GitHub"
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="form-label">Handle / Username</label>
+                  <input
+                    value={editingSocial.handle || ""}
+                    onChange={(e) => setEditingSocial({ ...editingSocial, handle: e.target.value })}
+                    placeholder="@username"
+                    className="form-input"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="form-label">Full Link URL</label>
+                <input
+                  value={editingSocial.href || ""}
+                  onChange={(e) => setEditingSocial({ ...editingSocial, href: e.target.value })}
+                  placeholder="https://..."
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="form-label">Icon (Emoji or Text)</label>
+                <input
+                  value={editingSocial.icon || ""}
+                  onChange={(e) => setEditingSocial({ ...editingSocial, icon: e.target.value })}
+                  placeholder="🐙"
+                  className="form-input"
+                  required
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => setEditingSocial(null)}
+                  className="button button-secondary"
+                >
+                  Cancel
+                </button>
+                <button type="submit" disabled={loading} className="button button-primary">
+                  {loading ? "Saving..." : "Save Social Link"} <Check size={18} />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}

@@ -1,0 +1,1 @@
+"use client";import {useRouter} from "next/navigation";export default function Logout(){const router=useRouter();return <button className="filter-chip" onClick={async()=>{await fetch("/api/admin/login",{method:"DELETE"});router.replace("/secret-admin/login")}}>Sign out ↗</button>}

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "profile-main",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2026-10-18T17:36:51.326Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "name": "Tanmay Tiwari",
+    "role": "Creative Developer & Community Builder",
+    "tagline": "Making the web a little more human.",
+    "bio": "I build digital experiences where thoughtful engineering meets vivid visual storytelling. By day, I shape products; after hours, I bring builders together.",
+    "location": "New Delhi, India",
+    "email": "workwithtakneekitanmay@gmail.com",
+    "resumeUrl": "",
+    "heroTitle": "With great code comes great possibility.",
+    "stats": [
+      {
+        "label": "Projects shipped",
+        "value": 18
+      },
+      {
+        "label": "Builders mentored",
+        "value": 240
+      },
+      {
+        "label": "Years creating",
+        "value": 3
+      }
+    ]
+  }
+]

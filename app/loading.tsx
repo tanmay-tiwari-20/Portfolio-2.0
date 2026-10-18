@@ -1,0 +1,1 @@
+export default function Loading(){return <section className="page-hero section-shell" role="status"><div className="eyebrow"><span className="eyebrow-line"/> Loading the next scene</div><div className="display" style={{fontSize:"clamp(58px,10vw,120px)",marginTop:28}}>One moment<span style={{color:"var(--red)"}}>…</span></div></section>}

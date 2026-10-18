@@ -1,0 +1,4 @@
+[
+ {"id":"event-01","createdAt":"2025-02-01","updatedAt":"2025-02-01","sortOrder":0,"isPublished":true,"title":"HackShastra Build Night","date":"2025-11-08","venue":"Mumbai · In person","status":"past","description":"A one-night sprint for curious minds. We paired first-time builders with experienced mentors and shipped small, useful things by midnight.","attendees":180,"link":"#"},
+ {"id":"event-02","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":1,"isPublished":true,"title":"The Open Source Social","date":"2026-12-06","venue":"Online · Worldwide","status":"upcoming","description":"A friendly online gathering to find a first issue, meet maintainers, and make open source feel open to everyone.","attendees":300,"link":"#"}
+]

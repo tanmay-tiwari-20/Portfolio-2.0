@@ -1,0 +1,1 @@
+import { jwtVerify } from "jose";const secret=()=>new TextEncoder().encode(process.env.SESSION_SECRET||"");export async function verifyToken(token?:string){if(!token||!process.env.SESSION_SECRET||process.env.SESSION_SECRET.length<32)return null;try{const {payload}=await jwtVerify(token,secret());return typeof payload.email==="string"?payload.email:null}catch{return null}}

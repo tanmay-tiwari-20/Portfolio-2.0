@@ -1,0 +1,14 @@
+services:
+  portfolio:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+    volumes:
+      - portfolio-data:/app/data
+    restart: unless-stopped
+volumes:
+  portfolio-data:
