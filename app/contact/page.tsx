@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ContactForm from "@/components/contact-form";
 import { repos } from "@/lib/db";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, Mail, Share2 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -70,12 +70,12 @@ export default async function Contact() {
                         backgroundColor: "var(--spidey-dark-700)",
                         display: "grid",
                         placeItems: "center",
-                        fontSize: 18,
+                        fontSize: 16,
                         color: "var(--spidey-red)",
                         border: "1px solid var(--line)",
                       }}
                     >
-                      {s.icon || "🔗"}
+                      <Share2 size={16} />
                     </span>
                     <div>
                       <div style={{ fontWeight: 700, fontSize: 16, color: "#ffffff" }}>

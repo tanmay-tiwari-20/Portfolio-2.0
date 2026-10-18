@@ -111,7 +111,7 @@ export default async function HackShastra() {
                       borderColor: e.status === "upcoming" ? "var(--spidey-red)" : "var(--line)",
                     }}
                   >
-                    {e.status === "upcoming" ? "⚡ UPCOMING EVENT" : "PAST GATHERING"}
+                    {e.status === "upcoming" ? "UPCOMING EVENT" : "PAST GATHERING"}
                   </span>
                   <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--spidey-text-dim)" }}>
                     <Calendar size={14} color="var(--spidey-red)" /> {e.date}

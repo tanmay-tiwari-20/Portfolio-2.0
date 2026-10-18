@@ -1,4 +1,50 @@
 [
- {"id":"exp-01","createdAt":"2024-01-01","updatedAt":"2024-01-01","sortOrder":0,"isPublished":true,"role":"Senior Frontend Engineer","company":"Northstar Labs","period":"2023 — Present","location":"Mumbai · Remote","description":"Leading the craft of a product platform used by teams around the world, from early interaction prototypes to production-ready systems.","achievements":["Built a shared design system adopted across four product teams","Improved key journey performance by 38%","Introduced motion guidelines that made complex workflows feel clear"],"tech":["Next.js","TypeScript","Design Systems","GSAP"]},
- {"id":"exp-02","createdAt":"2021-01-01","updatedAt":"2021-01-01","sortOrder":1,"isPublished":true,"role":"Frontend Developer","company":"Little Big Studio","period":"2020 — 2023","location":"Pune, India","description":"Partnered with designers and founders to turn ambitious ideas into expressive, accessible web experiences.","achievements":["Shipped 12 brand and commerce launches","Created reusable animation primitives","Mentored three early-career developers"],"tech":["React","Node.js","Figma","WebGL"]}
+  {
+    "id": "exp-01",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2026-10-18T18:29:29.340Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "role": "Co-founder",
+    "company": "HackShastra",
+    "period": "Nov 2024 — Present",
+    "location": "New Delhi",
+    "description": "As the Co-founder of HackShastra, I play a key role in shaping the vision, strategy, and execution of our initiatives. I lead cross-functional efforts to build a strong tech-driven community, organize impactful hackathons, and drive innovation through collaboration with developers, partners, and organizations.",
+    "achievements": [
+      "Co-founded HackShastra and work on the technical side of the community and its platforms.",
+      "Built and maintained the HackShastra website using Next.js, TypeScript, and Tailwind CSS.",
+      "Worked on hackathon websites, registration pages, participant dashboards, and event platforms."
+    ],
+    "tech": [
+      "Next.js",
+      "TypeScript",
+      "Design Systems",
+      "GSAP"
+    ]
+  },
+  {
+    "id": "exp-02",
+    "createdAt": "2021-01-01",
+    "updatedAt": "2026-10-18T18:26:45.856Z",
+    "sortOrder": 1,
+    "isPublished": true,
+    "role": "SDE",
+    "company": "DevNDez",
+    "period": "Nov 2024 - Nov 2025",
+    "location": "New Delhi, India",
+    "description": "Partnered with designers and founders to turn ambitious ideas into expressive, accessible web experiences.",
+    "achievements": [
+      "Shipped 12 brand and commerce launches",
+      "Created reusable animation primitives",
+      "Mentored three early-career developers"
+    ],
+    "tech": [
+      "React",
+      "Node.js",
+      "Figma",
+      "WebGL",
+      "MERN",
+      "Three.js"
+    ]
+  }
 ]

@@ -23,8 +23,10 @@ import {
   Star,
   StarOff,
   X,
-  Upload,
   Download,
+  Shield,
+  Layers,
+  Sparkles,
 } from "lucide-react";
 import type {
   Project,
@@ -32,7 +34,6 @@ import type {
   Profile,
   Hackathon,
   CommunityEvent,
-  ImageAsset,
 } from "@/lib/validators/schemas";
 import Logout from "@/components/admin/logout";
 
@@ -43,8 +44,7 @@ type Tab =
   | "hackathons"
   | "events"
   | "socials"
-  | "settings"
-  | "database";
+  | "settings";
 
 interface MongoStatus {
   success: boolean;
@@ -85,7 +85,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
   const showToast = useCallback((message: string, type: "success" | "error" = "success") => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 4500);
+    setTimeout(() => setToast(null), 4000);
   }, []);
 
   // Fetch all collections
@@ -118,8 +118,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         setSettings(s[0] || null);
       }
       if (dbRes.ok) setDbStatus(await dbRes.json());
-    } catch (err) {
-      showToast("Error loading data from server", "error");
+    } catch {
+      showToast("Error synchronizing with database", "error");
     } finally {
       setLoading(false);
     }
@@ -137,12 +137,12 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       const data = await res.json();
       setDbStatus(data);
       if (data.success) {
-        showToast("Connected to MongoDB successfully!");
+        showToast("Connected to MongoDB cluster!");
       } else {
         showToast(data.message || "MongoDB connection failed", "error");
       }
     } catch {
-      showToast("Could not check MongoDB status", "error");
+      showToast("Could not verify database status", "error");
     } finally {
       setTestingDb(false);
     }
@@ -165,14 +165,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "Save failed");
+        throw new Error(err.error || "Save operation failed");
       }
 
-      showToast("Saved! Live site updated instantly without redeployment.");
+      showToast("Saved to MongoDB! Live website updated.");
       await loadAllData();
       return true;
     } catch (err: any) {
-      showToast(err.message || "Failed to save item", "error");
+      showToast(err.message || "Save operation failed", "error");
       return false;
     } finally {
       setLoading(false);
@@ -181,7 +181,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
   // Generic Delete
   const deleteItem = async (collection: string, id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+    if (!confirm(`Confirm deletion of "${name}"?`)) return;
     setLoading(true);
     try {
       const res = await fetch("/api/admin/content", {
@@ -190,16 +190,16 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         body: JSON.stringify({ collection, id }),
       });
       if (!res.ok) throw new Error("Delete failed");
-      showToast(`Deleted "${name}". Live site updated.`);
+      showToast(`Removed "${name}". Live site updated.`);
       await loadAllData();
     } catch {
-      showToast("Could not delete item", "error");
+      showToast("Could not complete delete operation", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // Toggle boolean fields (e.g., isPublished, featured)
+  // Toggle boolean fields
   const toggleField = async (collection: string, id: string, field: string, currentValue: boolean) => {
     await saveItem(collection, { id, [field]: !currentValue }, false);
   };
@@ -220,9 +220,9 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             backgroundColor: toast.type === "success" ? "#0a2e1d" : "#3b0c10",
             border: `1px solid ${toast.type === "success" ? "#00ff88" : "var(--spidey-red)"}`,
             color: toast.type === "success" ? "#00ff88" : "#ff9498",
-            padding: "14px 22px",
+            padding: "14px 24px",
             borderRadius: "var(--radius-pill)",
-            boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+            boxShadow: "0 12px 36px rgba(0,0,0,0.7)",
             fontSize: 14,
             fontWeight: 600,
           }}
@@ -232,37 +232,54 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         </div>
       )}
 
-      {/* HEADER CONTROL ROOM */}
+      {/* TOP BAR / CONTROL ROOM */}
       <header className="admin-header-card">
-        <div>
-          <div className="eyebrow" style={{ marginBottom: 10 }}>
-            <span className="pulse-red" />
-            <span>PORTFOLIO COMMAND CENTER // SPIDER-TECH</span>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: "var(--radius-pill)",
+              backgroundColor: "var(--spidey-red)",
+              display: "grid",
+              placeItems: "center",
+              color: "#ffffff",
+              boxShadow: "0 0 20px var(--spidey-red-glow)",
+            }}
+          >
+            <Shield size={24} />
           </div>
-          <h1 className="display" style={{ fontSize: "clamp(28px, 4vw, 48px)", margin: "4px 0" }}>
-            Welcome, <em>Admin.</em>
-          </h1>
-          <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: 0 }}>
-            Signed in as <strong style={{ color: "#ffffff" }}>{userEmail}</strong>
-          </p>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <h1 className="display" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", margin: 0 }}>
+                Control Room
+              </h1>
+              <span className="tag-pill" style={{ backgroundColor: "rgba(0, 255, 136, 0.15)", color: "#00ff88", borderColor: "#00ff8840", fontSize: 11 }}>
+                LIVE SYNC ACTIVE
+              </span>
+            </div>
+            <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
+              Changes save directly to MongoDB and immediately reflect on your live website.
+            </p>
+          </div>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <Link href="/" target="_blank" className="button button-secondary" style={{ minHeight: 44 }}>
-            View Live Site <ExternalLink size={16} />
+          <Link href="/" target="_blank" className="button button-secondary" style={{ minHeight: 42, padding: "0 18px", fontSize: 12 }}>
+            Preview Site <ExternalLink size={15} />
           </Link>
-          <Link href="/secret-admin/media" className="button button-blue" style={{ minHeight: 44 }}>
-            Media Library <ExternalLink size={16} />
+          <Link href="/secret-admin/media" className="button button-blue" style={{ minHeight: 42, padding: "0 18px", fontSize: 12 }}>
+            Media Vault <ExternalLink size={15} />
           </Link>
           <Logout />
         </div>
       </header>
 
-      {/* LIVE DATABASE & CLOUD SYNC BANNER */}
+      {/* LIVE DATABASE HEALTH STATUS BAR */}
       <div
         className="timeline-card"
         style={{
-          padding: "20px 28px",
+          padding: "18px 24px",
           marginBottom: 24,
           display: "flex",
           justifyContent: "space-between",
@@ -275,8 +292,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div
             style={{
-              width: 42,
-              height: 42,
+              width: 38,
+              height: 38,
               borderRadius: "50%",
               backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 30, 39, 0.15)",
               border: `1px solid ${dbStatus?.success ? "#00ff88" : "var(--spidey-red)"}`,
@@ -285,27 +302,27 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               color: dbStatus?.success ? "#00ff88" : "var(--spidey-red)",
             }}
           >
-            <Database size={20} />
+            <Database size={18} />
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontWeight: 700, fontSize: 15, color: "#ffffff" }}>
-                Database: {dbStatus?.success ? `MongoDB (${dbStatus.dbName})` : "Local JSON Store"}
+                MongoDB Atlas: {dbStatus?.dbName || "portfolio"}
               </span>
               <span
                 className="tag-pill"
                 style={{
-                  backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.2)" : "rgba(255, 180, 0, 0.2)",
+                  backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 180, 0, 0.15)",
                   color: dbStatus?.success ? "#00ff88" : "#ffb400",
                   borderColor: "transparent",
                   fontSize: 10,
                 }}
               >
-                {dbStatus?.success ? "LIVE MONGODB ACTIVE" : "LOCAL BACKUP ACTIVE"}
+                {dbStatus?.success ? "CONNECTED & SEEDED" : "FALLBACK ACTIVE"}
               </span>
             </div>
-            <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--spidey-muted)" }}>
-              ⚡ Automatic Live Sync: Any edit, add, or delete applies to the live site immediately without redeployment.
+            <p style={{ margin: "3px 0 0", fontSize: 12, color: "var(--spidey-muted)" }}>
+              {dbStatus?.collections ? `${dbStatus.collections.length} Collections Active (${dbStatus.collections.join(", ")})` : "Monitoring live connection"}
             </p>
           </div>
         </div>
@@ -315,17 +332,17 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             onClick={checkMongoStatus}
             disabled={testingDb}
             className="button button-secondary"
-            style={{ minHeight: 38, padding: "0 16px", fontSize: 11 }}
+            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
           >
             <RefreshCw size={13} className={testingDb ? "animate-spin" : ""} />
-            {testingDb ? "Testing..." : "Test Connection"}
+            {testingDb ? "Checking..." : "Verify DB"}
           </button>
           <a
             href="/api/admin/export"
             className="button button-secondary"
-            style={{ minHeight: 38, padding: "0 16px", fontSize: 11 }}
+            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
           >
-            <Download size={13} /> Export JSON
+            <Download size={13} /> Export Backup
           </a>
         </div>
       </div>
@@ -336,7 +353,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           onClick={() => setActiveTab("projects")}
           className={`admin-nav-tab ${activeTab === "projects" ? "active" : ""}`}
         >
-          <FolderKanban size={16} /> Missions & Projects ({projects.length})
+          <FolderKanban size={16} /> Projects ({projects.length})
         </button>
         <button
           onClick={() => setActiveTab("experience")}
@@ -360,7 +377,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           onClick={() => setActiveTab("events")}
           className={`admin-nav-tab ${activeTab === "events" ? "active" : ""}`}
         >
-          <Users size={16} /> HackShastra Events ({events.length})
+          <Users size={16} /> Community Events ({events.length})
         </button>
         <button
           onClick={() => setActiveTab("socials")}
@@ -381,11 +398,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
-                Missions & Projects
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                Projects & Work
               </h2>
-              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
-                Add, edit details, toggle publication status, or remove projects.
+              <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
+                Add new projects, update screenshots, manage tags, or remove entries.
               </p>
             </div>
             <button
@@ -411,18 +428,18 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               }}
               className="button button-primary"
             >
-              <Plus size={18} /> Add New Project
+              <Plus size={16} /> Add Project
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {projects.map((p) => (
               <div
                 key={p.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
-                  padding: 20,
+                  padding: "16px 20px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -430,11 +447,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   gap: 16,
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 18, minWidth: 260 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16, minWidth: 260 }}>
                   <div
                     style={{
-                      width: 72,
-                      height: 52,
+                      width: 64,
+                      height: 48,
                       borderRadius: "var(--radius-sm)",
                       overflow: "hidden",
                       position: "relative",
@@ -450,16 +467,16 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: 17, fontWeight: 700, margin: "0 0 4px", color: "#ffffff" }}>
+                    <h3 style={{ fontSize: 16, fontWeight: 700, margin: "0 0 2px", color: "#ffffff" }}>
                       {p.title}
                     </h3>
-                    <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>
+                    <div style={{ fontSize: 12, color: "var(--spidey-muted)" }}>
                       {p.category} · {p.year} · <span style={{ color: "var(--spidey-blue)" }}>/{p.slug}</span>
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   {/* Featured Toggle */}
                   <button
                     onClick={() => toggleField("projects", p.id, "featured", p.featured)}
@@ -472,11 +489,12 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                       display: "flex",
                       alignItems: "center",
                       gap: 4,
+                      fontSize: 11,
                     }}
-                    title="Toggle Featured on Homepage"
+                    title="Toggle Featured"
                   >
                     {p.featured ? <Star size={13} fill="currentColor" /> : <StarOff size={13} />}
-                    {p.featured ? "Featured" : "Regular"}
+                    {p.featured ? "Featured" : "Standard"}
                   </button>
 
                   {/* Published Toggle */}
@@ -491,6 +509,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                       display: "flex",
                       alignItems: "center",
                       gap: 4,
+                      fontSize: 11,
                     }}
                     title="Toggle Publish / Draft"
                   >
@@ -502,9 +521,9 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   <button
                     onClick={() => setEditingProject({ ...p })}
                     className="button button-secondary"
-                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
-                    <Edit3 size={14} /> Edit
+                    <Edit3 size={13} /> Edit
                   </button>
 
                   {/* Delete button */}
@@ -512,14 +531,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     onClick={() => deleteItem("projects", p.id, p.title)}
                     className="button button-secondary"
                     style={{
-                      minHeight: 38,
+                      minHeight: 36,
                       padding: "0 14px",
                       fontSize: 12,
                       borderColor: "rgba(255, 30, 39, 0.4)",
                       color: "var(--spidey-red)",
                     }}
                   >
-                    <Trash2 size={14} /> Delete
+                    <Trash2 size={13} /> Delete
                   </button>
                 </div>
               </div>
@@ -533,10 +552,10 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
-                Work Experience Timeline
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                Experience Timeline
               </h2>
-              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
                 Manage roles, achievements, timeline periods, and technologies.
               </p>
             </div>
@@ -557,18 +576,18 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               }}
               className="button button-primary"
             >
-              <Plus size={18} /> Add Experience
+              <Plus size={16} /> Add Experience
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {experiences.map((exp) => (
               <div
                 key={exp.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
-                  padding: 24,
+                  padding: "20px 24px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "flex-start",
@@ -577,16 +596,16 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 }}
               >
                 <div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 4px", color: "#ffffff" }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, margin: "0 0 4px", color: "#ffffff" }}>
                     {exp.role} <span style={{ color: "var(--spidey-red)" }}>@ {exp.company}</span>
                   </h3>
-                  <div style={{ fontSize: 13, color: "var(--spidey-muted)", marginBottom: 8 }}>
+                  <div style={{ fontSize: 12, color: "var(--spidey-muted)", marginBottom: 8 }}>
                     {exp.period} · {exp.location}
                   </div>
                   <p style={{ color: "var(--spidey-text-dim)", fontSize: 14, margin: "0 0 10px 0", maxWidth: 640 }}>
                     {exp.description}
                   </p>
-                  <div className="tags-row" style={{ marginTop: 8 }}>
+                  <div className="tags-row" style={{ marginTop: 6 }}>
                     {exp.tech.map((t) => (
                       <span className="tag-pill" key={t}>
                         {t}
@@ -595,7 +614,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ display: "flex", gap: 8 }}>
                   <button
                     onClick={() => {
                       setTempTag("");
@@ -603,22 +622,22 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                       setEditingExperience({ ...exp });
                     }}
                     className="button button-secondary"
-                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
-                    <Edit3 size={14} /> Edit
+                    <Edit3 size={13} /> Edit
                   </button>
                   <button
                     onClick={() => deleteItem("experiences", exp.id, `${exp.role} at ${exp.company}`)}
                     className="button button-secondary"
                     style={{
-                      minHeight: 38,
+                      minHeight: 36,
                       padding: "0 14px",
                       fontSize: 12,
                       borderColor: "rgba(255, 30, 39, 0.4)",
                       color: "var(--spidey-red)",
                     }}
                   >
-                    <Trash2 size={14} /> Delete
+                    <Trash2 size={13} /> Delete
                   </button>
                 </div>
               </div>
@@ -631,10 +650,10 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       {activeTab === "profile" && profile && (
         <section className="admin-content-card">
           <div style={{ marginBottom: 24 }}>
-            <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+            <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
               Profile & Hero Customization
             </h2>
-            <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+            <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
               Edit your name, headline, bio, contact details, and hero metric numbers.
             </p>
           </div>
@@ -668,7 +687,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </div>
 
             <div>
-              <label className="form-label">Hero Title Headline</label>
+              <label className="form-label">Hero Headline Title</label>
               <input
                 value={profile.heroTitle}
                 onChange={(e) => setProfile({ ...profile, heroTitle: e.target.value })}
@@ -678,7 +697,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </div>
 
             <div>
-              <label className="form-label">Short Tagline</label>
+              <label className="form-label">Tagline Summary</label>
               <input
                 value={profile.tagline}
                 onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
@@ -693,7 +712,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 value={profile.bio}
                 onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
                 className="form-textarea"
-                rows={4}
+                rows={3}
                 required
               />
             </div>
@@ -730,7 +749,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </div>
 
             {/* Dynamic Hero Stats */}
-            <div style={{ marginTop: 12 }}>
+            <div style={{ marginTop: 8 }}>
               <label className="form-label">Hero Metric Numbers</label>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
                 {profile.stats.map((stat, idx) => (
@@ -764,8 +783,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 16 }}>
-              {loading ? "Saving..." : "Save Profile Details"} <Check size={18} />
+            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 12 }}>
+              {loading ? "Saving..." : "Save Profile Details"} <Check size={16} />
             </button>
           </form>
         </section>
@@ -776,10 +795,10 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
                 Hackathons & Mentorship
               </h2>
-              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
+              <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
                 Add or edit hackathons you have judged, mentored, or organized.
               </p>
             </div>
@@ -798,18 +817,18 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               }}
               className="button button-primary"
             >
-              <Plus size={18} /> Add Hackathon
+              <Plus size={16} /> Add Hackathon
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {hackathons.map((h) => (
               <div
                 key={h.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
-                  padding: 22,
+                  padding: "18px 22px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -822,9 +841,9 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     <span className="tag-pill" style={{ backgroundColor: "var(--spidey-red)", color: "#fff" }}>
                       {h.role}
                     </span>
-                    <span style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{h.date}</span>
+                    <span style={{ fontSize: 12, color: "var(--spidey-muted)" }}>{h.date}</span>
                   </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
                     {h.name}
                   </h3>
                   <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
@@ -832,26 +851,26 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ display: "flex", gap: 8 }}>
                   <button
                     onClick={() => setEditingHackathon({ ...h })}
                     className="button button-secondary"
-                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
-                    <Edit3 size={14} /> Edit
+                    <Edit3 size={13} /> Edit
                   </button>
                   <button
                     onClick={() => deleteItem("hackathons", h.id, h.name)}
                     className="button button-secondary"
                     style={{
-                      minHeight: 38,
+                      minHeight: 36,
                       padding: "0 14px",
                       fontSize: 12,
                       borderColor: "rgba(255, 30, 39, 0.4)",
                       color: "var(--spidey-red)",
                     }}
                   >
-                    <Trash2 size={14} /> Delete
+                    <Trash2 size={13} /> Delete
                   </button>
                 </div>
               </div>
@@ -860,16 +879,16 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         </section>
       )}
 
-      {/* ==================== TAB 5: HACKSHASTRA EVENTS ==================== */}
+      {/* ==================== TAB 5: COMMUNITY EVENTS ==================== */}
       {activeTab === "events" && (
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
-                HackShastra Community Events
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+                Community Events & HackShastra
               </h2>
-              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
-                Manage community gatherings, upcoming summits, and attendee statistics.
+              <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
+                Manage community gatherings, summits, and attendee statistics.
               </p>
             </div>
             <button
@@ -887,18 +906,18 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               }}
               className="button button-primary"
             >
-              <Plus size={18} /> Add Community Event
+              <Plus size={16} /> Add Event
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 16 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             {events.map((e) => (
               <div
                 key={e.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
-                  padding: 22,
+                  padding: "18px 22px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -917,9 +936,9 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     >
                       {e.status.toUpperCase()}
                     </span>
-                    <span style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{e.date} · {e.venue}</span>
+                    <span style={{ fontSize: 12, color: "var(--spidey-muted)" }}>{e.date} · {e.venue}</span>
                   </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, margin: "4px 0", color: "#ffffff" }}>
                     {e.title}
                   </h3>
                   <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
@@ -927,26 +946,26 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ display: "flex", gap: 8 }}>
                   <button
                     onClick={() => setEditingEvent({ ...e })}
                     className="button button-secondary"
-                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
-                    <Edit3 size={14} /> Edit
+                    <Edit3 size={13} /> Edit
                   </button>
                   <button
                     onClick={() => deleteItem("events", e.id, e.title)}
                     className="button button-secondary"
                     style={{
-                      minHeight: 38,
+                      minHeight: 36,
                       padding: "0 14px",
                       fontSize: 12,
                       borderColor: "rgba(255, 30, 39, 0.4)",
                       color: "var(--spidey-red)",
                     }}
                   >
-                    <Trash2 size={14} /> Delete
+                    <Trash2 size={13} /> Delete
                   </button>
                 </div>
               </div>
@@ -960,11 +979,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
             <div>
-              <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
                 Social Channels & Links
               </h2>
-              <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
-                Add or edit your GitHub, LinkedIn, Twitter/X, Instagram, and Discord links.
+              <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
+                Add or edit your GitHub, LinkedIn, Twitter/X, and communication links.
               </p>
             </div>
             <button
@@ -973,57 +992,70 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   label: "GitHub",
                   href: "https://github.com/",
                   handle: "@username",
-                  icon: "🐙",
+                  icon: "code",
                   isPublished: true,
                 });
               }}
               className="button button-primary"
             >
-              <Plus size={18} /> Add Social Link
+              <Plus size={16} /> Add Social Link
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 14 }}>
+          <div style={{ display: "grid", gap: 12 }}>
             {socials.map((s) => (
               <div
                 key={s.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
-                  padding: 18,
+                  padding: "16px 20px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                  <span style={{ fontSize: 22 }}>{s.icon}</span>
+                  <span
+                    style={{
+                      width: 36,
+                      height: 36,
+                      borderRadius: "50%",
+                      backgroundColor: "var(--spidey-dark-700)",
+                      border: "1px solid var(--line)",
+                      display: "grid",
+                      placeItems: "center",
+                      color: "var(--spidey-red)",
+                    }}
+                  >
+                    <Share2 size={16} />
+                  </span>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: 16, color: "#fff" }}>{s.label}</div>
-                    <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>{s.handle} — {s.href}</div>
+                    <div style={{ fontWeight: 700, fontSize: 15, color: "#fff" }}>{s.label}</div>
+                    <div style={{ fontSize: 12, color: "var(--spidey-muted)" }}>{s.handle} — {s.href}</div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 10 }}>
+                <div style={{ display: "flex", gap: 8 }}>
                   <button
                     onClick={() => setEditingSocial({ ...s })}
                     className="button button-secondary"
-                    style={{ minHeight: 38, padding: "0 14px", fontSize: 12 }}
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
-                    <Edit3 size={14} /> Edit
+                    <Edit3 size={13} /> Edit
                   </button>
                   <button
                     onClick={() => deleteItem("socials", s.id, s.label)}
                     className="button button-secondary"
                     style={{
-                      minHeight: 38,
+                      minHeight: 36,
                       padding: "0 14px",
                       fontSize: 12,
                       borderColor: "rgba(255, 30, 39, 0.4)",
                       color: "var(--spidey-red)",
                     }}
                   >
-                    <Trash2 size={14} /> Delete
+                    <Trash2 size={13} /> Delete
                   </button>
                 </div>
               </div>
@@ -1036,11 +1068,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       {activeTab === "settings" && settings && (
         <section className="admin-content-card">
           <div style={{ marginBottom: 24 }}>
-            <h2 className="display" style={{ fontSize: 26, margin: 0 }}>
+            <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
               Global Site Settings & SEO
             </h2>
-            <p style={{ color: "var(--spidey-muted)", fontSize: 14, margin: "4px 0 0" }}>
-              Update default page title, meta description, and theme accent.
+            <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
+              Update default page title, meta description, and theme accent color.
             </p>
           </div>
 
@@ -1079,7 +1111,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   type="color"
                   value={settings.accent || "#ff1e27"}
                   onChange={(e) => setSettings({ ...settings, accent: e.target.value })}
-                  style={{ width: 48, height: 48, borderRadius: "var(--radius-sm)", border: "none", cursor: "pointer", background: "none" }}
+                  style={{ width: 44, height: 44, borderRadius: "var(--radius-sm)", border: "none", cursor: "pointer", background: "none" }}
                 />
                 <input
                   value={settings.accent || "#ff1e27"}
@@ -1090,8 +1122,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 12 }}>
-              {loading ? "Saving..." : "Save Settings"} <Check size={18} />
+            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 10 }}>
+              {loading ? "Saving..." : "Save Settings"} <Check size={16} />
             </button>
           </form>
         </section>
@@ -1102,14 +1134,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div className="admin-modal-overlay">
           <div className="admin-modal-box">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
-                {editingProject.id ? "Edit Mission / Project" : "Add New Mission"}
+              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
+                {editingProject.id ? "Edit Project" : "Add Project"}
               </h2>
               <button
                 onClick={() => setEditingProject(null)}
                 style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             </div>
 
@@ -1162,7 +1194,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 <input
                   value={editingProject.category || ""}
                   onChange={(e) => setEditingProject({ ...editingProject, category: e.target.value })}
-                  placeholder="Product design · 2025"
+                  placeholder="Web Application · 2025"
                   className="form-input"
                   required
                 />
@@ -1248,9 +1280,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                       }
                     }}
                     className="button button-secondary"
-                    style={{ whiteSpace: "nowrap" }}
                   >
-                    Add Tag
+                    Add
                   </button>
                 </div>
 
@@ -1298,14 +1329,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: 24, marginTop: 10 }}>
+              <div style={{ display: "flex", gap: 24, marginTop: 8 }}>
                 <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14 }}>
                   <input
                     type="checkbox"
                     checked={editingProject.featured || false}
                     onChange={(e) => setEditingProject({ ...editingProject, featured: e.target.checked })}
                   />
-                  Feature on Homepage
+                  Featured on Homepage
                 </label>
                 <label style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", fontSize: 14 }}>
                   <input
@@ -1313,11 +1344,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     checked={editingProject.isPublished !== false}
                     onChange={(e) => setEditingProject({ ...editingProject, isPublished: e.target.checked })}
                   />
-                  Published (Visible Live)
+                  Published (Live)
                 </label>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
                   onClick={() => setEditingProject(null)}
@@ -1326,7 +1357,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   Cancel
                 </button>
                 <button type="submit" disabled={loading} className="button button-primary">
-                  {loading ? "Saving..." : "Save Project"} <Check size={18} />
+                  {loading ? "Saving..." : "Save Project"} <Check size={16} />
                 </button>
               </div>
             </form>
@@ -1339,14 +1370,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div className="admin-modal-overlay">
           <div className="admin-modal-box">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
-                {editingExperience.id ? "Edit Experience Entry" : "Add Experience Entry"}
+              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
+                {editingExperience.id ? "Edit Experience" : "Add Experience"}
               </h2>
               <button
                 onClick={() => setEditingExperience(null)}
                 style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             </div>
 
@@ -1549,7 +1580,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 </div>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
                   onClick={() => setEditingExperience(null)}
@@ -1558,7 +1589,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   Cancel
                 </button>
                 <button type="submit" disabled={loading} className="button button-primary">
-                  {loading ? "Saving..." : "Save Experience"} <Check size={18} />
+                  {loading ? "Saving..." : "Save Experience"} <Check size={16} />
                 </button>
               </div>
             </form>
@@ -1571,14 +1602,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div className="admin-modal-overlay">
           <div className="admin-modal-box">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
-                {editingHackathon.id ? "Edit Hackathon Entry" : "Add Hackathon"}
+              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
+                {editingHackathon.id ? "Edit Hackathon" : "Add Hackathon"}
               </h2>
               <button
                 onClick={() => setEditingHackathon(null)}
                 style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             </div>
 
@@ -1668,7 +1699,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
                   onClick={() => setEditingHackathon(null)}
@@ -1677,7 +1708,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   Cancel
                 </button>
                 <button type="submit" disabled={loading} className="button button-primary">
-                  {loading ? "Saving..." : "Save Hackathon"} <Check size={18} />
+                  {loading ? "Saving..." : "Save Hackathon"} <Check size={16} />
                 </button>
               </div>
             </form>
@@ -1690,14 +1721,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div className="admin-modal-overlay">
           <div className="admin-modal-box">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingEvent.id ? "Edit Community Event" : "Add Community Event"}
               </h2>
               <button
                 onClick={() => setEditingEvent(null)}
                 style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             </div>
 
@@ -1745,7 +1776,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                 <div>
-                  <label className="form-label">Venue / City</label>
+                  <label className="form-label">Venue / Location</label>
                   <input
                     value={editingEvent.venue || ""}
                     onChange={(e) => setEditingEvent({ ...editingEvent, venue: e.target.value })}
@@ -1777,7 +1808,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               </div>
 
               <div>
-                <label className="form-label">Registration / Details Link (Optional)</label>
+                <label className="form-label">Registration / Details Link</label>
                 <input
                   value={editingEvent.link || ""}
                   onChange={(e) => setEditingEvent({ ...editingEvent, link: e.target.value })}
@@ -1786,7 +1817,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
                   onClick={() => setEditingEvent(null)}
@@ -1795,7 +1826,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   Cancel
                 </button>
                 <button type="submit" disabled={loading} className="button button-primary">
-                  {loading ? "Saving..." : "Save Event"} <Check size={18} />
+                  {loading ? "Saving..." : "Save Event"} <Check size={16} />
                 </button>
               </div>
             </form>
@@ -1808,14 +1839,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
         <div className="admin-modal-overlay">
           <div className="admin-modal-box">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
+              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingSocial.id ? "Edit Social Link" : "Add Social Link"}
               </h2>
               <button
                 onClick={() => setEditingSocial(null)}
                 style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
               >
-                <X size={22} />
+                <X size={20} />
               </button>
             </div>
 
@@ -1852,7 +1883,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               </div>
 
               <div>
-                <label className="form-label">Full Link URL</label>
+                <label className="form-label">Full Profile Link URL</label>
                 <input
                   value={editingSocial.href || ""}
                   onChange={(e) => setEditingSocial({ ...editingSocial, href: e.target.value })}
@@ -1862,18 +1893,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 />
               </div>
 
-              <div>
-                <label className="form-label">Icon (Emoji or Text)</label>
-                <input
-                  value={editingSocial.icon || ""}
-                  onChange={(e) => setEditingSocial({ ...editingSocial, icon: e.target.value })}
-                  placeholder="🐙"
-                  className="form-input"
-                  required
-                />
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 16 }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
                   onClick={() => setEditingSocial(null)}
@@ -1882,7 +1902,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   Cancel
                 </button>
                 <button type="submit" disabled={loading} className="button button-primary">
-                  {loading ? "Saving..." : "Save Social Link"} <Check size={18} />
+                  {loading ? "Saving..." : "Save Social Link"} <Check size={16} />
                 </button>
               </div>
             </form>

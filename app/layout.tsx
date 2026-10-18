@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Poppins, Inter } from "next/font/google";
 import "./globals.css";
-import { SiteNav, Footer, MotionLayer, CustomCursor } from "@/components/shell";
+import { SiteNav, Footer, MotionLayer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
 import Preloader from "@/components/animations/preloader";
 import { repos } from "@/lib/db";
@@ -25,15 +25,20 @@ const inter = Inter({
 
 export async function generateMetadata(): Promise<Metadata> {
   const [settings] = await repos.settings.getAll();
-  const title = settings?.title || "Tanmay Tiwari — Creative Developer";
+  const title = settings?.title || "Tanmay Tiwari — Creative Developer & Architect";
   const description =
     settings?.description ||
-    "Creative developer and community builder.";
+    "Creative developer and technical architect building high-performance web applications.";
   const image = settings?.ogImage?.url || "/og.svg";
   return {
     title: { default: title, template: "%s — Tanmay Tiwari" },
     description,
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+    icons: {
+      icon: "/icon.svg",
+      shortcut: "/icon.svg",
+      apple: "/icon.svg",
+    },
     openGraph: { title, description, type: "website", images: [image] },
     twitter: { card: "summary_large_image", title, description, images: [image] },
     robots: { index: true, follow: true },
@@ -49,7 +54,6 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           Skip to content
         </a>
         <MotionLayer />
-        <CustomCursor />
         <Preloader />
         <SiteNav />
         <main id="main">

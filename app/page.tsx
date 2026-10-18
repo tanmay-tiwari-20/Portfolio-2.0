@@ -113,7 +113,7 @@ export default async function Home() {
               {/* Floating Hero Emblems */}
               <div className="hero-sticker">
                 BUILT WITH
-                <span>SPIDER-SENSE 🕷️</span>
+                <span>SPIDER-SENSE</span>
               </div>
 
               <div className="hero-stats-badge">

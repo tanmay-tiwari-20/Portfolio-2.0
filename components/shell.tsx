@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, Menu, X, ArrowUp } from "lucide-react";
+import { ArrowUpRight, Menu, X, ArrowUp, Send } from "lucide-react";
 
 const links = [
   ["Home", "/"],
@@ -16,11 +16,21 @@ const links = [
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const path = usePathname();
 
   useEffect(() => {
     setOpen(false);
   }, [path]);
+
+  // Track scroll position for dynamic navbar appearance
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -35,20 +45,51 @@ export function SiteNav() {
   }, [open]);
 
   return (
-    <header className="site-nav">
-      <Link className="brand" href="/" aria-label="Portfolio Home">
-        <span className="brand-emblem">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" />
+    <header className={`site-nav-capsule ${scrolled ? "scrolled" : ""}`}>
+      {/* Brand with Spidey Emblem */}
+      <Link className="nav-brand" href="/" aria-label="Tanmay Tiwari Portfolio Home">
+        <span className="nav-spidey-avatar">
+          <svg viewBox="0 0 100 100" width="22" height="22" aria-hidden="true">
+            <path d="M50 4 C24 4 10 26 10 54 C10 74 28 92 50 96 C72 92 90 74 90 54 C90 26 76 4 50 4 Z" fill="#ff1e27"/>
+            <path d="M50 4 L50 96M10 54 Q50 68 90 54M16 38 Q50 50 84 38M22 24 Q50 34 78 24M18 70 Q50 78 82 70" stroke="#08090d" strokeWidth="2.5" fill="none"/>
+            <path d="M46 44 C42 42 22 47 18 63 C22 66 36 67 46 54 Z" fill="#08090d"/>
+            <path d="M44 46 C40 44 25 49 22 61 C26 63 36 64 44 54 Z" fill="#ffffff"/>
+            <path d="M54 44 C58 42 78 47 82 63 C78 66 64 67 54 54 Z" fill="#08090d"/>
+            <path d="M56 46 C60 44 75 49 78 61 C74 63 64 64 56 54 Z" fill="#ffffff"/>
           </svg>
         </span>
-        <span>
-          SPIDER<span className="brand-dot">.DEV</span>
+        <span className="brand-text">
+          TANMAY<span className="brand-dot">.DEV</span>
         </span>
       </Link>
 
+      {/* Desktop Navigation Links */}
+      <nav className="nav-menu-desktop" aria-label="Main navigation">
+        {links.map(([label, href]) => {
+          const isActive = path === href;
+          return (
+            <Link key={href} className={`nav-item ${isActive ? "active" : ""}`} href={href}>
+              {label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Right Actions: Availability & Direct Contact */}
+      <div className="nav-right-actions">
+        <div className="status-badge" title="Available for freelance and full-time opportunities">
+          <span className="status-dot" />
+          <span className="status-text">Available</span>
+        </div>
+        <Link href="/contact" className="nav-cta-btn">
+          <span>Let’s Talk</span>
+          <ArrowUpRight size={15} />
+        </Link>
+      </div>
+
+      {/* Mobile Menu Hamburger */}
       <button
-        className="menu-toggle"
+        className="menu-toggle-btn"
         onClick={() => setOpen(!open)}
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
@@ -56,27 +97,32 @@ export function SiteNav() {
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
 
-      <nav className={`nav-links ${open ? "open" : ""}`} aria-label="Main navigation">
-        {links.map(([label, href]) => {
-          const isActive = path === href;
-          return (
-            <Link key={href} className={isActive ? "active" : ""} href={href}>
-              {label}
+      {/* Mobile Drawer Menu */}
+      <div className={`mobile-nav-drawer ${open ? "open" : ""}`} aria-label="Mobile navigation">
+        <div className="mobile-nav-inner">
+          {links.map(([label, href], idx) => {
+            const isActive = path === href;
+            return (
+              <Link key={href} className={`mobile-nav-link ${isActive ? "active" : ""}`} href={href}>
+                <span className="mobile-nav-num">0{idx + 1}</span>
+                <span>{label}</span>
+                <ArrowUpRight size={18} className="mobile-nav-arrow" />
+              </Link>
+            );
+          })}
+          <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid var(--line)" }}>
+            <Link href="/contact" className="button button-primary" style={{ width: "100%" }}>
+              Initiate Transmission <Send size={16} />
             </Link>
-          );
-        })}
-      </nav>
-
-      <Link className="availability" href="/contact">
-        <span className="pulse" />
-        <span>Available for projects</span>
-      </Link>
+          </div>
+        </div>
+      </div>
     </header>
   );
 }
 
 export function Footer({
-  name = "Alex Parker",
+  name = "Tanmay Tiwari",
   email = "hello@example.com",
 }: {
   name?: string;
@@ -91,7 +137,7 @@ export function Footer({
       <div className="footer-top">
         <div>
           <div className="eyebrow" style={{ marginBottom: 16 }}>
-            <span className="eyebrow-line" /> Friendly Neighborhood Builder
+            <span className="eyebrow-line" /> Digital Architect & Creative Engineer
           </div>
           <h2 className="display">
             With great code comes<br />
@@ -109,10 +155,7 @@ export function Footer({
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} {name}. All rights reserved.</span>
-        <span>Crafted with Marvel-grade care & Spider-Sense.</span>
-        <Link href="/secret-admin" className="text-link" style={{ fontSize: 11, padding: "4px 12px" }}>
-          Command Center 🔒
-        </Link>
+        <span>Crafted with engineering discipline & Spider-Sense.</span>
       </div>
     </footer>
   );
@@ -159,11 +202,11 @@ export function MotionLayer() {
           gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
             gsap.fromTo(
               el,
-              { y: 20, opacity: 0.35 },
+              { y: 22, opacity: 0.35 },
               {
                 y: 0,
                 opacity: 1,
-                duration: 0.6,
+                duration: 0.55,
                 ease: "power2.out",
                 scrollTrigger: {
                   trigger: el,
@@ -191,63 +234,6 @@ export function MotionLayer() {
     return () => {
       disposed = true;
       cleanup?.();
-    };
-  }, []);
-
-  return null;
-}
-
-export function CustomCursor() {
-  useEffect(() => {
-    if (
-      !matchMedia("(pointer:fine)").matches ||
-      matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-
-    const el = document.createElement("div");
-    el.className = "cursor-dot";
-    document.body.appendChild(el);
-
-    let mouseX = -100;
-    let mouseY = -100;
-    let currentX = -100;
-    let currentY = -100;
-    let animId = 0;
-
-    const move = (e: PointerEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    const render = () => {
-      currentX += (mouseX - currentX) * 0.22;
-      currentY += (mouseY - currentY) * 0.22;
-      el.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-      animId = requestAnimationFrame(render);
-    };
-    animId = requestAnimationFrame(render);
-
-    const over = (e: PointerEvent) => {
-      if ((e.target as HTMLElement).closest("a, button, input, select, textarea, .filter-chip")) {
-        el.classList.add("hover");
-      }
-    };
-
-    const out = () => {
-      el.classList.remove("hover");
-    };
-
-    window.addEventListener("pointermove", move, { passive: true });
-    document.addEventListener("pointerover", over, { passive: true });
-    document.addEventListener("pointerout", out, { passive: true });
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("pointermove", move);
-      document.removeEventListener("pointerover", over);
-      document.removeEventListener("pointerout", out);
-      el.remove();
     };
   }, []);
 
