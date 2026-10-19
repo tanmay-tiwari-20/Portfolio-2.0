@@ -1,5 +1,87 @@
 [
- {"id":"project-01","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":0,"isPublished":true,"title":"Orbit / a calmer kind of finance","slug":"orbit-finance","category":"Product design · 2025","description":"A human-first money dashboard that turns a tangle of accounts into one clear picture. Built to make everyday decisions feel lighter.","year":"2025","cover":{"url":"https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=1600&q=85","alt":"Colorful abstract shapes and product interface"},"gallery":[],"tags":["Next.js","TypeScript","Fintech"],"featured":true,"liveUrl":"#","githubUrl":"#"},
- {"id":"project-02","createdAt":"2024-01-01","updatedAt":"2024-01-01","sortOrder":1,"isPublished":true,"title":"Afterhours / community, in motion","slug":"afterhours-community","category":"Community platform · 2024","description":"A welcoming digital home for creative technologists to find their people, share work, and make something together.","year":"2024","cover":{"url":"https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1600&q=85","alt":"Friends gathered around a table at an event"},"gallery":[],"tags":["React","Community","Motion"],"featured":true,"liveUrl":"#","githubUrl":"#"},
- {"id":"project-03","createdAt":"2024-01-01","updatedAt":"2024-01-01","sortOrder":2,"isPublished":true,"title":"Goodform / tools for better work","slug":"goodform-tools","category":"Brand & digital · 2024","description":"A confident identity and fast, modular website for a new generation of independent makers.","year":"2024","cover":{"url":"https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=85","alt":"Retro pixel art display in neon light"},"gallery":[],"tags":["Brand","Web design","CMS"],"featured":true,"liveUrl":"#","githubUrl":"#"}
+  {
+    "id": "project-01",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2026-10-19T18:46:50.290Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "title": "Unoverse",
+    "slug": "unoverse",
+    "category": "Game Development",
+    "description": "Unoverse is a real-time 3D multiplayer UNO game built with Next.js, React Three Fiber, Express, Socket.IO, and TypeScript. It features a server-authoritative game engine, immersive 3D gameplay, WebRTC voice chat, customizable house rules, smart matchmaking with room codes, and seamless real-time multiplayer for an authentic UNO experience.",
+    "year": "2026",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792435350/unoverse_landscape_1_hbm62p.png",
+      "alt": "Unoverse"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Node.js",
+      "Express",
+      "Socket.IO",
+      "React Three Fiber",
+      "Three.js",
+      "Redis",
+      "WebRTC",
+      "Zustand",
+      "Docker",
+      "CrazyGames SDK"
+    ],
+    "featured": true,
+    "liveUrl": "https://unoverse-3d.vercel.app/",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Unoverse"
+  },
+  {
+    "id": "project-02",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2026-10-19T18:47:18.322Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "title": "Afterhours / community, in motion",
+    "slug": "afterhours-community",
+    "category": "Community platform · 2024",
+    "description": "A welcoming digital home for creative technologists to find their people, share work, and make something together.",
+    "year": "2024",
+    "cover": {
+      "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1600&q=85",
+      "alt": "Friends gathered around a table at an event"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Community",
+      "Motion"
+    ],
+    "featured": true,
+    "liveUrl": "#",
+    "githubUrl": "#"
+  },
+  {
+    "id": "project-03",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2024-01-01",
+    "sortOrder": 2,
+    "isPublished": true,
+    "title": "Goodform / tools for better work",
+    "slug": "goodform-tools",
+    "category": "Brand & digital · 2024",
+    "description": "A confident identity and fast, modular website for a new generation of independent makers.",
+    "year": "2024",
+    "cover": {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=85",
+      "alt": "Retro pixel art display in neon light"
+    },
+    "gallery": [],
+    "tags": [
+      "Brand",
+      "Web design",
+      "CMS"
+    ],
+    "featured": true,
+    "liveUrl": "#",
+    "githubUrl": "#"
+  }
 ]

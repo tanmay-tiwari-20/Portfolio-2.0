@@ -79,6 +79,36 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
   const [editingEvent, setEditingEvent] = useState<Partial<CommunityEvent> | null>(null);
   const [editingSocial, setEditingSocial] = useState<any | null>(null);
 
+  // Lock body scroll and handle escape key when any modal is open
+  const isModalOpen = Boolean(
+    editingProject ||
+    editingExperience ||
+    editingHackathon ||
+    editingEvent ||
+    editingSocial
+  );
+
+  useEffect(() => {
+    if (isModalOpen) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setEditingProject(null);
+          setEditingExperience(null);
+          setEditingHackathon(null);
+          setEditingEvent(null);
+          setEditingSocial(null);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = prevOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isModalOpen]);
+
   // Temporary tag inputs
   const [tempTag, setTempTag] = useState("");
   const [tempAchievement, setTempAchievement] = useState("");
@@ -233,7 +263,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       )}
 
       {/* TOP BAR / CONTROL ROOM */}
-      <header className="admin-header-card">
+      <header className="admin-header-card mt-12">
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div
             style={{
@@ -245,6 +275,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               placeItems: "center",
               color: "#ffffff",
               boxShadow: "0 0 20px var(--spidey-red-glow)",
+              
             }}
           >
             <Shield size={24} />
@@ -254,9 +285,6 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
               <h1 className="display" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", margin: 0 }}>
                 Control Room
               </h1>
-              <span className="tag-pill" style={{ backgroundColor: "rgba(0, 255, 136, 0.15)", color: "#00ff88", borderColor: "#00ff8840", fontSize: 11 }}>
-                LIVE SYNC ACTIVE
-              </span>
             </div>
             <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
               Changes save directly to MongoDB and immediately reflect on your live website.
@@ -274,78 +302,6 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           <Logout />
         </div>
       </header>
-
-      {/* LIVE DATABASE HEALTH STATUS BAR */}
-      <div
-        className="timeline-card"
-        style={{
-          padding: "18px 24px",
-          marginBottom: 24,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 16,
-          borderColor: dbStatus?.success ? "#00ff8840" : "var(--line)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: "50%",
-              backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 30, 39, 0.15)",
-              border: `1px solid ${dbStatus?.success ? "#00ff88" : "var(--spidey-red)"}`,
-              display: "grid",
-              placeItems: "center",
-              color: dbStatus?.success ? "#00ff88" : "var(--spidey-red)",
-            }}
-          >
-            <Database size={18} />
-          </div>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <span style={{ fontWeight: 700, fontSize: 15, color: "#ffffff" }}>
-                MongoDB Atlas: {dbStatus?.dbName || "portfolio"}
-              </span>
-              <span
-                className="tag-pill"
-                style={{
-                  backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 180, 0, 0.15)",
-                  color: dbStatus?.success ? "#00ff88" : "#ffb400",
-                  borderColor: "transparent",
-                  fontSize: 10,
-                }}
-              >
-                {dbStatus?.success ? "CONNECTED & SEEDED" : "FALLBACK ACTIVE"}
-              </span>
-            </div>
-            <p style={{ margin: "3px 0 0", fontSize: 12, color: "var(--spidey-muted)" }}>
-              {dbStatus?.collections ? `${dbStatus.collections.length} Collections Active (${dbStatus.collections.join(", ")})` : "Monitoring live connection"}
-            </p>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", gap: 10 }}>
-          <button
-            onClick={checkMongoStatus}
-            disabled={testingDb}
-            className="button button-secondary"
-            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
-          >
-            <RefreshCw size={13} className={testingDb ? "animate-spin" : ""} />
-            {testingDb ? "Checking..." : "Verify DB"}
-          </button>
-          <a
-            href="/api/admin/export"
-            className="button button-secondary"
-            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
-          >
-            <Download size={13} /> Export Backup
-          </a>
-        </div>
-      </div>
 
       {/* NAVIGATION TABS */}
       <nav className="admin-nav-tabs" aria-label="Admin Navigation Tabs">
@@ -1131,8 +1087,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       {/* ==================== PROJECT EDIT/CREATE MODAL ==================== */}
       {editingProject && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-box">
+        <div
+          className="admin-modal-overlay"
+          data-lenis-prevent="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingProject(null);
+          }}
+        >
+          <div className="admin-modal-box" data-lenis-prevent="true">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingProject.id ? "Edit Project" : "Add Project"}
@@ -1367,8 +1329,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       {/* ==================== EXPERIENCE EDIT/CREATE MODAL ==================== */}
       {editingExperience && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-box">
+        <div
+          className="admin-modal-overlay"
+          data-lenis-prevent="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingExperience(null);
+          }}
+        >
+          <div className="admin-modal-box" data-lenis-prevent="true">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingExperience.id ? "Edit Experience" : "Add Experience"}
@@ -1599,8 +1567,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       {/* ==================== HACKATHON EDIT/CREATE MODAL ==================== */}
       {editingHackathon && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-box">
+        <div
+          className="admin-modal-overlay"
+          data-lenis-prevent="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingHackathon(null);
+          }}
+        >
+          <div className="admin-modal-box" data-lenis-prevent="true">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingHackathon.id ? "Edit Hackathon" : "Add Hackathon"}
@@ -1718,8 +1692,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       {/* ==================== EVENT EDIT/CREATE MODAL ==================== */}
       {editingEvent && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-box">
+        <div
+          className="admin-modal-overlay"
+          data-lenis-prevent="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingEvent(null);
+          }}
+        >
+          <div className="admin-modal-box" data-lenis-prevent="true">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingEvent.id ? "Edit Community Event" : "Add Community Event"}
@@ -1836,8 +1816,14 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
       {/* ==================== SOCIAL EDIT/CREATE MODAL ==================== */}
       {editingSocial && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-box">
+        <div
+          className="admin-modal-overlay"
+          data-lenis-prevent="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingSocial(null);
+          }}
+        >
+          <div className="admin-modal-box" data-lenis-prevent="true">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
                 {editingSocial.id ? "Edit Social Link" : "Add Social Link"}
@@ -1909,6 +1895,78 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           </div>
         </div>
       )}
+
+      {/* LIVE DATABASE HEALTH STATUS BAR */}
+      <div
+        className="timeline-card"
+        style={{
+          padding: "18px 24px",
+          marginTop: 24,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 16,
+          borderColor: dbStatus?.success ? "#00ff8840" : "var(--line)",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: "50%",
+              backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 30, 39, 0.15)",
+              border: `1px solid ${dbStatus?.success ? "#00ff88" : "var(--spidey-red)"}`,
+              display: "grid",
+              placeItems: "center",
+              color: dbStatus?.success ? "#00ff88" : "var(--spidey-red)",
+            }}
+          >
+            <Database size={18} />
+          </div>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontWeight: 700, fontSize: 15, color: "#ffffff" }}>
+                MongoDB Atlas: {dbStatus?.dbName || "portfolio"}
+              </span>
+              <span
+                className="tag-pill"
+                style={{
+                  backgroundColor: dbStatus?.success ? "rgba(0, 255, 136, 0.15)" : "rgba(255, 180, 0, 0.15)",
+                  color: dbStatus?.success ? "#00ff88" : "#ffb400",
+                  borderColor: "transparent",
+                  fontSize: 10,
+                }}
+              >
+                {dbStatus?.success ? "CONNECTED & SEEDED" : "FALLBACK ACTIVE"}
+              </span>
+            </div>
+            <p style={{ margin: "3px 0 0", fontSize: 12, color: "var(--spidey-muted)" }}>
+              {dbStatus?.collections ? `${dbStatus.collections.length} Collections Active (${dbStatus.collections.join(", ")})` : "Monitoring live connection"}
+            </p>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <button
+            onClick={checkMongoStatus}
+            disabled={testingDb}
+            className="button button-secondary"
+            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
+          >
+            <RefreshCw size={13} className={testingDb ? "animate-spin" : ""} />
+            {testingDb ? "Checking..." : "Verify DB"}
+          </button>
+          <a
+            href="/api/admin/export"
+            className="button button-secondary"
+            style={{ minHeight: 36, padding: "0 14px", fontSize: 11 }}
+          >
+            <Download size={13} /> Export Backup
+          </a>
+        </div>
+      </div>
     </main>
   );
 }

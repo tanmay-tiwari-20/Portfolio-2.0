@@ -1,7 +1,46 @@
 [
- {"id":"instagram","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":0,"isPublished":true,"label":"Instagram","href":"https://instagram.com/","handle":"@alexbuilds","icon":"◎"},
- {"id":"twitter","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":1,"isPublished":true,"label":"X / Twitter","href":"https://x.com/","handle":"@alexbuilds","icon":"𝕏"},
- {"id":"whatsapp","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":2,"isPublished":true,"label":"WhatsApp","href":"https://wa.me/910000000000","handle":"Say hello","icon":"↗"},
- {"id":"linkedin","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":3,"isPublished":true,"label":"LinkedIn","href":"https://linkedin.com/","handle":"Alex Parker","icon":"in"},
- {"id":"github","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":4,"isPublished":true,"label":"GitHub","href":"https://github.com/","handle":"alexparker","icon":"⌘"}
+  {
+    "id": "instagram",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 0,
+    "isPublished": true,
+    "label": "Instagram",
+    "href": "https://instagram.com/",
+    "handle": "@alexbuilds",
+    "icon": "◎"
+  },
+  {
+    "id": "twitter",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 1,
+    "isPublished": true,
+    "label": "X / Twitter",
+    "href": "https://x.com/",
+    "handle": "@alexbuilds",
+    "icon": "𝕏"
+  },
+  {
+    "id": "linkedin",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 3,
+    "isPublished": true,
+    "label": "LinkedIn",
+    "href": "https://linkedin.com/",
+    "handle": "Alex Parker",
+    "icon": "in"
+  },
+  {
+    "id": "github",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 4,
+    "isPublished": true,
+    "label": "GitHub",
+    "href": "https://github.com/",
+    "handle": "alexparker",
+    "icon": "⌘"
+  }
 ]

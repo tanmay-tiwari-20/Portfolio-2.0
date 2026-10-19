@@ -2,7 +2,7 @@
   {
     "id": "profile-main",
     "createdAt": "2025-01-01",
-    "updatedAt": "2026-10-18T17:36:51.326Z",
+    "updatedAt": "2026-10-19T18:12:10.509Z",
     "sortOrder": 0,
     "isPublished": true,
     "name": "Tanmay Tiwari",
@@ -20,11 +20,11 @@
     "stats": [
       {
         "label": "Projects shipped",
-        "value": 18
+        "value": 6
       },
       {
         "label": "Builders mentored",
-        "value": 240
+        "value": 3000
       },
       {
         "label": "Years creating",

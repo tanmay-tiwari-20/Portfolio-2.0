@@ -15,29 +15,29 @@ export default function NotFound() {
     >
       <div style={{ maxWidth: 560 }}>
         <div className="eyebrow" style={{ margin: "0 auto 20px", display: "inline-flex" }}>
-          <span className="pulse-red" />
-          <span>MISSED THE WEB // 404 DETECTED</span>
+          <span className="eyebrow-accent-bar" />
+          <span>PAGE NOT FOUND // ERROR 404</span>
         </div>
 
         <h1
           className="display"
           style={{
             fontSize: "clamp(88px, 16vw, 180px)",
-            color: "var(--spidey-red)",
+            color: "var(--theme-red)",
             lineHeight: 0.9,
             margin: "0 0 20px",
-            textShadow: "0 0 40px var(--spidey-red-glow)",
+            textShadow: "0 0 40px var(--theme-red-glow)",
           }}
         >
           404
         </h1>
 
         <p className="hero-lede" style={{ margin: "0 auto 36px" }}>
-          This page swung off somewhere into another multiverse. Let’s get you safely back to headquarters.
+          The requested coordinate doesn't exist or has been relocated. Let’s guide you back to the home index.
         </p>
 
         <Link href="/" className="button button-primary">
-          <ArrowLeft size={18} /> Return To Headquarters
+          <ArrowLeft size={18} /> Return To Home
         </Link>
       </div>
     </section>

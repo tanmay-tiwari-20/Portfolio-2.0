@@ -2,18 +2,19 @@
   {
     "id": "exp-01",
     "createdAt": "2024-01-01",
-    "updatedAt": "2026-10-18T18:29:29.340Z",
+    "updatedAt": "2026-10-19T18:55:57.735Z",
     "sortOrder": 0,
     "isPublished": true,
-    "role": "Co-founder",
-    "company": "HackShastra",
-    "period": "Nov 2024 — Present",
+    "role": "Software Development Engineer",
+    "company": "DevNDez",
+    "period": "Nov 2024 — Sep 2025",
     "location": "New Delhi",
-    "description": "As the Co-founder of HackShastra, I play a key role in shaping the vision, strategy, and execution of our initiatives. I lead cross-functional efforts to build a strong tech-driven community, organize impactful hackathons, and drive innovation through collaboration with developers, partners, and organizations.",
+    "description": "Worked on multiple freelance projects, mainly handling full stack development and\nintegrating APIs.",
     "achievements": [
-      "Co-founded HackShastra and work on the technical side of the community and its platforms.",
-      "Built and maintained the HackShastra website using Next.js, TypeScript, and Tailwind CSS.",
-      "Worked on hackathon websites, registration pages, participant dashboards, and event platforms."
+      "Built responsive web interfaces using React, Next.js, TypeScript, and Tailwind CSS.",
+      "Converted Figma/design mockups into responsive and reusable React components.",
+      "Worked on API integration, debugging, performance improvements, and accessibility across different projects.",
+      "Worked with different project requirements and helped take features from development to deployment."
     ],
     "tech": [
       "Next.js",
@@ -25,26 +26,26 @@
   {
     "id": "exp-02",
     "createdAt": "2021-01-01",
-    "updatedAt": "2026-10-18T18:26:45.856Z",
+    "updatedAt": "2026-10-19T18:58:09.769Z",
     "sortOrder": 1,
     "isPublished": true,
-    "role": "SDE",
-    "company": "DevNDez",
-    "period": "Nov 2024 - Nov 2025",
+    "role": "Co-Founder",
+    "company": "HackShastra",
+    "period": "Nov 2024 – Present",
     "location": "New Delhi, India",
-    "description": "Partnered with designers and founders to turn ambitious ideas into expressive, accessible web experiences.",
+    "description": "Co-founded HackShastra and work on the technical side of the community and its platforms.",
     "achievements": [
-      "Shipped 12 brand and commerce launches",
-      "Created reusable animation primitives",
-      "Mentored three early-career developers"
+      "Built and maintained the HackShastra website using Next.js, TypeScript, and Tailwind CSS.",
+      "Worked on hackathon websites, registration pages, participant dashboards, and event platforms.",
+      "Organized 7+ tech events, including 4+ hackathons and 2 meetups, with universities, sponsors, mentors, and developer communities.",
+      "Judged and mentored 20+ hackathons, helping participants with their projects and technical decisions.",
+      "Work with the team on technical planning, development, debugging, and code reviews."
     ],
     "tech": [
       "React",
       "Node.js",
       "Figma",
-      "WebGL",
-      "MERN",
-      "Three.js"
+      "WebGL"
     ]
   }
 ]

@@ -22,12 +22,12 @@ export default async function Home() {
   const personJson = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: person?.name || "Alex Parker",
+    name: person?.name || "Tanmay Tiwari",
     jobTitle: person?.role || "Creative Developer",
     email: person?.email || "",
     address: {
       "@type": "PostalAddress",
-      addressLocality: person?.location || "Mumbai",
+      addressLocality: person?.location || "New Delhi",
     },
   };
 
@@ -44,49 +44,28 @@ export default async function Home() {
       <section className="hero section-shell">
         <div className="hero-grid">
           <div className="hero-copy">
-            <div className="eyebrow">
-              <span className="pulse-red" />
-              <span>SPIDER-SENSE ONLINE // CREATIVE DEVELOPER</span>
-              <span style={{ color: "var(--spidey-red)" }}>/</span>
-              <span>{person?.location || "MUMBAI, IN"}</span>
-            </div>
-
             <p className="hero-kicker">
-              {person?.role || "CREATIVE DEVELOPER & COMMUNITY ARCHITECT"}
+              {person?.role || "SOFTWARE ENGINEER & COMMUNITY BUILDER"}
             </p>
 
             <h1 className="display hero-title">
-              {person?.heroTitle ? (
-                person.heroTitle.includes("great") ? (
-                  <>
-                    With great code comes <em>great possibility.</em>
-                  </>
-                ) : (
-                  person.heroTitle
-                )
-              ) : (
-                <>
-                  With great code comes <em>great possibility.</em>
-                </>
-              )}
+              Architecting digital products with <em>precision & craft.</em>
             </h1>
 
             <p className="hero-lede">
-              I’m <strong>{person?.name || "Alex Parker"}</strong> —{" "}
+              I’m <strong>{person?.name || "Tanmay Tiwari"}</strong> —{" "}
               {person?.tagline ||
-                "crafting high-performance digital experiences where bold superhero storytelling meets fluid engineering."}
+                "crafting high-performance digital experiences where thoughtful design meets fluid engineering."}
             </p>
 
             <div className="hero-actions">
               <Link href="/projects" className="button button-primary">
-                Explore Missions <ArrowUpRight size={18} />
+                View Selected Work <ArrowUpRight size={18} />
               </Link>
               <Link href="/contact" className="button button-secondary">
-                Spider-Sense / Contact <ArrowUpRight size={18} />
+                Initiate Contact <ArrowUpRight size={18} />
               </Link>
             </div>
-
-            {/* Awwwards Minimalist Stats Strip */}
             <div className="hero-metrics-strip">
               {(person?.stats || [
                 { value: 18, label: "Projects shipped" },
@@ -110,15 +89,6 @@ export default async function Home() {
               }
             />
           </div>
-        </div>
-
-        {/* HERO BOTTOM BAR */}
-        <div className="hero-bottom">
-          <span>
-            SCROLL TO EXPLORE <span className="scroll-arrow">↓</span>
-          </span>
-          <span>{person?.name || "Alex Parker"} — PORTFOLIO 2026</span>
-          <span style={{ color: "var(--spidey-red)" }}>01 / 05</span>
         </div>
       </section>
 
@@ -160,17 +130,17 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ABOUT / ORIGIN STORY */}
+      {/* ABOUT / PROFILE */}
       <section className="section-shell" style={{ padding: "80px 0 100px" }}>
         <div className="section-label">
-          <span>01 // ORIGIN STORY</span>
+          <span>01 // PROFILE & PHILOSOPHY</span>
           <span className="rule" />
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 40, alignItems: "center" }}>
           <div>
             <h2 className="display reveal" style={{ fontSize: "clamp(38px, 5vw, 64px)", marginBottom: 24 }}>
-              Engineering digital products that feel <em>alive & heroic.</em>
+              Engineering digital products that feel <em>fluid & human.</em>
             </h2>
             <p className="hero-lede reveal" style={{ fontSize: 17, marginBottom: 28 }}>
               {person?.bio ||
@@ -180,49 +150,49 @@ export default async function Home() {
               <Link href="/experience" className="button button-secondary">
                 View The Journey <ArrowUpRight size={18} />
               </Link>
-              <Link href="/contact" className="button button-blue">
-                Dispatch A Signal <ArrowUpRight size={18} />
+              <Link href="/contact" className="button button-primary">
+                Initiate Contact <ArrowUpRight size={18} />
               </Link>
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
             <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Code2 size={28} color="var(--spidey-red)" style={{ marginBottom: 14 }} />
+              <Code2 size={28} color="var(--theme-red)" style={{ marginBottom: 14 }} />
               <div style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>
                 {person?.stats?.[0]?.value || 18}+
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--spidey-text-dim)" }}>
-                {person?.stats?.[0]?.label || "Missions Shipped"}
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--theme-text-dim)" }}>
+                {person?.stats?.[0]?.label || "Projects Shipped"}
               </div>
             </div>
 
             <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Users size={28} color="var(--spidey-blue)" style={{ marginBottom: 14 }} />
+              <Users size={28} color="var(--theme-red)" style={{ marginBottom: 14 }} />
               <div style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>
                 {person?.stats?.[1]?.value || 240}+
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--spidey-text-dim)" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--theme-text-dim)" }}>
                 {person?.stats?.[1]?.label || "Builders Mentored"}
               </div>
             </div>
 
             <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Sparkles size={28} color="var(--spidey-red)" style={{ marginBottom: 14 }} />
+              <Sparkles size={28} color="var(--theme-red)" style={{ marginBottom: 14 }} />
               <div style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>
                 {events.length}+
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--spidey-text-dim)" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--theme-text-dim)" }}>
                 HackShastra Events
               </div>
             </div>
 
             <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Rocket size={28} color="var(--spidey-blue)" style={{ marginBottom: 14 }} />
+              <Rocket size={28} color="var(--theme-red)" style={{ marginBottom: 14 }} />
               <div style={{ fontFamily: "var(--font-display)", fontSize: 32, fontWeight: 900, color: "#fff", marginBottom: 4 }}>
                 {person?.stats?.[2]?.value || 6}+
               </div>
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--spidey-text-dim)" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--theme-text-dim)" }}>
                 {person?.stats?.[2]?.label || "Years Creating"}
               </div>
             </div>
@@ -230,12 +200,12 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* SELECTED WORK / MISSIONS */}
+      {/* SELECTED WORK */}
       <section className="section-shell" style={{ padding: "40px 0 100px" }}>
         <div className="section-label">
-          <span>02 // SELECTED MISSIONS</span>
+          <span>02 // SELECTED WORKS</span>
           <span className="rule" />
-          <span style={{ color: "var(--spidey-red)" }}>FEATURED</span>
+          <span style={{ color: "var(--theme-red)" }}>FEATURED</span>
         </div>
 
         <div className="section-heading-row">
@@ -243,12 +213,12 @@ export default async function Home() {
             <h2 className="display">
               Built to <em>matter.</em>
             </h2>
-            <p style={{ color: "var(--spidey-text-dim)", marginTop: 8, fontSize: 16 }}>
+            <p style={{ color: "var(--theme-text-dim)", marginTop: 8, fontSize: 16 }}>
               A curated selection of production apps, interactive experiences, and open-source systems.
             </p>
           </div>
           <Link href="/projects" className="button button-secondary">
-            All Missions ({projects.length}) <ArrowUpRight size={18} />
+            View All Projects ({projects.length}) <ArrowUpRight size={18} />
           </Link>
         </div>
 
@@ -267,7 +237,7 @@ export default async function Home() {
                   sizes="(max-width: 900px) 100vw, 50vw"
                   style={{ objectFit: "cover" }}
                 />
-                <span className="project-badge-top">MISSION 0{i + 1}</span>
+                <span className="project-badge-top">PROJECT 0{i + 1}</span>
                 <span className="project-open-btn">
                   <ArrowUpRight size={20} />
                 </span>
@@ -387,21 +357,21 @@ export default async function Home() {
         <div className="cta-box-rounded reveal">
           <div>
             <div className="eyebrow" style={{ marginBottom: 16 }}>
-              <span className="eyebrow-line" /> OPEN TO HIGH-IMPACT COLLABORATIONS
+              <span className="eyebrow-accent-bar" /> OPEN TO HIGH-IMPACT COLLABORATIONS
             </div>
             <h2 className="display" style={{ fontSize: "clamp(34px, 4.8vw, 58px)", marginBottom: 12 }}>
-              Have a heroic mission in mind?
+              Have a bold vision in mind?
             </h2>
-            <p style={{ color: "var(--spidey-text-dim)", fontSize: 16, maxWidth: 540, margin: 0 }}>
-              Whether you need a world-class creative developer, a scalable Next.js architecture, or community leadership, let’s make it happen.
+            <p style={{ color: "var(--theme-text-dim)", fontSize: 16, maxWidth: 540, margin: 0 }}>
+              Whether you need a world-class creative developer, scalable Next.js architecture, or community leadership, let’s build it.
             </p>
           </div>
 
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <Link href="/contact" className="button button-primary">
-              Send Transmission <ArrowUpRight size={18} />
+              Initiate Contact <ArrowUpRight size={18} />
             </Link>
-            <a href={`mailto:${person?.email || "hello@example.com"}`} className="button button-blue">
+            <a href={`mailto:${person?.email || "workwithtakneekitanmay@gmail.com"}`} className="button button-secondary">
               Direct Mail <ArrowUpRight size={18} />
             </a>
           </div>

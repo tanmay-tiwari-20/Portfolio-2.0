@@ -8,7 +8,7 @@ const DitherVeil = dynamic(() => import("./animations/dither-veil"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-[#07090e] flex items-center justify-center">
-      <div className="w-5 h-5 border-2 border-white/15 border-t-[#ff1e27] rounded-full animate-spin" />
+      <div className="w-5 h-5 border-2 border-white/15 border-t-[#ff003c] rounded-full animate-spin" />
     </div>
   ),
 });
@@ -77,7 +77,7 @@ export default function HeroPortrait({
           revealRadius={190}
           softness={0.65}
           linger={1.1}
-          rimColor="#ff1e27"
+          rimColor="#ff003c"
           rim={0.12}
           clickBurst={true}
           wander={false}
