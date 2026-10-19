@@ -12,6 +12,10 @@
     "location": "New Delhi, India",
     "email": "workwithtakneekitanmay@gmail.com",
     "resumeUrl": "",
+    "avatar": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/v1792423733/hero_ppp8ke.png",
+      "alt": "Tanmay Tiwari — Creative Developer"
+    },
     "heroTitle": "With great code comes great possibility.",
     "stats": [
       {

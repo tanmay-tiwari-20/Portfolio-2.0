@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 import { published, repos } from "@/lib/db";
 import { ArrowUpRight, Sparkles, Code2, Users, Rocket } from "lucide-react";
+import HeroPortrait from "@/components/hero-portrait";
 
 export const dynamic = "force-dynamic";
 
@@ -84,46 +85,30 @@ export default async function Home() {
                 Spider-Sense / Contact <ArrowUpRight size={18} />
               </Link>
             </div>
+
+            {/* Awwwards Minimalist Stats Strip */}
+            <div className="hero-metrics-strip">
+              {(person?.stats || [
+                { value: 18, label: "Projects shipped" },
+                { value: 240, label: "Builders mentored" },
+                { value: 3, label: "Years creating" },
+              ]).map((st, i) => (
+                <div key={i} className="hero-metric-item">
+                  <span className="hero-metric-val">{st.value}+</span>
+                  <span className="hero-metric-lbl">{st.label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* HERO GRAPHIC - SPIDER-WEB MATRIX */}
-          <div className="hero-art" aria-label="Spider-Web Cybernetic Matrix">
-            <div className="web-globe-container">
-              <div className="web-globe">
-                <svg viewBox="0 0 500 500" aria-hidden="true">
-                  {/* Concentric Web Rings */}
-                  <circle cx="250" cy="250" r="230" />
-                  <circle cx="250" cy="250" r="180" />
-                  <circle cx="250" cy="250" r="130" />
-                  <circle cx="250" cy="250" r="80" />
-                  <circle cx="250" cy="250" r="30" />
-
-                  {/* Radial Strands */}
-                  <path d="M250 20 V480" />
-                  <path d="M20 250 H480" />
-                  <path d="M87 87 L413 413" />
-                  <path d="M413 87 L87 413" />
-                  <path d="M125 45 L375 455" />
-                  <path d="M375 45 L125 455" />
-                  <path d="M45 125 L455 375" />
-                  <path d="M455 125 L45 375" />
-                </svg>
-              </div>
-
-              {/* Floating Hero Emblems */}
-              <div className="hero-sticker">
-                BUILT WITH
-                <span>SPIDER-SENSE</span>
-              </div>
-
-              <div className="hero-stats-badge">
-                <strong>{person?.stats?.[0]?.value || 18}+</strong>
-                <span>
-                  {person?.stats?.[0]?.label || "Projects Shipped"}
-                  <br />Worldwide
-                </span>
-              </div>
-            </div>
+          {/* HERO GRAPHIC - DITHER VEIL PORTRAIT */}
+          <div className="hero-art" aria-label="Interactive Hero Portrait">
+            <HeroPortrait
+              imageSrc={
+                person?.avatar?.url ||
+                "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/v1792423733/hero_ppp8ke.png"
+              }
+            />
           </div>
         </div>
 
