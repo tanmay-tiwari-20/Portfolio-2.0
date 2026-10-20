@@ -354,40 +354,7 @@ export function MotionLayer() {
               );
             });
 
-          const workViewport = document.querySelector<HTMLElement>(
-            "[data-home-work-track]",
-          );
-          const workTrack =
-            workViewport?.querySelector<HTMLElement>(".project-track");
-          const getTravelDistance = () =>
-            workViewport && workTrack
-              ? Math.max(0, workTrack.scrollWidth - workViewport.clientWidth)
-              : 0;
 
-          if (
-            workViewport &&
-            workTrack &&
-            workTrack.children.length > 1 &&
-            getTravelDistance() > 32
-          ) {
-            gsapMedia = gsap.matchMedia();
-            gsapMedia.add("(min-width: 901px) and (hover: hover)", () => {
-              gsap.to(workTrack, {
-                x: () => -getTravelDistance(),
-                ease: "none",
-                scrollTrigger: {
-                  trigger: workViewport,
-                  start: "top top",
-                  end: () => `+=${getTravelDistance()}`,
-                  scrub: true,
-                  pin: true,
-                  pinSpacing: true,
-                  anticipatePin: 1,
-                  invalidateOnRefresh: true,
-                },
-              });
-            });
-          }
 
           const refreshMotion = () => {
             if (disposed) return;

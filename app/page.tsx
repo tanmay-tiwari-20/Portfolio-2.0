@@ -6,6 +6,7 @@ import { ArrowUpRight, Sparkles, Code2, Users, Rocket } from "lucide-react";
 import HeroPortrait from "@/components/hero-portrait";
 import { MotionLayer } from "@/components/shell";
 import Skiper31Text from "@/components/animations/skiper31-text";
+import HomeProjectShowcase from "@/components/home-project-showcase";
 
 export const dynamic = "force-dynamic";
 
@@ -63,7 +64,7 @@ export default async function Home() {
       />
 
       {/* HERO SECTION */}
-      <section className="hero section-shell" data-home-hero>
+      <section className="hero" data-home-hero>
         <div className="hero-grid">
           <div className="hero-copy">
             <p className="hero-kicker">
@@ -178,6 +179,7 @@ export default async function Home() {
         </div>
 
         <div
+          className="profile-overview-grid"
           style={{
             display: "grid",
             gridTemplateColumns:
@@ -213,9 +215,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}
-          >
+          <div className="profile-stats-grid">
             <div className="timeline-card reveal" style={{ margin: 0 }}>
               <Code2
                 size={28}
@@ -337,91 +337,11 @@ export default async function Home() {
 
       <Skiper31Text />
 
-      {/* SELECTED WORK */}
-      <section id="selected-work" className="home-work-section">
-        <div className="section-shell home-work-heading">
-          <div className="section-label">
-            <span>02 // SELECTED WORKS</span>
-            <span className="rule" />
-            <span style={{ color: "var(--theme-red)" }}>FEATURED</span>
-          </div>
-
-          <div className="section-heading-row">
-            <div>
-              <h2 className="display">
-                Built to <em>matter.</em>
-              </h2>
-              <p
-                style={{
-                  color: "var(--theme-text-dim)",
-                  marginTop: 8,
-                  fontSize: 16,
-                }}
-              >
-                A curated selection of production apps, interactive experiences,
-                and open-source systems.
-              </p>
-            </div>
-            <Link href="/projects" className="button button-secondary">
-              View All Projects ({projects.length}) <ArrowUpRight size={18} />
-            </Link>
-          </div>
-        </div>
-
-        <div className="project-track-viewport" data-home-work-track>
-          <div className="project-track">
-            {featured.map((p, i) => (
-              <Link
-                href={`/projects/${p.slug}`}
-                key={p.id}
-                className="project-card work-project-card"
-              >
-                <div className="project-image-box">
-                  <Image
-                    src={getOptimizedUrl(p.cover.url, 1440, 900)}
-                    alt={p.cover.alt || p.title}
-                    fill
-                    sizes="(max-width: 900px) 88vw, 76vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                  <span className="project-badge-top">
-                    SELECTED WORK / {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="project-open-btn">
-                    <ArrowUpRight size={20} />
-                  </span>
-                </div>
-                <div className="project-body">
-                  <div className="project-meta-info">
-                    <div className="project-category">
-                      {p.category} · {p.year}
-                    </div>
-                    <h3>{p.title}</h3>
-                    <p>{p.description}</p>
-                  </div>
-                  <div className="tags-row">
-                    {p.tags.slice(0, 4).map((t) => (
-                      <span className="tag-pill" key={t}>
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            ))}
-            <Link href="/projects" className="work-end-card">
-              <span className="work-end-index">THERE’S MORE TO EXPLORE</span>
-              <span className="work-end-title">
-                All projects<span>↗</span>
-              </span>
-              <span className="work-end-copy">
-                A closer look at the products, experiments, and ideas I’ve
-                helped bring to life.
-              </span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* SELECTED WORK SHOWCASE */}
+      <HomeProjectShowcase
+        projects={featured}
+        totalProjectCount={projects.length}
+      />
 
       {/* THE JOURNEY / EXPERIENCE PEEK */}
       <section className="section-shell" style={{ padding: "40px 0 100px" }}>
@@ -530,7 +450,7 @@ export default async function Home() {
             things that matter.
           </p>
 
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <div className="community-actions" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <Link
               href="/hackshastra"
               className="button button-secondary"
@@ -600,7 +520,7 @@ export default async function Home() {
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <div className="cta-actions" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
             <Link href="/contact" className="button button-primary">
               Initiate Contact <ArrowUpRight size={18} />
             </Link>
