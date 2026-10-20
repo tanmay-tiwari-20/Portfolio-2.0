@@ -7,6 +7,7 @@ import HeroPortrait from "@/components/hero-portrait";
 import { MotionLayer } from "@/components/shell";
 import Skiper31Text from "@/components/animations/skiper31-text";
 import HomeProjectShowcase from "@/components/home-project-showcase";
+import HomeProfilePhilosophy from "@/components/home-profile-philosophy";
 
 export const dynamic = "force-dynamic";
 
@@ -167,173 +168,13 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ABOUT / PROFILE */}
-      <section
-        id="profile-philosophy"
-        className="section-shell"
-        style={{ padding: "80px 0 100px" }}
-      >
-        <div className="section-label">
-          <span>01 // PROFILE & PHILOSOPHY</span>
-          <span className="rule" />
-        </div>
-
-        <div
-          className="profile-overview-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
-            gap: 40,
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <h2
-              className="display philosophy-statement"
-              style={{ fontSize: "clamp(38px, 5vw, 64px)", marginBottom: 24 }}
-            >
-              Engineering digital products with <em>clarity & care.</em>
-            </h2>
-            <p
-              className="hero-lede reveal"
-              style={{ fontSize: 17, marginBottom: 28 }}
-            >
-              {person?.bio ||
-                "I specialize in building full-stack platforms, creative interactive experiences, and open-source tooling where clean architecture meets vivid design."}
-            </p>
-            <div
-              className="philosophy-actions"
-              style={{ display: "flex", gap: 14 }}
-            >
-              <Link href="/experience" className="button button-secondary">
-                View The Journey <ArrowUpRight size={18} />
-              </Link>
-              <Link href="/contact" className="button button-primary">
-                Initiate Contact <ArrowUpRight size={18} />
-              </Link>
-            </div>
-          </div>
-
-          <div className="profile-stats-grid">
-            <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Code2
-                size={28}
-                color="var(--theme-red)"
-                style={{ marginBottom: 14 }}
-              />
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 32,
-                  fontWeight: 900,
-                  color: "#fff",
-                  marginBottom: 4,
-                }}
-              >
-                {person?.stats?.[0]?.value || 18}+
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  color: "var(--theme-text-dim)",
-                }}
-              >
-                {person?.stats?.[0]?.label || "Projects Shipped"}
-              </div>
-            </div>
-
-            <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Users
-                size={28}
-                color="var(--theme-red)"
-                style={{ marginBottom: 14 }}
-              />
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 32,
-                  fontWeight: 900,
-                  color: "#fff",
-                  marginBottom: 4,
-                }}
-              >
-                {person?.stats?.[1]?.value || 240}+
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  color: "var(--theme-text-dim)",
-                }}
-              >
-                {person?.stats?.[1]?.label || "Builders Mentored"}
-              </div>
-            </div>
-
-            <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Sparkles
-                size={28}
-                color="var(--theme-red)"
-                style={{ marginBottom: 14 }}
-              />
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 32,
-                  fontWeight: 900,
-                  color: "#fff",
-                  marginBottom: 4,
-                }}
-              >
-                {events.length}+
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  color: "var(--theme-text-dim)",
-                }}
-              >
-                HackShastra Events
-              </div>
-            </div>
-
-            <div className="timeline-card reveal" style={{ margin: 0 }}>
-              <Rocket
-                size={28}
-                color="var(--theme-red)"
-                style={{ marginBottom: 14 }}
-              />
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: 32,
-                  fontWeight: 900,
-                  color: "#fff",
-                  marginBottom: 4,
-                }}
-              >
-                {person?.stats?.[2]?.value || 6}+
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  color: "var(--theme-text-dim)",
-                }}
-              >
-                {person?.stats?.[2]?.label || "Years Creating"}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* SECTION 01 // PROFILE & PHILOSOPHY DOSSIER */}
+      <HomeProfilePhilosophy
+        bio={person?.bio}
+        stats={person?.stats}
+        eventsCount={events.length}
+        hackathonsCount={hackathons.length}
+      />
 
       <Skiper31Text />
 
