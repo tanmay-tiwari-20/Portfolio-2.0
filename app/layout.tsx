@@ -6,6 +6,7 @@ import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
 import Preloader from "@/components/animations/preloader";
 import { repos } from "@/lib/db";
+import { Analytics } from "@vercel/analytics/next";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +66,7 @@ export default async function RootLayout({
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <Analytics />
         <Preloader />
         <SiteNav />
         <main id="main">
