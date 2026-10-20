@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ContactForm from "@/components/contact-form";
 import { repos } from "@/lib/db";
 import { ArrowUpRight, Mail, Share2 } from "lucide-react";
+import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
 
@@ -145,6 +146,7 @@ export default async function Contact() {
           </div>
         </div>
       </section>
+      <MotionLayer />
     </>
   );
 }

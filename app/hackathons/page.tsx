@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import HackathonList from "@/components/hackathon-list";
+import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
 
@@ -80,6 +81,7 @@ export default async function Hackathons() {
       <section className="section-shell" style={{ paddingBottom: 120 }}>
         <HackathonList items={items} />
       </section>
+      <MotionLayer />
     </>
   );
 }

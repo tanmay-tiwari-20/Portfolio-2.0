@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import ProjectGallery from "@/components/project-gallery";
+import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +31,7 @@ export default async function ProjectsPage() {
       <section className="section-shell" style={{ paddingBottom: 120 }}>
         <ProjectGallery projects={items} />
       </section>
+      <MotionLayer />
     </>
   );
 }

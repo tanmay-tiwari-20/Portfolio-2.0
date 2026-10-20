@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import { Briefcase, CheckCircle2 } from "lucide-react";
+import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
 
@@ -161,6 +162,7 @@ export default async function ExperiencePage() {
           ))}
         </div>
       </section>
+      <MotionLayer />
     </>
   );
 }

@@ -1,27 +1,27 @@
-# Design Notes — Awwwards Spider-Man / Marvel Edition
+# Design Notes — Editorial Red Portfolio
 
 ## Aesthetic & Architecture Overview
-This portfolio is engineered to Awwwards Site-of-the-Day standards, treating the portfolio as an immersive superhero narrative: cinematic first screen, fluid inertia scrolling, punchy typographic hierarchy, and seamless real-time database reactivity.
+The portfolio uses an editorial, portrait-led opening and a clear story through selected work, experience, and community. Its motion should feel deliberate and fluid, with restrained red accents and strong readable contrast.
 
 ### Visual Identity
-- **Theme:** Vibrant Spider-Man / Marvel heroic aesthetic.
-- **Color Palette:** High-contrast, pure and punchy solid colors (**NO GRADIENTS**):
-  - **Spider-Man Vibrant Red:** `#ff1e27` (energetic, heroic scarlet)
-  - **Stark / Spidey Tech Blue:** `#0b63f6` (electric cobalt)
-  - **Nightfall Dark Canvas:** `#06070a` to `#151924` (stealth superhero backdrop)
-  - **Spider Web Grid:** Crisp subtle SVG web lines & concentric rings
+- **Theme:** Charcoal and warm scarlet, with an editorial creative-developer feel.
+- **Color Palette:**
+  - **Warm Red:** a scarlet hero panel with `#ef463e` for highlights, links, and interaction cues.
+  - **Charcoal Canvas:** `#0d0a0b` with warm layered surfaces through `#1c1516` below the opening.
+  - **Warm Paper:** `#fffaf7` for headlines and key text.
+  - **Fine Grid:** low-contrast square lines behind the hero and thin rules between story sections.
 - **Typography:**
-  - **Display / Headers:** Google Font **Poppins** (400–900 weights) for energetic, bold comic-book punch and tight kerning.
-  - **Body / Interface:** Google Font **Inter** (300–700 weights) for ultra-clean readability, modern numbers, and elegant metrics.
+  - **Display / Headers:** Google Font **Poppins** (400–900 weights) for bold, oversized names and section titles.
+  - **Body / Interface:** Google Font **Inter** (300–700 weights) for clear reading and interface details.
 - **Shapes & Corners:**
-  - All buttons and chips are smooth pills (`border-radius: 9999px`).
-  - Cards and containers use generous smooth radii (`border-radius: 20px` to `24px`).
-  - Sharp and jagged polygon cuts have been removed in favor of modern, sleek curvatures.
+  - Pills for actions and small status labels.
+  - Project imagery keeps a restrained rounded frame; information sits below it for readability.
+  - Hand-drawn annotation and fine grid details provide a personal, print-like touch.
 
 ### Motion & Interaction (Awwwards Grade)
-- **Smooth Inertia Scrolling:** Studio Freight's **Lenis** integration combined with **GSAP ScrollTrigger** for friction-free acceleration and scroll-bound reveals.
-- **Custom Spider-Sense Cursor:** Interactive magnetic crosshair with responsive scaling on clickable elements.
-- **Micro-Animations:** Spring physics, hover lifts (`transform: translateY(-4px)`), radar pulses, and infinite tech superpower marquee tickers.
+- **Smooth Scrolling:** **Lenis** with **GSAP ScrollTrigger** for eased scrolling, staged section reveals, and a pinned horizontal project showcase on desktop.
+- **Responsive Motion:** Project cards remain swipeable on touch screens; `prefers-reduced-motion` disables the animation layer and pauses decorative motion.
+- **Micro-Animations:** Subtle portrait tilt, image hover lift, arrow cues, and a slow technical-skills ticker.
 
 ### Database & Live Dynamic Publishing
 - **Database Engine:** **MongoDB** (with local MongoDB service support and zero-config MongoDB Atlas support via `MONGODB_URI`).

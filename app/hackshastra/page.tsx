@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import { ArrowUpRight, Calendar, MapPin, Users } from "lucide-react";
+import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
 
@@ -164,6 +165,7 @@ export default async function HackShastra() {
           ))}
         </div>
       </section>
+      <MotionLayer />
     </>
   );
 }

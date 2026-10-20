@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,7 +36,11 @@ const DEFAULT_ITEMS: StaggeredMenuItem[] = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
   { label: "Work", href: "/projects", sublabel: "Featured Works" },
   { label: "Experience", href: "/experience", sublabel: "Career & Roles" },
-  { label: "HackShastra", href: "/hackshastra", sublabel: "Flagship Hackathon" },
+  {
+    label: "HackShastra",
+    href: "/hackshastra",
+    sublabel: "Flagship Hackathon",
+  },
   { label: "Hackathons", href: "/hackathons", sublabel: "Awards & Builds" },
   { label: "Contact", href: "/contact", sublabel: "Direct Communication" },
 ];
@@ -43,6 +53,12 @@ const DEFAULT_SOCIALS: StaggeredMenuSocialItem[] = [
   { label: "Instagram", href: "https://instagram.com/" },
 ];
 
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const subscribeMounted = () => () => {};
+const getClientMountedSnapshot = () => true;
+const getServerMountedSnapshot = () => false;
+
 export default function StaggeredMenu({
   items = DEFAULT_ITEMS,
   socials = DEFAULT_SOCIALS,
@@ -51,13 +67,13 @@ export default function StaggeredMenu({
   onStateChange,
 }: StaggeredMenuProps) {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    subscribeMounted,
+    getClientMountedSnapshot,
+    getServerMountedSnapshot,
+  );
   const openRef = useRef(false);
   const path = usePathname();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
@@ -72,17 +88,11 @@ export default function StaggeredMenu({
   const [textLines, setTextLines] = useState<string[]>(["Menu", "Close"]);
 
   const openTlRef = useRef<gsap.core.Timeline | null>(null);
-  const closeTweenRef = useRef<gsap.core.Timeline | gsap.core.Tween | null>(null);
+  const closeTweenRef = useRef<gsap.core.Timeline | gsap.core.Tween | null>(
+    null,
+  );
   const spinTweenRef = useRef<gsap.core.Timeline | null>(null);
   const textCycleAnimRef = useRef<gsap.core.Tween | null>(null);
-  const busyRef = useRef(false);
-
-  // Close menu on route change
-  useEffect(() => {
-    if (openRef.current) {
-      closeMenu();
-    }
-  }, [path]);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -112,7 +122,9 @@ export default function StaggeredMenu({
 
       let preLayers: HTMLElement[] = [];
       if (preContainer) {
-        preLayers = Array.from(preContainer.querySelectorAll(".sm-prelayer")) as HTMLElement[];
+        preLayers = Array.from(
+          preContainer.querySelectorAll(".sm-prelayer"),
+        ) as HTMLElement[];
       }
       preLayerElsRef.current = preLayers;
 
@@ -137,7 +149,9 @@ export default function StaggeredMenu({
     const backdrop = backdropRef.current;
     if (!panel) return null;
     const layers = preLayersRef.current
-      ? (Array.from(preLayersRef.current.querySelectorAll(".sm-prelayer")) as HTMLElement[])
+      ? (Array.from(
+          preLayersRef.current.querySelectorAll(".sm-prelayer"),
+        ) as HTMLElement[])
       : [];
 
     openTlRef.current?.kill();
@@ -146,10 +160,18 @@ export default function StaggeredMenu({
       closeTweenRef.current = null;
     }
 
-    const itemEls = Array.from(panel.querySelectorAll(".sm-panel-itemLabel")) as HTMLElement[];
-    const subEls = Array.from(panel.querySelectorAll(".sm-panel-sublabel")) as HTMLElement[];
-    const numberEls = Array.from(panel.querySelectorAll(".sm-item-index")) as HTMLElement[];
-    const bottomEls = Array.from(panel.querySelectorAll(".sm-bottom-section")) as HTMLElement[];
+    const itemEls = Array.from(
+      panel.querySelectorAll(".sm-panel-itemLabel"),
+    ) as HTMLElement[];
+    const subEls = Array.from(
+      panel.querySelectorAll(".sm-panel-sublabel"),
+    ) as HTMLElement[];
+    const numberEls = Array.from(
+      panel.querySelectorAll(".sm-item-index"),
+    ) as HTMLElement[];
+    const bottomEls = Array.from(
+      panel.querySelectorAll(".sm-bottom-section"),
+    ) as HTMLElement[];
 
     gsap.set([panel, ...layers], { xPercent: 100, x: 0 });
     if (itemEls.length) gsap.set(itemEls, { yPercent: 100, opacity: 0 });
@@ -157,10 +179,26 @@ export default function StaggeredMenu({
     if (numberEls.length) gsap.set(numberEls, { opacity: 0 });
     if (bottomEls.length) gsap.set(bottomEls, { opacity: 0, y: 20 });
 
+    if (prefersReducedMotion()) {
+      gsap.set([panel, ...layers], { xPercent: 0, x: 0 });
+      if (backdrop) gsap.set(backdrop, { opacity: 1 });
+      if (itemEls.length) gsap.set(itemEls, { yPercent: 0, opacity: 1 });
+      if (subEls.length) gsap.set(subEls, { opacity: 1, x: 0 });
+      if (numberEls.length) gsap.set(numberEls, { opacity: 1 });
+      if (bottomEls.length) gsap.set(bottomEls, { opacity: 1, y: 0 });
+      openTlRef.current = null;
+      return null;
+    }
+
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
     if (backdrop) {
-      tl.fromTo(backdrop, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 0);
+      tl.fromTo(
+        backdrop,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: "power2.out" },
+        0,
+      );
     }
 
     // Stagger sliding prelayers
@@ -169,7 +207,7 @@ export default function StaggeredMenu({
         el,
         { xPercent: 100, x: 0 },
         { xPercent: 0, x: 0, duration: 0.55 },
-        i * 0.08
+        i * 0.08,
       );
     });
 
@@ -181,7 +219,7 @@ export default function StaggeredMenu({
       panel,
       { xPercent: 100, x: 0 },
       { xPercent: 0, x: 0, duration: panelDuration },
-      panelInsertTime
+      panelInsertTime,
     );
 
     // Stagger menu item titles with clean modern motion (no jitter)
@@ -196,7 +234,7 @@ export default function StaggeredMenu({
           ease: "power3.out",
           stagger: 0.05,
         },
-        itemsStart
+        itemsStart,
       );
 
       if (numberEls.length) {
@@ -208,7 +246,7 @@ export default function StaggeredMenu({
             ease: "power2.out",
             stagger: 0.05,
           },
-          itemsStart + 0.03
+          itemsStart + 0.03,
         );
       }
 
@@ -222,7 +260,7 @@ export default function StaggeredMenu({
             ease: "power2.out",
             stagger: 0.05,
           },
-          itemsStart + 0.05
+          itemsStart + 0.05,
         );
       }
     }
@@ -237,7 +275,7 @@ export default function StaggeredMenu({
           duration: 0.45,
           ease: "power3.out",
         },
-        panelInsertTime + 0.32
+        panelInsertTime + 0.32,
       );
     }
 
@@ -264,12 +302,26 @@ export default function StaggeredMenu({
     const backdrop = backdropRef.current;
     if (!panel) return;
     const layers = preLayersRef.current
-      ? (Array.from(preLayersRef.current.querySelectorAll(".sm-prelayer")) as HTMLElement[])
+      ? (Array.from(
+          preLayersRef.current.querySelectorAll(".sm-prelayer"),
+        ) as HTMLElement[])
       : [];
 
     closeTweenRef.current?.kill();
 
-    const itemEls = Array.from(panel.querySelectorAll(".sm-panel-itemLabel")) as HTMLElement[];
+    const itemEls = Array.from(
+      panel.querySelectorAll(".sm-panel-itemLabel"),
+    ) as HTMLElement[];
+
+    if (prefersReducedMotion()) {
+      gsap.set([panel, ...layers], { xPercent: 100, x: 0 });
+      if (backdrop) gsap.set(backdrop, { opacity: 0 });
+      if (itemEls.length) gsap.set(itemEls, { yPercent: 100, opacity: 0 });
+      setOpen(false);
+      onStateChange?.(false);
+      closeTweenRef.current = null;
+      return;
+    }
 
     const closeTl = gsap.timeline({
       defaults: { ease: "power3.inOut" },
@@ -283,22 +335,41 @@ export default function StaggeredMenu({
 
     // 1. Items tuck down smoothly
     if (itemEls.length) {
-      closeTl.to(itemEls, { opacity: 0, yPercent: 30, duration: 0.2, stagger: 0.02 }, 0);
+      closeTl.to(
+        itemEls,
+        { opacity: 0, yPercent: 30, duration: 0.2, stagger: 0.02 },
+        0,
+      );
     }
 
     // 2. Main panel smoothly slides out
-    closeTl.to(panel, { xPercent: 100, x: 0, duration: 0.42, ease: "power3.inOut" }, 0.05);
+    closeTl.to(
+      panel,
+      { xPercent: 100, x: 0, duration: 0.42, ease: "power3.inOut" },
+      0.05,
+    );
 
     // 3. Prelayers slide out right behind it
     if (layers.length) {
-      layers.slice().reverse().forEach((layer, idx) => {
-        closeTl.to(layer, { xPercent: 100, x: 0, duration: 0.36, ease: "power3.inOut" }, 0.1 + idx * 0.04);
-      });
+      layers
+        .slice()
+        .reverse()
+        .forEach((layer, idx) => {
+          closeTl.to(
+            layer,
+            { xPercent: 100, x: 0, duration: 0.36, ease: "power3.inOut" },
+            0.1 + idx * 0.04,
+          );
+        });
     }
 
     // 4. Backdrop smoothly fades out
     if (backdrop) {
-      closeTl.to(backdrop, { opacity: 0, duration: 0.36, ease: "power2.out" }, 0.1);
+      closeTl.to(
+        backdrop,
+        { opacity: 0, duration: 0.36, ease: "power2.out" },
+        0.1,
+      );
     }
 
     closeTweenRef.current = closeTl;
@@ -312,6 +383,12 @@ export default function StaggeredMenu({
     if (!icon || !h || !v) return;
 
     spinTweenRef.current?.kill();
+
+    if (prefersReducedMotion()) {
+      gsap.set(h, { rotate: opening ? 45 : 0 });
+      gsap.set(v, { rotate: opening ? 135 : 90 });
+      return;
+    }
 
     if (opening) {
       spinTweenRef.current = gsap
@@ -335,6 +412,13 @@ export default function StaggeredMenu({
 
     const currentLabel = opening ? "MENU" : "CLOSE";
     const targetLabel = opening ? "CLOSE" : "MENU";
+
+    if (prefersReducedMotion()) {
+      setTextLines([currentLabel, targetLabel]);
+      gsap.set(inner, { yPercent: -50 });
+      return;
+    }
+
     const cycles = 3;
 
     const seq: string[] = [currentLabel];
@@ -384,6 +468,13 @@ export default function StaggeredMenu({
     }
   }, [playClose, animateIcon, animateText]);
 
+  // Close menu on route change
+  useEffect(() => {
+    if (openRef.current) {
+      closeMenu();
+    }
+  }, [path, closeMenu]);
+
   // Close on Escape or click outside
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -429,6 +520,7 @@ export default function StaggeredMenu({
         createPortal(
           <div
             className={`staggered-menu-overlay ${open ? "active" : ""}`}
+            style={{ "--menu-accent": accentColor } as React.CSSProperties}
             aria-hidden={!open}
           >
             {/* Backdrop Dark Scrim */}
@@ -440,7 +532,11 @@ export default function StaggeredMenu({
             />
 
             {/* Pre-Layers (Obsidian Charcoal & Radiant Carmine Red) */}
-            <div ref={preLayersRef} className="staggered-prelayers" aria-hidden="true">
+            <div
+              ref={preLayersRef}
+              className="staggered-prelayers"
+              aria-hidden="true"
+            >
               {prelayerColors.map((color, idx) => (
                 <div
                   key={idx}
@@ -459,7 +555,6 @@ export default function StaggeredMenu({
               aria-modal="true"
               aria-label="Site Navigation"
             >
-
               {/* Staggered Navigation Link List */}
               <nav className="panel-nav" aria-label="Primary Navigation">
                 <ul className="panel-nav-list" role="list">
@@ -477,13 +572,20 @@ export default function StaggeredMenu({
                           <span className="sm-item-index">{indexStr}</span>
                           <div className="panel-nav-text-col">
                             <div className="panel-nav-label-wrap">
-                              <span className="sm-panel-itemLabel">{item.label}</span>
+                              <span className="sm-panel-itemLabel">
+                                {item.label}
+                              </span>
                             </div>
                             {item.sublabel && (
-                              <span className="sm-panel-sublabel">{item.sublabel}</span>
+                              <span className="sm-panel-sublabel">
+                                {item.sublabel}
+                              </span>
                             )}
                           </div>
-                          <ArrowUpRight className="panel-item-arrow" size={24} />
+                          <ArrowUpRight
+                            className="panel-item-arrow"
+                            size={24}
+                          />
                         </Link>
                       </li>
                     );
@@ -506,7 +608,10 @@ export default function StaggeredMenu({
                           className="social-pill-link"
                         >
                           <span>{soc.label}</span>
-                          <ArrowUpRight size={11} className="social-pill-arrow" />
+                          <ArrowUpRight
+                            size={11}
+                            className="social-pill-arrow"
+                          />
                         </a>
                       ))}
                     </div>
@@ -519,7 +624,7 @@ export default function StaggeredMenu({
               </div>
             </aside>
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

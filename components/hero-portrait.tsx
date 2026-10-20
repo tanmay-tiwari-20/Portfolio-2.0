@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 // Dynamically import DitherVeil with ssr: false to prevent WebGL/canvas hydration issues
 const DitherVeil = dynamic(() => import("./animations/dither-veil"), {
@@ -23,29 +23,51 @@ export default function HeroPortrait({
   className = "",
 }: HeroPortraitProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
   const [isHovered, setIsHovered] = useState(false);
+  const reducedMotion = useRef(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => {
+      reducedMotion.current = media.matches;
+      if (media.matches && cardRef.current) {
+        cardRef.current.classList.remove("is-tilting");
+        cardRef.current.style.transform = "";
+      }
+    };
+
+    updatePreference();
+    media.addEventListener("change", updatePreference);
+    return () => media.removeEventListener("change", updatePreference);
+  }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
+    const card = cardRef.current;
+    if (!card || reducedMotion.current) return;
+    const rect = card.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const cx = rect.width / 2;
     const cy = rect.height / 2;
 
-    // Subtle, expensive Awwwards-grade magnetic tilt (max ~4.5 degrees)
+    // Update only the card's compositor transform; avoid rerendering the WebGL child
+    // for every pointer event.
     const rx = ((y - cy) / cy) * -4.5;
     const ry = ((x - cx) / cx) * 4.5;
 
-    setTilt({ rx, ry });
+    card.classList.add("is-tilting");
+    card.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.015, 1.015, 1.015)`;
   }, []);
 
   const handleMouseEnter = () => setIsHovered(true);
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    setTilt({ rx: 0, ry: 0 });
+    if (cardRef.current) {
+      cardRef.current.classList.remove("is-tilting");
+      cardRef.current.style.transform = "";
+    }
   };
 
   return (
@@ -57,11 +79,6 @@ export default function HeroPortrait({
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={{
-          transform: isHovered
-            ? `perspective(1000px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) scale3d(1.015, 1.015, 1.015)`
-            : "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)",
-        }}
       >
         <DitherVeil
           src={imageSrc}

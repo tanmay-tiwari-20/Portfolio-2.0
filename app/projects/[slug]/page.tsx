@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
+import { MotionLayer } from "@/components/shell";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 import { ArrowUpRight, ArrowLeft, Globe, GitBranch } from "lucide-react";
 
@@ -137,6 +138,7 @@ export default async function ProjectDetail({
           </div>
         </div>
       </section>
+      <MotionLayer />
     </>
   );
 }
