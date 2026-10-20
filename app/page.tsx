@@ -5,6 +5,7 @@ import { published, repos } from "@/lib/db";
 import { ArrowUpRight, Sparkles, Code2, Users, Rocket } from "lucide-react";
 import HeroPortrait from "@/components/hero-portrait";
 import { MotionLayer } from "@/components/shell";
+import Skiper31Text from "@/components/animations/skiper31-text";
 
 export const dynamic = "force-dynamic";
 
@@ -166,7 +167,11 @@ export default async function Home() {
       </section>
 
       {/* ABOUT / PROFILE */}
-      <section className="section-shell" style={{ padding: "80px 0 100px" }}>
+      <section
+        id="profile-philosophy"
+        className="section-shell"
+        style={{ padding: "80px 0 100px" }}
+      >
         <div className="section-label">
           <span>01 // PROFILE & PHILOSOPHY</span>
           <span className="rule" />
@@ -175,17 +180,18 @@ export default async function Home() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
             gap: 40,
             alignItems: "center",
           }}
         >
           <div>
             <h2
-              className="display reveal"
+              className="display philosophy-statement"
               style={{ fontSize: "clamp(38px, 5vw, 64px)", marginBottom: 24 }}
             >
-              Engineering digital products that feel <em>fluid & human.</em>
+              Engineering digital products with <em>clarity & care.</em>
             </h2>
             <p
               className="hero-lede reveal"
@@ -194,7 +200,10 @@ export default async function Home() {
               {person?.bio ||
                 "I specialize in building full-stack platforms, creative interactive experiences, and open-source tooling where clean architecture meets vivid design."}
             </p>
-            <div className="reveal" style={{ display: "flex", gap: 14 }}>
+            <div
+              className="philosophy-actions"
+              style={{ display: "flex", gap: 14 }}
+            >
               <Link href="/experience" className="button button-secondary">
                 View The Journey <ArrowUpRight size={18} />
               </Link>
@@ -325,6 +334,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <Skiper31Text />
 
       {/* SELECTED WORK */}
       <section id="selected-work" className="home-work-section">
