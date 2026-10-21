@@ -1,13 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
-import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 import { published, repos } from "@/lib/db";
-import { ArrowUpRight, Sparkles, Code2, Users, Rocket } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import HeroPortrait from "@/components/hero-portrait";
 import { MotionLayer } from "@/components/shell";
 import Skiper31Text from "@/components/animations/skiper31-text";
 import HomeProjectShowcase from "@/components/home-project-showcase";
 import HomeProfilePhilosophy from "@/components/home-profile-philosophy";
+import HomeExperienceJourney from "@/components/home-experience-journey";
 
 export const dynamic = "force-dynamic";
 
@@ -185,68 +184,7 @@ export default async function Home() {
       />
 
       {/* THE JOURNEY / EXPERIENCE PEEK */}
-      <section className="section-shell" style={{ padding: "40px 0 100px" }}>
-        <div className="section-label">
-          <span>03 // THE JOURNEY</span>
-          <span className="rule" />
-        </div>
-
-        <div className="section-heading-row">
-          <div>
-            <h2 className="display">
-              Battle-tested <em>experience.</em>
-            </h2>
-            <p
-              style={{
-                color: "var(--spidey-text-dim)",
-                marginTop: 8,
-                fontSize: 16,
-              }}
-            >
-              High-growth teams, architectural challenges, and products that
-              scale.
-            </p>
-          </div>
-          <Link href="/experience" className="button button-secondary">
-            Full Experience Timeline <ArrowUpRight size={18} />
-          </Link>
-        </div>
-
-        <div>
-          {experience.slice(0, 3).map((e) => (
-            <article className="timeline-card reveal" key={e.id}>
-              <div className="timeline-header">
-                <div>
-                  <h3 className="timeline-role">{e.role}</h3>
-                  <div className="timeline-company">
-                    {e.company}{" "}
-                    <span style={{ color: "var(--spidey-muted)" }}>
-                      · {e.location}
-                    </span>
-                  </div>
-                </div>
-                <span className="timeline-period-badge">{e.period}</span>
-              </div>
-              <p
-                style={{
-                  color: "var(--spidey-text-dim)",
-                  fontSize: 15,
-                  margin: "14px 0",
-                }}
-              >
-                {e.description}
-              </p>
-              <div className="tags-row">
-                {e.tech.map((t) => (
-                  <span className="tag-pill" key={t}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <HomeExperienceJourney experiences={experience} />
 
       {/* HACKSHASTRA & COMMUNITY HERO BAND (ROUNDED, VIBRANT RED, NO GRADIENTS) */}
       <section className="section-shell">
