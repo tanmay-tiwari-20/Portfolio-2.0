@@ -7,6 +7,7 @@ import Skiper31Text from "@/components/animations/skiper31-text";
 import HomeProjectShowcase from "@/components/home-project-showcase";
 import HomeProfilePhilosophy from "@/components/home-profile-philosophy";
 import HomeExperienceJourney from "@/components/home-experience-journey";
+import HomeHackShastraStory from "@/components/home-hackshastra-story";
 
 export const dynamic = "force-dynamic";
 
@@ -186,91 +187,7 @@ export default async function Home() {
       {/* THE JOURNEY / EXPERIENCE PEEK */}
       <HomeExperienceJourney experiences={experience} />
 
-      {/* HACKSHASTRA & COMMUNITY HERO BAND (ROUNDED, VIBRANT RED, NO GRADIENTS) */}
-      <section className="section-shell">
-        <div className="community-band-rounded reveal">
-          <div
-            className="eyebrow"
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
-              borderColor: "rgba(255, 255, 255, 0.25)",
-              color: "#ffffff",
-              marginBottom: 20,
-            }}
-          >
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: "#ffffff",
-              }}
-            />
-            <span>COMMUNITY HEADQUARTERS // HACKSHASTRA</span>
-          </div>
-
-          <h2>
-            Find your people.
-            <br />
-            Build the next builder.
-          </h2>
-
-          <p
-            style={{
-              maxWidth: 640,
-              fontSize: 17,
-              lineHeight: 1.6,
-              color: "rgba(255, 255, 255, 0.9)",
-              margin: "0 0 28px 0",
-            }}
-          >
-            HackShastra is a vibrant community for curious developers, builders,
-            and designers to learn by doing, share open-source ideas, and build
-            things that matter.
-          </p>
-
-          <div className="community-actions" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            <Link
-              href="/hackshastra"
-              className="button button-secondary"
-              style={{
-                backgroundColor: "#ffffff",
-                color: "var(--spidey-dark-900)",
-                border: "none",
-              }}
-            >
-              Explore HackShastra <ArrowUpRight size={18} />
-            </Link>
-            <Link
-              href="/hackathons"
-              className="button"
-              style={{
-                backgroundColor: "rgba(0, 0, 0, 0.35)",
-                color: "#ffffff",
-                borderColor: "rgba(255, 255, 255, 0.35)",
-              }}
-            >
-              Hackathon Mentorship ({hackathons.length}){" "}
-              <ArrowUpRight size={18} />
-            </Link>
-          </div>
-
-          <div className="community-stats-grid">
-            <div className="community-stat-item">
-              <strong>{events.length}+</strong>
-              <span>COMMUNITY GATHERINGS</span>
-            </div>
-            <div className="community-stat-item">
-              <strong>{events.reduce((n, x) => n + x.attendees, 0)}+</strong>
-              <span>BUILDERS ATTENDED</span>
-            </div>
-            <div className="community-stat-item">
-              <strong>{hackathons.reduce((n, x) => n + x.teams, 0)}+</strong>
-              <span>TEAMS MENTORED</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHackShastraStory founderName={person?.name || "Tanmay Tiwari"} />
 
       {/* CALL TO ACTION BOX (ROUNDED, HIGH CONTRAST) */}
       <section className="section-shell">
