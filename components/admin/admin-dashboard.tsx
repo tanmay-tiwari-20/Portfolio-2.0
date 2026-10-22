@@ -194,8 +194,16 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Save operation failed");
+        const err = await res.json().catch(() => null);
+        const fieldErrors = err?.details?.fieldErrors as Record<string, string[]> | undefined;
+        const validationMessage = fieldErrors
+          ? Object.entries(fieldErrors)
+              .flatMap(([field, messages]) => messages.map((message) => `${field}: ${message}`))
+              .join("; ")
+          : "";
+        throw new Error(
+          [err?.error || "Save operation failed", validationMessage].filter(Boolean).join(" — "),
+        );
       }
 
       showToast("Saved to MongoDB! Live website updated.");

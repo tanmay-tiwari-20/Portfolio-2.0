@@ -73,6 +73,13 @@ export function Footer({
   name?: string;
   email?: string;
 }) {
+  const pathname = usePathname();
+
+  // Hide footer on admin panel pages
+  if (pathname?.startsWith("/secret-admin") || pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

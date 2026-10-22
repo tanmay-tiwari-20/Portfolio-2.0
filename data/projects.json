@@ -2,7 +2,7 @@
   {
     "id": "project-01",
     "createdAt": "2025-01-01",
-    "updatedAt": "2026-10-19T18:46:50.290Z",
+    "updatedAt": "2026-10-22T11:12:04.997Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "Unoverse",
@@ -11,7 +11,7 @@
     "description": "Unoverse is a real-time 3D multiplayer UNO game built with Next.js, React Three Fiber, Express, Socket.IO, and TypeScript. It features a server-authoritative game engine, immersive 3D gameplay, WebRTC voice chat, customizable house rules, smart matchmaking with room codes, and seamless real-time multiplayer for an authentic UNO experience.",
     "year": "2026",
     "cover": {
-      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792435350/unoverse_landscape_1_hbm62p.png",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
       "alt": "Unoverse"
     },
     "gallery": [],
@@ -37,51 +37,104 @@
   {
     "id": "project-02",
     "createdAt": "2024-01-01",
-    "updatedAt": "2026-10-19T18:47:18.322Z",
+    "updatedAt": "2026-10-22T11:19:24.566Z",
     "sortOrder": 0,
     "isPublished": true,
-    "title": "Afterhours / community, in motion",
-    "slug": "afterhours-community",
-    "category": "Community platform · 2024",
-    "description": "A welcoming digital home for creative technologists to find their people, share work, and make something together.",
+    "title": "Spools",
+    "slug": "spools",
+    "category": "Social Media Platform",
+    "description": "Spools is a social space for sharing ideas, finding your people, and building things together. It is a full-stack social app built with the MERN stack. Share short posts, explore beyond your feed, start interest-based Circles, collaborate on multi-part Spool series, and chat in real time.",
     "year": "2024",
     "cover": {
-      "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1600&q=85",
-      "alt": "Friends gathered around a table at an event"
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "alt": "Spools"
     },
     "gallery": [],
     "tags": [
       "React",
       "Community",
-      "Motion"
+      "Vite",
+      "React Router",
+      "Recoil",
+      "Tailwind CSS",
+      "Chakra UI",
+      "Node.js",
+      "Express",
+      "Socket.IO",
+      "MongoDB",
+      "JWT",
+      "Bcrypt",
+      "Cloudinary",
+      "PWA",
+      "Social media"
     ],
     "featured": true,
-    "liveUrl": "#",
-    "githubUrl": "#"
+    "liveUrl": "https://spools.onrender.com",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Spools"
   },
   {
     "id": "project-03",
     "createdAt": "2024-01-01",
-    "updatedAt": "2024-01-01",
+    "updatedAt": "2026-10-22T11:25:22.146Z",
     "sortOrder": 2,
     "isPublished": true,
-    "title": "Goodform / tools for better work",
-    "slug": "goodform-tools",
-    "category": "Brand & digital · 2024",
-    "description": "A confident identity and fast, modular website for a new generation of independent makers.",
-    "year": "2024",
+    "title": "Baithak",
+    "slug": "baithak",
+    "category": "Video Meeting and Collaboration App",
+    "description": "Baithak is a video meeting and collaboration app built with Next.js. Its dashboard brings meeting creation, joining, scheduling, personal rooms, meeting history, and recordings together in one place. Meetings use Stream Video for real-time calls, while Clerk handles sign-in.",
+    "year": "2025",
     "cover": {
-      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1600&q=85",
-      "alt": "Retro pixel art display in neon light"
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "alt": "Baithak"
     },
     "gallery": [],
     "tags": [
-      "Brand",
-      "Web design",
-      "CMS"
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Clerk",
+      "Stream Video React SDK",
+      "Radix UI",
+      "PWA",
+      "Vercel",
+      "Video Meeting Website",
+      "Live video chat",
+      "WebRTC"
     ],
     "featured": true,
-    "liveUrl": "#",
-    "githubUrl": "#"
+    "liveUrl": "https://baithak-meet.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Baithak"
+  },
+  {
+    "id": "aXsigA2x-pnKjjRuO50uh",
+    "createdAt": "2026-10-22T11:34:26.366Z",
+    "updatedAt": "2026-10-22T11:34:26.366Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "title": "HackShastra Website",
+    "slug": "hackshastra-website",
+    "category": "Community Website",
+    "description": "This is an interactive, high-performance community platform and event management system built for the HackShastra community.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "alt": "HackShastra Website"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Tailwind CSS",
+      "Community Website",
+      "MongoDB",
+      "Framer motion",
+      "GSAP",
+      "Lenis"
+    ],
+    "featured": true,
+    "liveUrl": "https://hackshastra.in",
+    "githubUrl": ""
   }
 ]

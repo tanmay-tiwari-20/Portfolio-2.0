@@ -1,5 +1,44 @@
 [
- {"id":"hack-01","createdAt":"2025-01-01","updatedAt":"2025-01-01","sortOrder":0,"isPublished":true,"name":"Hack the Hills","role":"Judge","date":"2025","organizer":"Buildspace Community","description":"Reviewed thoughtful climate and mobility projects, with a focus on the story behind the prototype.","teams":42,"link":"#"},
- {"id":"hack-02","createdAt":"2024-01-01","updatedAt":"2024-01-01","sortOrder":1,"isPublished":true,"name":"Design for Impact","role":"Mentor","date":"2024","organizer":"Open Futures","description":"Helped four teams shape their product narrative and turn early ideas into testable experiences.","teams":24,"link":"#"},
- {"id":"hack-03","createdAt":"2023-01-01","updatedAt":"2023-01-01","sortOrder":2,"isPublished":true,"name":"Campus Createathon","role":"Organizer","date":"2023","organizer":"HackShastra","description":"Built a welcoming two-day event where students could learn, collaborate, and share their first projects.","teams":60,"link":"#"}
+  {
+    "id": "hack-01",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 0,
+    "isPublished": true,
+    "name": "Hack the Hills",
+    "role": "Judge",
+    "date": "2025",
+    "organizer": "Buildspace Community",
+    "description": "Reviewed thoughtful climate and mobility projects, with a focus on the story behind the prototype.",
+    "teams": 42,
+    "link": "#"
+  },
+  {
+    "id": "hack-02",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2024-01-01",
+    "sortOrder": 1,
+    "isPublished": true,
+    "name": "Design for Impact",
+    "role": "Mentor",
+    "date": "2024",
+    "organizer": "Open Futures",
+    "description": "Helped four teams shape their product narrative and turn early ideas into testable experiences.",
+    "teams": 24,
+    "link": "#"
+  },
+  {
+    "id": "hack-03",
+    "createdAt": "2023-01-01",
+    "updatedAt": "2026-10-22T10:52:03.852Z",
+    "sortOrder": 2,
+    "isPublished": true,
+    "name": "Nexhack",
+    "role": "Mentor",
+    "date": "2025",
+    "organizer": "Geeta University",
+    "description": "Built a welcoming two-day event where students could learn, collaborate, and share their first projects.",
+    "teams": 30,
+    "link": "#"
+  }
 ]
