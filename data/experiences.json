@@ -1,9 +1,29 @@
 [
   {
+    "id": "exp-02",
+    "createdAt": "2021-01-01",
+    "updatedAt": "2026-10-22T11:26:27.893Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "role": "Co-Founder",
+    "company": "HackShastra",
+    "period": "Nov 2024 – Present",
+    "location": "New Delhi",
+    "description": "Co-founded HackShastra and work on the technical side of the community and its platforms.",
+    "achievements": [
+      "Built and maintained the HackShastra website using Next.js, TypeScript, and Tailwind CSS.",
+      "Worked on hackathon websites, registration pages, participant dashboards, and event platforms.",
+      "Organized 7+ tech events, including 4+ hackathons and 2 meetups, with universities, sponsors, mentors, and developer communities.",
+      "Judged and mentored 20+ hackathons, helping participants with their projects and technical decisions.",
+      "Work with the team on technical planning, development, debugging, and code reviews."
+    ],
+    "tech": []
+  },
+  {
     "id": "exp-01",
     "createdAt": "2024-01-01",
     "updatedAt": "2026-10-19T18:55:57.735Z",
-    "sortOrder": 0,
+    "sortOrder": 1,
     "isPublished": true,
     "role": "Software Development Engineer",
     "company": "DevNDez",
@@ -22,25 +42,5 @@
       "Design Systems",
       "GSAP"
     ]
-  },
-  {
-    "id": "exp-02",
-    "createdAt": "2021-01-01",
-    "updatedAt": "2026-10-22T11:26:27.893Z",
-    "sortOrder": 1,
-    "isPublished": true,
-    "role": "Co-Founder",
-    "company": "HackShastra",
-    "period": "Nov 2024 – Present",
-    "location": "New Delhi",
-    "description": "Co-founded HackShastra and work on the technical side of the community and its platforms.",
-    "achievements": [
-      "Built and maintained the HackShastra website using Next.js, TypeScript, and Tailwind CSS.",
-      "Worked on hackathon websites, registration pages, participant dashboards, and event platforms.",
-      "Organized 7+ tech events, including 4+ hackathons and 2 meetups, with universities, sponsors, mentors, and developer communities.",
-      "Judged and mentored 20+ hackathons, helping participants with their projects and technical decisions.",
-      "Work with the team on technical planning, development, debugging, and code reviews."
-    ],
-    "tech": []
   }
 ]

@@ -6,7 +6,7 @@ import { ArrowUpRight, Trophy, Users, Calendar } from "lucide-react";
 
 export default function HackathonList({ items }: { items: Hackathon[] }) {
   const [role, setRole] = useState("All Roles");
-  const roles = ["All Roles", "Judge", "Mentor", "Organizer"];
+  const roles = ["All Roles", "Judge", "Mentor"];
 
   const visible = role === "All Roles" ? items : items.filter((item) => item.role === role);
 
@@ -25,7 +25,7 @@ export default function HackathonList({ items }: { items: Hackathon[] }) {
       </div>
 
       <div style={{ display: "grid", gap: 20 }}>
-        {visible.map((x, i) => (
+        {visible.map((x) => (
           <article
             className="timeline-card reveal"
             key={x.id}
@@ -65,7 +65,7 @@ export default function HackathonList({ items }: { items: Hackathon[] }) {
                 {x.name}
               </h2>
               <div style={{ fontSize: 14, color: "var(--spidey-red)", fontWeight: 600, marginBottom: 12 }}>
-                Organizer: {x.organizer}
+                Hosted by {x.organizer}
               </div>
               <p style={{ color: "var(--spidey-text-dim)", fontSize: 15, margin: 0, lineHeight: 1.55 }}>
                 {x.description}

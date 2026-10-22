@@ -25,17 +25,19 @@ import {
   X,
   Download,
   Shield,
-  Layers,
-  Sparkles,
 } from "lucide-react";
+import SortableList from "@/components/admin/sortable-list";
+import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 import type {
   Project,
   Experience,
   Profile,
   Hackathon,
   CommunityEvent,
+  ImageAsset,
+  SocialLink,
+  SiteSettings,
 } from "@/lib/validators/schemas";
-import Logout from "@/components/admin/logout";
 
 type Tab =
   | "projects"
@@ -54,7 +56,7 @@ interface MongoStatus {
   collections: string[];
 }
 
-export default function AdminDashboard({ userEmail }: { userEmail: string }) {
+export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<Tab>("projects");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
@@ -65,8 +67,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
   const [events, setEvents] = useState<CommunityEvent[]>([]);
-  const [socials, setSocials] = useState<any[]>([]);
-  const [settings, setSettings] = useState<any>(null);
+  const [socials, setSocials] = useState<SocialLink[]>([]);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
 
   // Database connection status
   const [dbStatus, setDbStatus] = useState<MongoStatus | null>(null);
@@ -77,7 +79,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
   const [editingExperience, setEditingExperience] = useState<Partial<Experience> | null>(null);
   const [editingHackathon, setEditingHackathon] = useState<Partial<Hackathon> | null>(null);
   const [editingEvent, setEditingEvent] = useState<Partial<CommunityEvent> | null>(null);
-  const [editingSocial, setEditingSocial] = useState<any | null>(null);
+  const [posterLoadError, setPosterLoadError] = useState<string | null>(null);
+  const [editingSocial, setEditingSocial] = useState<Partial<SocialLink> | null>(null);
 
   // Lock body scroll and handle escape key when any modal is open
   const isModalOpen = Boolean(
@@ -155,7 +158,9 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
     }
   }, [showToast]);
 
+  // Start the initial async synchronization; its state changes follow the fetch.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadAllData();
   }, [loadAllData]);
 
@@ -179,13 +184,19 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
   };
 
   // Generic Save (Create or Update)
-  const saveItem = async (collection: string, item: any, isNew: boolean) => {
+  const saveItem = async <T extends { id?: string }>(collection: string, item: T, isNew: boolean) => {
     setLoading(true);
     try {
       const method = isNew ? "POST" : "PATCH";
       const body = isNew
         ? { collection, item }
-        : { collection, id: item.id, patch: item };
+        : {
+            collection,
+            id: item.id,
+            patch: collection === "events"
+              ? { ...item, image: (item as T & { image?: ImageAsset }).image ?? null }
+              : item,
+          };
 
       const res = await fetch("/api/admin/content", {
         method,
@@ -209,8 +220,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       showToast("Saved to MongoDB! Live website updated.");
       await loadAllData();
       return true;
-    } catch (err: any) {
-      showToast(err.message || "Save operation failed", "error");
+    } catch (err: unknown) {
+      showToast(err instanceof Error ? err.message : "Save operation failed", "error");
       return false;
     } finally {
       setLoading(false);
@@ -243,10 +254,12 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
   };
 
   return (
-    <main className="admin-shell-modern">
+    <main className="admin-shell-modern admin-dashboard">
       {/* FLOATING TOAST NOTIFICATION */}
       {toast && (
         <div
+          role={toast.type === "error" ? "alert" : "status"}
+          aria-live={toast.type === "error" ? "assertive" : "polite"}
           style={{
             position: "fixed",
             bottom: 24,
@@ -271,19 +284,18 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
       )}
 
       {/* TOP BAR / CONTROL ROOM */}
-      <header className="admin-header-card mt-12">
+      <header className="admin-header-card">
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div
             style={{
-              width: 48,
-              height: 48,
-              borderRadius: "var(--radius-pill)",
-              backgroundColor: "var(--spidey-red)",
+              width: 42,
+              height: 42,
+              borderRadius: 12,
+              backgroundColor: "var(--theme-red-surface)",
               display: "grid",
               placeItems: "center",
               color: "#ffffff",
-              boxShadow: "0 0 20px var(--spidey-red-glow)",
-              
+              border: "1px solid var(--line-active)",
             }}
           >
             <Shield size={24} />
@@ -291,11 +303,11 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <h1 className="display" style={{ fontSize: "clamp(24px, 3.5vw, 36px)", margin: 0 }}>
-                Control Room
+                Portfolio studio
               </h1>
             </div>
             <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-              Changes save directly to MongoDB and immediately reflect on your live website.
+              Manage the content that appears on your portfolio.
             </p>
           </div>
         </div>
@@ -304,10 +316,6 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
           <Link href="/" target="_blank" className="button button-secondary" style={{ minHeight: 42, padding: "0 18px", fontSize: 12 }}>
             Preview Site <ExternalLink size={15} />
           </Link>
-          <Link href="/secret-admin/media" className="button button-blue" style={{ minHeight: 42, padding: "0 18px", fontSize: 12 }}>
-            Media Vault <ExternalLink size={15} />
-          </Link>
-          <Logout />
         </div>
       </header>
 
@@ -396,10 +404,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 14 }}>
-            {projects.map((p) => (
+          <SortableList collection="projects" items={projects} onChange={setProjects} onNotify={showToast} renderItem={(p) => (
               <div
-                key={p.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
@@ -506,8 +512,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )} />
         </section>
       )}
 
@@ -544,10 +549,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 14 }}>
-            {experiences.map((exp) => (
+          <SortableList collection="experiences" items={experiences} onChange={setExperiences} onNotify={showToast} renderItem={(exp) => (
               <div
-                key={exp.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
@@ -605,8 +608,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )} />
         </section>
       )}
 
@@ -763,7 +765,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 Hackathons & Mentorship
               </h2>
               <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-                Add or edit hackathons you have judged, mentored, or organized.
+                Manage your judging and mentorship participation.
               </p>
             </div>
             <button
@@ -785,10 +787,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 14 }}>
-            {hackathons.map((h) => (
+          <SortableList collection="hackathons" items={hackathons} onChange={setHackathons} onNotify={showToast} renderItem={(h) => (
               <div
-                key={h.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
@@ -811,7 +811,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                     {h.name}
                   </h3>
                   <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
-                    Organizer: {h.organizer} · {h.teams} Teams
+                    Hosted by {h.organizer} · {h.teams} Teams
                   </div>
                 </div>
 
@@ -838,8 +838,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )} />
         </section>
       )}
 
@@ -857,6 +856,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </div>
             <button
               onClick={() => {
+                setPosterLoadError(null);
                 setEditingEvent({
                   title: "",
                   date: "2025",
@@ -874,10 +874,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 14 }}>
-            {events.map((e) => (
+          <SortableList collection="events" items={events} onChange={setEvents} onNotify={showToast} renderItem={(e) => (
               <div
-                key={e.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
@@ -912,7 +910,10 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
 
                 <div style={{ display: "flex", gap: 8 }}>
                   <button
-                    onClick={() => setEditingEvent({ ...e })}
+                    onClick={() => {
+                      setPosterLoadError(null);
+                      setEditingEvent({ ...e });
+                    }}
                     className="button button-secondary"
                     style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
                   >
@@ -933,8 +934,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )} />
         </section>
       )}
 
@@ -966,10 +966,8 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
             </button>
           </div>
 
-          <div style={{ display: "grid", gap: 12 }}>
-            {socials.map((s) => (
+          <SortableList collection="socials" items={socials} onChange={setSocials} onNotify={showToast} renderItem={(s) => (
               <div
-                key={s.id}
                 className="timeline-card"
                 style={{
                   margin: 0,
@@ -1023,8 +1021,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            )} />
         </section>
       )}
 
@@ -1619,12 +1616,12 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   <label className="form-label">Your Role</label>
                   <select
                     value={editingHackathon.role || "Judge"}
-                    onChange={(e) => setEditingHackathon({ ...editingHackathon, role: e.target.value as any })}
+                    onChange={(e) => setEditingHackathon({ ...editingHackathon, role: e.target.value as Hackathon["role"] })}
                     className="form-select"
                   >
                     <option value="Judge">Judge</option>
                     <option value="Mentor">Mentor</option>
-                    <option value="Organizer">Organizer</option>
+                    {editingHackathon.role === "Organizer" && <option value="Organizer" disabled>Legacy Organizer — choose a new role</option>}
                   </select>
                 </div>
                 <div>
@@ -1753,7 +1750,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                   <label className="form-label">Status</label>
                   <select
                     value={editingEvent.status || "upcoming"}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, status: e.target.value as any })}
+                    onChange={(e) => setEditingEvent({ ...editingEvent, status: e.target.value as CommunityEvent["status"] })}
                     className="form-select"
                   >
                     <option value="upcoming">Upcoming</option>
@@ -1805,6 +1802,49 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 />
               </div>
 
+              <div>
+                <label className="form-label" htmlFor="event-poster-url">
+                  Event Poster Image URL <span className="form-label-optional">Optional</span>
+                </label>
+                <input
+                  id="event-poster-url"
+                  type="url"
+                  value={editingEvent.image?.url || ""}
+                  onChange={(e) => {
+                    const url = e.target.value.trim();
+                    setPosterLoadError(null);
+                    setEditingEvent({
+                      ...editingEvent,
+                      image: url ? { ...editingEvent.image, url, alt: editingEvent.image?.alt || `${editingEvent.title || "Event"} poster` } : undefined,
+                    });
+                  }}
+                  placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
+                  className="form-input"
+                  aria-describedby="event-poster-help"
+                />
+                <p id="event-poster-help" className="form-help-text">
+                  Paste an HTTPS image URL from res.cloudinary.com. Leave blank for no poster.
+                </p>
+                {editingEvent.image?.url && !isCloudinaryImageUrl(editingEvent.image.url) && (
+                  <p className="form-error-text" role="alert">Enter a valid HTTPS Cloudinary image URL.</p>
+                )}
+                {editingEvent.image?.url && isCloudinaryImageUrl(editingEvent.image.url) && (
+                  <div className="event-poster-preview">
+                    {posterLoadError === editingEvent.image.url ? (
+                      <p className="form-error-text" role="alert">This poster could not be loaded. Check that the Cloudinary URL is public and points to an image.</p>
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={editingEvent.image.url}
+                        alt={`${editingEvent.title || "Event"} poster preview`}
+                        onLoad={() => setPosterLoadError(null)}
+                        onError={() => setPosterLoadError(editingEvent.image?.url || null)}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+
               <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
                 <button
                   type="button"
@@ -1813,7 +1853,7 @@ export default function AdminDashboard({ userEmail }: { userEmail: string }) {
                 >
                   Cancel
                 </button>
-                <button type="submit" disabled={loading} className="button button-primary">
+                <button type="submit" disabled={loading || Boolean(editingEvent.image?.url && (!isCloudinaryImageUrl(editingEvent.image.url) || posterLoadError === editingEvent.image.url))} className="button button-primary">
                   {loading ? "Saving..." : "Save Event"} <Check size={16} />
                 </button>
               </div>

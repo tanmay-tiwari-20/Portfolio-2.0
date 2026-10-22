@@ -14,6 +14,10 @@ import {
 } from "lucide-react";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 
+type GsapInstance = typeof import("gsap").gsap;
+type ScrollTriggerPlugin = typeof import("gsap/ScrollTrigger").ScrollTrigger;
+type AnimeModule = typeof import("animejs");
+
 export type ProjectShowcaseItem = {
   id: string;
   title: string;
@@ -21,7 +25,12 @@ export type ProjectShowcaseItem = {
   category: string;
   description: string;
   year: string;
-  cover: { url: string; alt?: string };
+  cover: {
+    url: string;
+    alt?: string;
+    fit?: "contain" | "cover";
+    position?: string;
+  };
   tags: string[];
   featured: boolean;
   liveUrl?: string;
@@ -39,7 +48,9 @@ export default function HomeProjectShowcase({
 }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"theater" | "grid">("theater");
-  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [isReducedMotion, setIsReducedMotion] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
 
   // References for DOM and animation engines
   const stageRef = useRef<HTMLDivElement>(null);
@@ -50,17 +61,20 @@ export default function HomeProjectShowcase({
   const imageBoxRef = useRef<HTMLAnchorElement>(null);
 
   // Engine references
-  const gsapRef = useRef<any>(null);
-  const animeRef = useRef<any>(null);
-  const scrollTriggerRef = useRef<any>(null);
+  const gsapRef = useRef<GsapInstance | null>(null);
+  const animeRef = useRef<AnimeModule | null>(null);
+  const scrollTriggerRef = useRef<ScrollTriggerPlugin | null>(null);
 
   const activeProject = projects[activeIndex] || projects[0];
+  const activeCoverFit = activeProject?.cover.fit ||
+    (activeProject?.cover.url.toLowerCase().includes("screenshot") ? "contain" : "cover");
 
   // 1. Initialize Motion Libraries (GSAP + ScrollTrigger + Anime.js)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setIsReducedMotion(mq.matches);
+    const updateMotionPreference = (event: MediaQueryListEvent) => setIsReducedMotion(event.matches);
+    mq.addEventListener("change", updateMotionPreference);
 
     let isDisposed = false;
 
@@ -104,6 +118,7 @@ export default function HomeProjectShowcase({
 
     return () => {
       isDisposed = true;
+      mq.removeEventListener("change", updateMotionPreference);
     };
   }, []);
 
@@ -389,17 +404,25 @@ export default function HomeProjectShowcase({
                 {/* Main Viewport */}
                 <Link
                   href={`/projects/${activeProject.slug}`}
-                  className="showcase-image-viewport"
+                  className={`showcase-image-viewport ${activeCoverFit === "contain" ? "is-contained" : ""}`}
                   ref={imageBoxRef}
                   tabIndex={-1}
                 >
                   <Image
-                    src={getOptimizedUrl(activeProject.cover.url, 1440, 920)}
+                    src={getOptimizedUrl(
+                      activeProject.cover.url,
+                      1440,
+                      activeCoverFit === "cover" ? 920 : undefined,
+                    )}
                     alt={activeProject.cover.alt || activeProject.title}
                     fill
                     priority
                     sizes="(max-width: 900px) 96vw, 55vw"
-                    className="showcase-image"
+                    className={`showcase-image ${activeCoverFit === "contain" ? "showcase-image-contained" : ""}`}
+                    style={{
+                      objectFit: activeCoverFit,
+                      objectPosition: activeProject.cover.position || "center",
+                    }}
                   />
 
                   {/* Scanline / Dither Veil Texture */}
@@ -544,19 +567,31 @@ export default function HomeProjectShowcase({
       {/* VIEW MODE 2: MAGAZINE GRID */}
       {viewMode === "grid" && (
         <div className="showcase-grid-view">
-          {projects.map((p, i) => (
+          {projects.map((p, i) => {
+            const coverFit = p.cover.fit ||
+              (p.cover.url.toLowerCase().includes("screenshot") ? "contain" : "cover");
+            return (
             <div key={p.id} className="showcase-grid-card">
               <Link
                 href={`/projects/${p.slug}`}
-                className="grid-card-media"
+                className={`grid-card-media ${coverFit === "contain" ? "is-contained" : ""}`}
                 tabIndex={-1}
               >
                 <Image
-                  src={getOptimizedUrl(p.cover.url, 960, 600)}
+                  src={getOptimizedUrl(
+                    p.cover.url,
+                    960,
+                    coverFit === "cover" ? 600 : undefined,
+                  )}
                   alt={p.cover.alt || p.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="grid-card-img"
+                  className={`grid-card-img ${coverFit === "contain" ? "grid-card-img-contained" : ""}`}
+                  loading="lazy"
+                  style={{
+                    objectFit: coverFit,
+                    objectPosition: p.cover.position || "center",
+                  }}
                 />
                 <span className="grid-card-index">0{i + 1}</span>
                 <span className="grid-card-arrow">
@@ -604,7 +639,7 @@ export default function HomeProjectShowcase({
                 </div>
               </div>
             </div>
-          ))}
+          );})}
         </div>
       )}
     </section>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import { ArrowUpRight, Calendar, MapPin, Users } from "lucide-react";
 import { MotionLayer } from "@/components/shell";
+import EventPoster from "@/components/event-poster";
 
 export const dynamic = "force-dynamic";
 
@@ -102,6 +103,7 @@ export default async function HackShastra() {
                 padding: 32,
               }}
             >
+              <EventPoster url={e.image?.url} alt={e.image?.alt || `${e.title} event poster`} />
               <div style={{ maxWidth: 680 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
                   <span

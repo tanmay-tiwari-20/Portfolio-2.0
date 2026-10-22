@@ -12,7 +12,8 @@
     "year": "2026",
     "cover": {
       "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
-      "alt": "Unoverse"
+      "alt": "Unoverse",
+      "fit": "contain"
     },
     "gallery": [],
     "tags": [
@@ -38,7 +39,7 @@
     "id": "project-02",
     "createdAt": "2024-01-01",
     "updatedAt": "2026-10-22T11:19:24.566Z",
-    "sortOrder": 0,
+    "sortOrder": 1,
     "isPublished": true,
     "title": "Spools",
     "slug": "spools",
@@ -47,7 +48,8 @@
     "year": "2024",
     "cover": {
       "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
-      "alt": "Spools"
+      "alt": "Spools",
+      "fit": "contain"
     },
     "gallery": [],
     "tags": [
@@ -73,10 +75,42 @@
     "githubUrl": "https://github.com/tanmay-tiwari-20/Spools"
   },
   {
+    "id": "aXsigA2x-pnKjjRuO50uh",
+    "createdAt": "2026-10-22T11:34:26.366Z",
+    "updatedAt": "2026-10-22T11:34:26.366Z",
+    "sortOrder": 2,
+    "isPublished": true,
+    "title": "HackShastra Website",
+    "slug": "hackshastra-website",
+    "category": "Community Website",
+    "description": "This is an interactive, high-performance community platform and event management system built for the HackShastra community.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "alt": "HackShastra Website",
+      "fit": "contain"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Tailwind CSS",
+      "Community Website",
+      "MongoDB",
+      "Framer motion",
+      "GSAP",
+      "Lenis"
+    ],
+    "featured": true,
+    "liveUrl": "https://hackshastra.in",
+    "githubUrl": ""
+  },
+  {
     "id": "project-03",
     "createdAt": "2024-01-01",
     "updatedAt": "2026-10-22T11:25:22.146Z",
-    "sortOrder": 2,
+    "sortOrder": 3,
     "isPublished": true,
     "title": "Baithak",
     "slug": "baithak",
@@ -85,7 +119,8 @@
     "year": "2025",
     "cover": {
       "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
-      "alt": "Baithak"
+      "alt": "Baithak",
+      "fit": "contain"
     },
     "gallery": [],
     "tags": [
@@ -105,36 +140,5 @@
     "featured": true,
     "liveUrl": "https://baithak-meet.vercel.app",
     "githubUrl": "https://github.com/tanmay-tiwari-20/Baithak"
-  },
-  {
-    "id": "aXsigA2x-pnKjjRuO50uh",
-    "createdAt": "2026-10-22T11:34:26.366Z",
-    "updatedAt": "2026-10-22T11:34:26.366Z",
-    "sortOrder": 0,
-    "isPublished": true,
-    "title": "HackShastra Website",
-    "slug": "hackshastra-website",
-    "category": "Community Website",
-    "description": "This is an interactive, high-performance community platform and event management system built for the HackShastra community.",
-    "year": "2024",
-    "cover": {
-      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
-      "alt": "HackShastra Website"
-    },
-    "gallery": [],
-    "tags": [
-      "Next.js",
-      "TypeScript",
-      "React",
-      "Tailwind CSS",
-      "Community Website",
-      "MongoDB",
-      "Framer motion",
-      "GSAP",
-      "Lenis"
-    ],
-    "featured": true,
-    "liveUrl": "https://hackshastra.in",
-    "githubUrl": ""
   }
 ]

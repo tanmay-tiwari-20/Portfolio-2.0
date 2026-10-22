@@ -16,5 +16,5 @@ export default async function Dashboard() {
     redirect("/secret-admin/login");
   }
 
-  return <AdminDashboard userEmail={user} />;
+  return <AdminDashboard />;
 }

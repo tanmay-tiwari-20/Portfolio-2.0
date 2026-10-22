@@ -11,21 +11,10 @@
     "icon": "◎"
   },
   {
-    "id": "twitter",
-    "createdAt": "2025-01-01",
-    "updatedAt": "2025-01-01",
-    "sortOrder": 1,
-    "isPublished": true,
-    "label": "X / Twitter",
-    "href": "https://x.com/",
-    "handle": "@alexbuilds",
-    "icon": "𝕏"
-  },
-  {
     "id": "linkedin",
     "createdAt": "2025-01-01",
     "updatedAt": "2025-01-01",
-    "sortOrder": 3,
+    "sortOrder": 1,
     "isPublished": true,
     "label": "LinkedIn",
     "href": "https://linkedin.com/",
@@ -36,11 +25,22 @@
     "id": "github",
     "createdAt": "2025-01-01",
     "updatedAt": "2025-01-01",
-    "sortOrder": 4,
+    "sortOrder": 2,
     "isPublished": true,
     "label": "GitHub",
     "href": "https://github.com/",
     "handle": "alexparker",
     "icon": "⌘"
+  },
+  {
+    "id": "twitter",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 3,
+    "isPublished": true,
+    "label": "X / Twitter",
+    "href": "https://x.com/",
+    "handle": "@alexbuilds",
+    "icon": "𝕏"
   }
 ]

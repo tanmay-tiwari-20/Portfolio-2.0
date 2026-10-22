@@ -67,7 +67,11 @@ export class JsonFileRepository<T extends { id: string; sortOrder?: number }> im
     return this.mutate<T | null>((rows): [T[], T | null] => {
       const index = rows.findIndex((x) => x.id === id);
       if (index < 0) return [rows, null];
-      const value = this.schema.parse({ ...rows[index], ...patch, id, updatedAt: new Date().toISOString() });
+      const valueToParse: Record<string, unknown> = { ...rows[index], ...patch, id, updatedAt: new Date().toISOString() };
+      for (const [key, patchValue] of Object.entries(patch)) {
+        if (patchValue === null) delete valueToParse[key];
+      }
+      const value = this.schema.parse(valueToParse);
       rows[index] = value;
       return [rows, value];
     });
@@ -164,14 +168,27 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
     const current = await this.getById(id);
     if (!current) return null;
 
-    const updated = this.schema.parse({
+    const valueToParse: Record<string, unknown> = {
       ...current,
       ...patch,
       id,
       updatedAt: new Date().toISOString(),
-    });
+    };
+    const unsetFields: Record<string, ""> = {};
+    for (const [key, patchValue] of Object.entries(patch)) {
+      if (patchValue === null) {
+        delete valueToParse[key];
+        unsetFields[key] = "";
+      }
+    }
+    const updated = this.schema.parse(valueToParse);
 
-    await col.updateOne({ id }, { $set: updated as Record<string, unknown> });
+    await col.updateOne({
+      id,
+    }, {
+      $set: updated as Record<string, unknown>,
+      ...(Object.keys(unsetFields).length > 0 ? { $unset: unsetFields } : {}),
+    });
     return updated;
   }
 
@@ -182,11 +199,14 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
   }
 
   async reorder(ids: string[]): Promise<T[]> {
+    if (ids.length === 0) return this.getAll();
     const col = await this.getCollection();
-    const operations = ids.map((id, index) =>
-      col.updateOne({ id }, { $set: { sortOrder: index } })
+    await col.bulkWrite(
+      ids.map((id, sortOrder) => ({
+        updateOne: { filter: { id }, update: { $set: { sortOrder } } },
+      })),
+      { ordered: true },
     );
-    await Promise.all(operations);
     return this.getAll();
   }
 }

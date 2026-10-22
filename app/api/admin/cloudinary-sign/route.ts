@@ -12,6 +12,17 @@ export async function POST(req: Request) {
   cloudinary.config({ cloud_name: process.env.CLOUDINARY_CLOUD_NAME, api_key: process.env.CLOUDINARY_API_KEY, api_secret: process.env.CLOUDINARY_API_SECRET });
   const timestamp = Math.floor(Date.now() / 1000);
   const folder = `portfolio/${section}`;
-  const signature = cloudinary.utils.api_sign_request({ timestamp, folder }, process.env.CLOUDINARY_API_SECRET);
-  return NextResponse.json({ timestamp, signature, apiKey: process.env.CLOUDINARY_API_KEY, cloudName: process.env.CLOUDINARY_CLOUD_NAME, folder });
+  const allowedFormats = "jpg,png,webp,gif,avif";
+  const signature = cloudinary.utils.api_sign_request(
+    { timestamp, folder, allowed_formats: allowedFormats },
+    process.env.CLOUDINARY_API_SECRET,
+  );
+  return NextResponse.json({
+    timestamp,
+    signature,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    folder,
+    allowedFormats,
+  });
 }

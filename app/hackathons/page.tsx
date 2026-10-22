@@ -7,11 +7,11 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Hackathons & Mentorship",
-  description: "Judging, mentoring, and organizing hackathons to empower the next generation of builders.",
+  description: "Judging and mentoring hackathon teams and emerging builders.",
 };
 
 export default async function Hackathons() {
-  const items = await published(repos.hackathons);
+  const items = (await published(repos.hackathons)).filter((item) => item.role === "Judge" || item.role === "Mentor");
   const judges = items.filter((i) => i.role === "Judge").length;
   const mentors = items.filter((i) => i.role === "Mentor").length;
   const teams = items.reduce((n, i) => n + i.teams, 0);

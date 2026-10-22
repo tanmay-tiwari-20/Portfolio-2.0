@@ -1,5 +1,5 @@
 import { z } from "zod";
-export const imageSchema = z.object({ url: z.string().url(), publicId: z.string().optional(), width: z.number().optional(), height: z.number().optional(), alt: z.string().default("") });
+export const imageSchema = z.object({ url: z.string().url(), publicId: z.string().optional(), width: z.number().optional(), height: z.number().optional(), alt: z.string().default(""), fit: z.enum(["contain", "cover"]).optional(), position: z.string().optional() });
 export const baseRecord = z.object({ id: z.string(), createdAt: z.string(), updatedAt: z.string(), sortOrder: z.number().default(0), isPublished: z.boolean().default(true) });
 export const profileSchema = baseRecord.extend({ name: z.string(), role: z.string(), tagline: z.string(), bio: z.string(), location: z.string(), email: z.string().email(), resumeUrl: z.string().optional(), avatar: imageSchema.optional(), heroTitle: z.string(), stats: z.array(z.object({ label: z.string(), value: z.number() })) });
 export const experienceSchema = baseRecord.extend({ role: z.string(), company: z.string(), period: z.string(), location: z.string(), description: z.string(), achievements: z.array(z.string()), tech: z.array(z.string()) });
@@ -14,3 +14,5 @@ export type Experience = z.infer<typeof experienceSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type CommunityEvent = z.infer<typeof eventSchema>;
 export type Hackathon = z.infer<typeof hackathonSchema>;
+export type SocialLink = z.infer<typeof socialSchema>;
+export type SiteSettings = z.infer<typeof settingsSchema>;
