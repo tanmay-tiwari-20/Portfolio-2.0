@@ -8,6 +8,7 @@ import HomeProjectShowcase from "@/components/home-project-showcase";
 import HomeProfilePhilosophy from "@/components/home-profile-philosophy";
 import HomeExperienceJourney from "@/components/home-experience-journey";
 import HomeHackShastraStory from "@/components/home-hackshastra-story";
+import HomeHackathonsJourney from "@/components/home-hackathons-journey";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,9 @@ export default async function Home() {
 
   const person = profile[0];
   const featured = projects.filter((p) => p.featured).slice(0, 4);
+  const hackathonStoryEvents = hackathons
+    .filter((event) => event.role === "Judge" || event.role === "Mentor")
+    .map(({ id, name, role, link }) => ({ id, name, role, link }));
   const fullName = (person?.name || "Tanmay Tiwari").trim() || "Tanmay Tiwari";
   const nameParts = fullName.split(/\s+/);
   const firstName = nameParts.shift() || "Tanmay";
@@ -189,6 +193,11 @@ export default async function Home() {
 
       <HomeHackShastraStory founderName={person?.name || "Tanmay Tiwari"} />
 
+      <HomeHackathonsJourney
+        events={hackathonStoryEvents}
+        email={person?.email || "workwithtakneekitanmay@gmail.com"}
+      />
+
       {/* CALL TO ACTION BOX (ROUNDED, HIGH CONTRAST) */}
       <section className="section-shell">
         <div className="cta-box-rounded reveal">
@@ -216,7 +225,10 @@ export default async function Home() {
             </p>
           </div>
 
-          <div className="cta-actions" style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+          <div
+            className="cta-actions"
+            style={{ display: "flex", gap: 14, flexWrap: "wrap" }}
+          >
             <Link href="/contact" className="button button-primary">
               Initiate Contact <ArrowUpRight size={18} />
             </Link>
