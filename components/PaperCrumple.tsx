@@ -731,7 +731,8 @@ const PaperCrumple = ({
       speedY = 0;
     let held = false,
       keyboard = false,
-      pointerId: number | null = null;
+      pointerId: number | null = null,
+      activePointerType: string | null = null;
     let peak = 0,
       ready = false,
       inView = true,
@@ -979,6 +980,7 @@ const PaperCrumple = ({
       hit!.dataset.held = "false";
       const captured = pointerId;
       pointerId = null;
+      activePointerType = null;
       if (captured !== null && hit!.hasPointerCapture(captured))
         hit!.releasePointerCapture(captured);
       if (releaseBehavior === "stay") {
@@ -1101,6 +1103,7 @@ const PaperCrumple = ({
       );
       keyboard = false;
       pointerId = event.pointerId;
+      activePointerType = event.pointerType;
       speedX = speedY = 0;
       lastMove = performance.now();
       hit!.setPointerCapture(event.pointerId);
@@ -1132,11 +1135,12 @@ const PaperCrumple = ({
       wake();
     }
 
-    function pointerUp(event: PointerEvent) {
+    function finishPointer(event: PointerEvent) {
       if (event.pointerId !== pointerId) return;
       const distance = Math.hypot(lastX - startX, lastY - startY);
       const releaseAge = performance.now() - lastMove;
       const releaseVelocity = Math.max(0, 1 - releaseAge / 140);
+      const isTouch = activePointerType === "touch";
       const velocity = {
         velocityX: speedX * releaseVelocity,
         velocityY: speedY * releaseVelocity,
@@ -1144,13 +1148,16 @@ const PaperCrumple = ({
       const shouldThrow =
         !reduceMotion &&
         peak >= 0.3 &&
-        distance >= 48 &&
-        Math.hypot(velocity.velocityX, velocity.velocityY) >= 650;
+        distance >= (isTouch ? 28 : 48) &&
+        Math.hypot(velocity.velocityX, velocity.velocityY) >=
+          (isTouch ? 340 : 650);
       finish(false, shouldThrow ? "stay" : undefined);
       if (shouldThrow) options.current.onThrow?.(velocity);
     }
     function pointerCancel(event: PointerEvent) {
-      if (event.pointerId === pointerId) finish(true);
+      // Treat a canceled touch like a release. Mobile browsers can cancel a
+      // captured pointer while the hit target is moving with the crumpled mesh.
+      finishPointer(event);
     }
     function cancel() {
       finish(true);
@@ -1246,10 +1253,9 @@ const PaperCrumple = ({
     }
 
     hit.addEventListener("pointerdown", pointerDown);
-    hit.addEventListener("pointermove", pointerMove);
-    hit.addEventListener("pointerup", pointerUp);
-    hit.addEventListener("pointercancel", pointerCancel);
-    hit.addEventListener("lostpointercapture", pointerUp);
+    window.addEventListener("pointermove", pointerMove, true);
+    window.addEventListener("pointerup", finishPointer, true);
+    window.addEventListener("pointercancel", pointerCancel, true);
     hit.addEventListener("keydown", keyDown);
     hit.addEventListener("keyup", keyUp);
     hit.addEventListener("blur", blur);
@@ -1442,10 +1448,9 @@ const PaperCrumple = ({
       observer.disconnect();
       intersectionObserver.disconnect();
       hit.removeEventListener("pointerdown", pointerDown);
-      hit.removeEventListener("pointermove", pointerMove);
-      hit.removeEventListener("pointerup", pointerUp);
-      hit.removeEventListener("pointercancel", pointerCancel);
-      hit.removeEventListener("lostpointercapture", pointerUp);
+      window.removeEventListener("pointermove", pointerMove, true);
+      window.removeEventListener("pointerup", finishPointer, true);
+      window.removeEventListener("pointercancel", pointerCancel, true);
       hit.removeEventListener("keydown", keyDown);
       hit.removeEventListener("keyup", keyUp);
       hit.removeEventListener("blur", blur);
@@ -1508,7 +1513,7 @@ const PaperCrumple = ({
     >
       <canvas
         ref={canvasRef}
-        className="pointer-events-none absolute inset-0 z-[1] block h-full w-full transition-opacity duration-200 ease-out"
+        className="pointer-events-none absolute inset-0 z-1 block h-full w-full transition-opacity duration-200 ease-out"
         aria-hidden="true"
         style={{
           opacity: status === "ready" ? 1 : 0,
@@ -1517,7 +1522,7 @@ const PaperCrumple = ({
       />
       <img
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[var(--pc-image-height,72%)] w-[var(--pc-image-width,60%)] select-none transition-opacity duration-200 ease-out"
+        className="pointer-events-none absolute left-1/2 top-1/2 h-(--pc-image-height,72%) w-(--pc-image-width,60%) select-none transition-opacity duration-200 ease-out"
         src={src || undefined}
         alt={alt}
         draggable={false}
@@ -1531,14 +1536,19 @@ const PaperCrumple = ({
       <button
         ref={hitRef}
         type="button"
-        className="peer absolute left-0 top-0 z-10 m-0 cursor-grab touch-none appearance-none select-none rounded-[2px] border-0 bg-transparent p-0 !shadow-none !outline-none [-webkit-tap-highlight-color:transparent] data-[held=true]:cursor-grabbing focus:!outline-none focus-visible:!outline-none focus-visible:ring-2 focus-visible:ring-[#ef463e] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0d0a0b] disabled:cursor-default"
+        className="peer absolute left-0 top-0 z-10 m-0 cursor-grab touch-none appearance-none select-none rounded-xs border-0 bg-transparent p-0 shadow-none! [-webkit-tap-highlight-color:transparent] focus:outline-none! focus-visible:ring-2 focus-visible:ring-[#ef463e] focus-visible:ring-offset-4 focus-visible:ring-offset-[#0d0a0b]"
         disabled={disabled || status !== "ready"}
         aria-label={`${alt}. Hold to crumple; release to smooth. Flick quickly to throw and continue. Use the previous and next buttons to browse. Keyboard: hold Space or Enter, use arrow keys, then release to throw. Escape resets.`}
         aria-pressed="false"
-        style={{ visibility: status === "ready" ? "visible" : "hidden" }}
+        style={{
+          visibility: status === "ready" ? "visible" : "hidden",
+          touchAction: "none",
+          userSelect: "none",
+          WebkitUserSelect: "none",
+        }}
       />
       <span
-        className="pointer-events-none absolute bottom-6 left-[calc(50%-2px)] h-1 w-1 rounded-full bg-current opacity-0 peer-focus-visible:opacity-55 peer-data-[pointer=true]:!opacity-0"
+        className="pointer-events-none absolute bottom-6 left-[calc(50%-2px)] h-1 w-1 rounded-full bg-current opacity-0"
         aria-hidden="true"
       />
       <span className="sr-only" role="status">

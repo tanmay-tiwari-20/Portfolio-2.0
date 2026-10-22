@@ -172,7 +172,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* SECTION 01 // PROFILE & PHILOSOPHY DOSSIER */}
+      {/* PROFILE & PHILOSOPHY DOSSIER */}
       <HomeProfilePhilosophy
         bio={person?.bio}
         stats={person?.stats}
