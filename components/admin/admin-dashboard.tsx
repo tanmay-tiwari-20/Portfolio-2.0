@@ -284,7 +284,7 @@ export default function AdminDashboard() {
       )}
 
       {/* TOP BAR / CONTROL ROOM */}
-      <header className="admin-header-card">
+      <header className="admin-header-card" style={{ marginTop: "4rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div
             style={{

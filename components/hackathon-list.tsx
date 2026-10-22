@@ -99,7 +99,7 @@ export default function HackathonList({ items }: { items: Hackathon[] }) {
                   className="button button-secondary"
                   style={{ minHeight: 40, padding: "0 18px", fontSize: 12 }}
                 >
-                  Hackathon Link <ArrowUpRight size={15} />
+                  Instagram Post <ArrowUpRight size={15} />
                 </a>
               )}
             </div>

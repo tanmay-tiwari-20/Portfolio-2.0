@@ -2,7 +2,7 @@
   {
     "id": "project-01",
     "createdAt": "2025-01-01",
-    "updatedAt": "2026-10-22T11:12:04.997Z",
+    "updatedAt": "2026-10-22T14:46:03.563Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "Unoverse",
@@ -12,8 +12,7 @@
     "year": "2026",
     "cover": {
       "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
-      "alt": "Unoverse",
-      "fit": "contain"
+      "alt": "Unoverse"
     },
     "gallery": [],
     "tags": [
@@ -33,7 +32,7 @@
     ],
     "featured": true,
     "liveUrl": "https://unoverse-3d.vercel.app/",
-    "githubUrl": "https://github.com/tanmay-tiwari-20/Unoverse"
+    "githubUrl": ""
   },
   {
     "id": "project-02",
@@ -140,5 +139,92 @@
     "featured": true,
     "liveUrl": "https://baithak-meet.vercel.app",
     "githubUrl": "https://github.com/tanmay-tiwari-20/Baithak"
+  },
+  {
+    "id": "pjS0WP-9OXIX3zcc1fVW2",
+    "createdAt": "2026-10-22T14:35:47.991Z",
+    "updatedAt": "2026-10-22T14:42:43.715Z",
+    "sortOrder": 4,
+    "isPublished": true,
+    "title": "3D Shirt Showcaser",
+    "slug": "3d-shirt-showcaser",
+    "category": "3D Website",
+    "description": "3D Shirt Showcaser is an interactive web app using React, Three.js, and Tailwind CSS that lets users customize 3D shirt models with various textures and colors in real time. It offers a dynamic and engaging way to visualize products online.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "alt": "3D Shirt Showcaser"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Three.js",
+      "React Three Fiber",
+      "Tailwind CSS",
+      "3D model"
+    ],
+    "featured": false,
+    "liveUrl": "https://shirt-showcaser.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/shirt-showcaser"
+  },
+  {
+    "id": "5kzT5b_3bRn9YGhAkxO2E",
+    "createdAt": "2026-10-22T14:30:28.254Z",
+    "updatedAt": "2026-10-22T14:30:28.254Z",
+    "sortOrder": 5,
+    "isPublished": true,
+    "title": "Resumify",
+    "slug": "resumify",
+    "category": "Web Application",
+    "description": "Resumify is a full-stack resume review web app that lets users upload resumes, preview them, get ATS-based scores, and receive detailed feedback with improvement suggestions, all in a clean and interactive interface.",
+    "year": "2025",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "alt": "Resumify"
+    },
+    "gallery": [],
+    "tags": [
+      "TypeScript",
+      "React.js",
+      "Tailwind CSS",
+      "React Router",
+      "Puter Store",
+      "Blob Storage",
+      "Custom Data Structures",
+      "Resume",
+      "ATS-based scores"
+    ],
+    "featured": false,
+    "liveUrl": "https://resumify-silk.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Resumify"
+  },
+  {
+    "id": "igRsTHYyVGoq781fCNC00",
+    "createdAt": "2026-10-22T14:42:15.778Z",
+    "updatedAt": "2026-10-22T14:42:15.778Z",
+    "sortOrder": 6,
+    "isPublished": true,
+    "title": "Apple iPhone 15 Pro Website",
+    "slug": "apple-iphone-15-pro-website",
+    "category": "3D Website",
+    "description": "Apple iPhone 15 Pro Website is a React-based recreation of Apple's iPhone 15 Pro website. Featuring Tailwind CSS for responsive styling and Three.js for immersive 3D effects, this project incorporates GSAP animations for a dynamic user experience, closely mirroring the original site’s sleek design and interactive elements.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "alt": "Apple iPhone 15 Pro Website"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Tailwind CSS",
+      "Three.js",
+      "GSAP",
+      "GSAP ScrollTrigger",
+      "Apple Iphone",
+      "3D Website"
+    ],
+    "featured": false,
+    "liveUrl": "https://apple-i-phone15-theta.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Apple-iPhone15"
   }
 ]

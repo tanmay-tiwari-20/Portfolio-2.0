@@ -2,35 +2,43 @@
   {
     "id": "event-01",
     "createdAt": "2025-02-01",
-    "updatedAt": "2025-02-01",
+    "updatedAt": "2026-10-22T13:28:24.792Z",
     "sortOrder": 0,
     "isPublished": true,
-    "title": "HackShastra Build Night",
-    "date": "2025-11-08",
-    "venue": "Mumbai · In person",
+    "title": "HackShastra 1.0",
+    "date": "20-09-2025",
+    "venue": "ThoughtWorks Office, Gurugram",
     "status": "past",
-    "description": "A one-night sprint for curious minds. We paired first-time builders with experienced mentors and shipped small, useful things by midnight.",
+    "description": "HackShastra 1.0 is the first hackathon by our community, marking the beginning of many more innovations to come.",
     "attendees": 180,
-    "link": "#"
+    "link": "https://unstop.com/hackathons/hackshastra-hackshastra-1544473",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772462046/hackshastra2026_03_02_20_03_0106133100-147b-42e1-a4ca-ee5310eee7ae.jpg_wbipcz.webp",
+      "alt": "HackShastra 1.0 poster"
+    }
   },
   {
     "id": "event-02",
     "createdAt": "2025-01-01",
-    "updatedAt": "2025-01-01",
+    "updatedAt": "2026-10-22T13:28:42.990Z",
     "sortOrder": 1,
     "isPublished": true,
-    "title": "The Open Source Social",
-    "date": "2026-12-06",
-    "venue": "Online · Worldwide",
-    "status": "upcoming",
-    "description": "A friendly online gathering to find a first issue, meet maintainers, and make open source feel open to everyone.",
+    "title": "HackShastra Pre-Meetup",
+    "date": "27-07-2025",
+    "venue": "IIIT Delhi",
+    "status": "past",
+    "description": "HackShastra Pre-Meetup was the first tech event of the HackShastra community, bringing developers together to connect and kickstart the community.",
     "attendees": 300,
-    "link": "#"
+    "link": "https://luma.com/n17f71yg",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772462520/9c6e178a-cb54-4b19-a814-ba10ef2ef2cf_kuqxxl.jpg",
+      "alt": "HackShastra Pre-Meetup poster"
+    }
   },
   {
     "id": "cg-7NM8XceWWle9Svd-7j",
-    "createdAt": "2026-10-22T11:02:12.885Z",
-    "updatedAt": "2026-10-22T11:02:12.885Z",
+    "createdAt": "2026-10-22T11:02:12.782Z",
+    "updatedAt": "2026-10-22T13:27:37.366Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "HI-O",
@@ -39,12 +47,16 @@
     "status": "past",
     "description": "HackShastra IPEC Orientation is designed to introduce students to the HackShastra community, where technology meets creativity.",
     "attendees": 350,
-    "link": "https://luma.com/6vc2jiem"
+    "link": "https://luma.com/6vc2jiem",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772461885/17c4fee4-c37e-4767-9182-d38cc3a9b949_oi5rly.jpg",
+      "alt": "HI-O poster"
+    }
   },
   {
     "id": "-diqvGFp-0K1HPL4OkIyS",
-    "createdAt": "2026-10-22T11:03:47.887Z",
-    "updatedAt": "2026-10-22T11:03:47.887Z",
+    "createdAt": "2026-10-22T11:03:47.805Z",
+    "updatedAt": "2026-10-22T13:27:17.475Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "SnowHackIPEC",
@@ -53,12 +65,16 @@
     "status": "past",
     "description": "IPEC's annual winter hackathon organized by HackShastra.",
     "attendees": 300,
-    "link": "https://unstop.com/hackathons/snowhackipec-hackshastra-1613746"
+    "link": "https://unstop.com/hackathons/snowhackipec-hackshastra-1613746",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772402434/poster_towlyg.png",
+      "alt": "SnowHackIPEC poster"
+    }
   },
   {
     "id": "e81z2KHrFdbHa8HTO3dus",
-    "createdAt": "2026-10-22T11:04:42.193Z",
-    "updatedAt": "2026-10-22T11:04:42.193Z",
+    "createdAt": "2026-10-22T11:04:42.099Z",
+    "updatedAt": "2026-10-22T13:26:53.901Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "TEXPO'26",
@@ -67,12 +83,16 @@
     "status": "past",
     "description": "TEXPO 2026 brings together students, faculty, startups, and technology companies on a single platform, creating opportunities for exposure, validation, collaboration, and talent discovery.",
     "attendees": 250,
-    "link": "https://unstop.com/competitions/texpo-2026-student-innovation-and-industry-technology-expo-srm-university-srmap-andhra-pradesh-1638340"
+    "link": "https://unstop.com/competitions/texpo-2026-student-innovation-and-industry-technology-expo-srm-university-srmap-andhra-pradesh-1638340",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772662521/WELCOME_ohhsyh.png",
+      "alt": "TEXPO'26 poster"
+    }
   },
   {
     "id": "Dd2i-5c16PFmLlQS_VI3K",
-    "createdAt": "2026-10-22T11:05:34.719Z",
-    "updatedAt": "2026-10-22T11:05:34.719Z",
+    "createdAt": "2026-10-22T11:05:34.649Z",
+    "updatedAt": "2026-10-22T13:26:38.154Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "ShubhShastra",
@@ -81,12 +101,16 @@
     "status": "past",
     "description": "ShubhShastra is a 24-hour National Level AI Hackathon being organized through a collaboration between HackShastra and Subharti University, Meerut.",
     "attendees": 350,
-    "link": "https://unstop.com/hackathons/shubhshastra-subharti-university-meerut-uttar-pradesh-india-1663561"
+    "link": "https://unstop.com/hackathons/shubhshastra-subharti-university-meerut-uttar-pradesh-india-1663561",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1774202755/NATIONAL_AI_HACKATHON_qjhiue.png",
+      "alt": "ShubhShastra poster"
+    }
   },
   {
     "id": "cG77mPg9fcm2DoI1jD0fC",
-    "createdAt": "2026-10-22T11:06:37.390Z",
-    "updatedAt": "2026-10-22T11:06:37.390Z",
+    "createdAt": "2026-10-22T11:06:37.305Z",
+    "updatedAt": "2026-10-22T13:26:17.298Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "Grand Hack IPEC",
@@ -95,6 +119,10 @@
     "status": "past",
     "description": "Grand Hack IPEC is a 24-hour national-level offline hackathon organized by HackShastra in collaboration with Inderprastha Engineering College (IPEC), Ghaziabad.",
     "attendees": 300,
-    "link": "https://unstop.com/p/grand-hack-ipec-hackshastra-1704703"
+    "link": "https://unstop.com/p/grand-hack-ipec-hackshastra-1704703",
+    "image": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1782501435/grandhackipec_instagram_post.jpg_pke0kx.jpg",
+      "alt": "Grand Hack IPEC poster"
+    }
   }
 ]
