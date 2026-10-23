@@ -1166,7 +1166,6 @@ textarea:focus-visible {
 
 .button-primary:hover {
   background-color: var(--spidey-red-hover);
-  box-shadow: 0 12px 30px rgba(255, 30, 39, 0.55);
 }
 
 .button-secondary {
@@ -2785,6 +2784,20 @@ textarea:focus-visible {
 .philosophy-showcase-section {
   padding: 84px 0 104px;
   position: relative;
+  isolation: isolate;
+}
+
+.philosophy-showcase-section::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 7%;
+  left: -13vw;
+  width: min(46vw, 620px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(239, 70, 62, 0.08), transparent 68%);
+  pointer-events: none;
 }
 
 .philosophy-spec-code {
@@ -2800,7 +2813,7 @@ textarea:focus-visible {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
   gap: clamp(36px, 5.5vw, 76px);
-  align-items: flex-end;
+  align-items: center;
   margin-bottom: 44px;
 }
 
@@ -2810,6 +2823,8 @@ textarea:focus-visible {
   letter-spacing: -0.04em;
   color: var(--theme-paper);
   margin: 0;
+  text-wrap: balance;
+  perspective: 900px;
 }
 
 .philosophy-horizon-title em {
@@ -2822,7 +2837,7 @@ textarea:focus-visible {
 .horizon-narrative-col {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 17px;
 }
 
 .philosophy-horizon-lede {
@@ -2833,11 +2848,107 @@ textarea:focus-visible {
   max-width: 52ch;
 }
 
+.philosophy-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 3px;
+}
+
+.philosophy-identity-mark {
+  position: relative;
+  display: block;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  border-radius: 50%;
+  background: var(--theme-red);
+  box-shadow: 0 0 18px rgba(239, 70, 62, 0.55);
+}
+
+.philosophy-identity-mark::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgba(239, 70, 62, 0.42);
+  border-radius: inherit;
+  animation: philosophy-identity-pulse 2.8s ease-out infinite;
+}
+
+@keyframes philosophy-identity-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.65);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.philosophy-identity strong,
+.philosophy-identity small {
+  display: block;
+}
+
+.philosophy-identity strong {
+  color: var(--theme-paper);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+}
+
+.philosophy-identity small {
+  margin-top: 3px;
+  color: var(--theme-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.philosophy-horizon-note {
+  max-width: 52ch;
+  margin: -5px 0 1px;
+  padding-left: 15px;
+  border-left: 1px solid rgba(239, 70, 62, 0.48);
+  color: #e5d9d6;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.7;
+}
+
+.philosophy-principles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 1px;
+}
+
+.philosophy-principles span {
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 250, 247, 0.09);
+  border-radius: 999px;
+  background: rgba(255, 250, 247, 0.025);
+  color: #d9cfcb;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.philosophy-showcase-section .section-label .rule {
+  transform-origin: left center;
+}
+
 /* BOTTOM TACTILE MODULES TRACK */
 .tactile-cards-track {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
+}
+
+.philosophy-stat-shell {
+  min-width: 0;
 }
 
 .tactile-card {
@@ -5700,6 +5811,10 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .philosophy-identity-mark::after {
+    animation: none;
+  }
+
   .hackshastra-story-reveal {
     transform: scale(var(--hs-completed-scale, 4.25)) !important;
     will-change: auto;

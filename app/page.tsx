@@ -176,6 +176,8 @@ export default async function Home() {
       {/* PROFILE & PHILOSOPHY DOSSIER */}
       <HomeProfilePhilosophy
         bio={person?.bio}
+        name={person?.name}
+        role={person?.role}
         stats={person?.stats}
         eventsCount={events.length}
         hackathonsCount={hackathons.length}
