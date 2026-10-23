@@ -9,19 +9,20 @@ import HomeProfilePhilosophy from "@/components/home-profile-philosophy";
 import HomeExperienceJourney from "@/components/home-experience-journey";
 import HomeHackShastraStory from "@/components/home-hackshastra-story";
 import HomeHackathonsJourney from "@/components/home-hackathons-journey";
+import CinematicFooter from "@/components/cinematic-footer";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [profile, projects, experience, events, hackathons] = await Promise.all(
-    [
+  const [profile, projects, experience, events, hackathons, socials] =
+    await Promise.all([
       repos.profile.getAll(),
       published(repos.projects),
       published(repos.experiences),
       published(repos.events),
       published(repos.hackathons),
-    ],
-  );
+      published(repos.socials),
+    ]);
 
   const person = profile[0];
   const featured = projects.filter((p) => p.featured).slice(0, 4);
@@ -198,49 +199,7 @@ export default async function Home() {
         email={person?.email || "workwithtakneekitanmay@gmail.com"}
       />
 
-      {/* CALL TO ACTION BOX (ROUNDED, HIGH CONTRAST) */}
-      <section className="section-shell">
-        <div className="cta-box-rounded reveal">
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 16 }}>
-              <span className="eyebrow-accent-bar" /> OPEN TO HIGH-IMPACT
-              COLLABORATIONS
-            </div>
-            <h2
-              className="display"
-              style={{ fontSize: "clamp(34px, 4.8vw, 58px)", marginBottom: 12 }}
-            >
-              Have a bold vision in mind?
-            </h2>
-            <p
-              style={{
-                color: "var(--theme-text-dim)",
-                fontSize: 16,
-                maxWidth: 540,
-                margin: 0,
-              }}
-            >
-              Whether you need a world-class creative developer, scalable
-              Next.js architecture, or community leadership, let’s build it.
-            </p>
-          </div>
-
-          <div
-            className="cta-actions"
-            style={{ display: "flex", gap: 14, flexWrap: "wrap" }}
-          >
-            <Link href="/contact" className="button button-primary">
-              Initiate Contact <ArrowUpRight size={18} />
-            </Link>
-            <a
-              href={`mailto:${person?.email || "workwithtakneekitanmay@gmail.com"}`}
-              className="button button-secondary"
-            >
-              Direct Mail <ArrowUpRight size={18} />
-            </a>
-          </div>
-        </div>
-      </section>
+      <CinematicFooter socials={socials} />
       <MotionLayer />
     </>
   );

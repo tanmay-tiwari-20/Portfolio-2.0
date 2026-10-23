@@ -76,7 +76,11 @@ export function Footer({
   const pathname = usePathname();
 
   // Hide footer on admin panel pages
-  if (pathname?.startsWith("/secret-admin") || pathname?.startsWith("/admin")) {
+  if (
+    pathname === "/" ||
+    pathname?.startsWith("/secret-admin") ||
+    pathname?.startsWith("/admin")
+  ) {
     return null;
   }
 
@@ -162,12 +166,7 @@ export function MotionLayer() {
       event: string;
       listener: EventListener;
     }> = [];
-    let gsapMedia:
-      | {
-          add: (conditions: string, callback: () => void) => unknown;
-          revert: () => void;
-        }
-      | undefined;
+    let gsapMedia: { revert: () => void } | undefined;
     let cleanedUp = false;
 
     const cleanupMotion = () => {
@@ -286,6 +285,200 @@ export function MotionLayer() {
             animeAnimations.push(intro);
           }
 
+          const cinematicFooter = document.querySelector<HTMLElement>(
+            "[data-cinematic-footer]",
+          );
+          if (cinematicFooter) {
+            const plane = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-plane]",
+            );
+            const background = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-background]",
+            );
+            const colorReveal = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-color-reveal]",
+            );
+            const title = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-title]",
+            );
+            const light = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-light]",
+            );
+            const grid =
+              cinematicFooter.querySelector<HTMLElement>("[data-footer-grid]");
+            const orbit = cinematicFooter.querySelector<HTMLElement>(
+              "[data-footer-orbit]",
+            );
+            const revealItems = cinematicFooter.querySelectorAll<HTMLElement>(
+              "[data-footer-reveal]",
+            );
+            const getFooterRevealScale = () => {
+              if (!plane || !colorReveal) return 1;
+              const diameter =
+                colorReveal.offsetWidth ||
+                Math.max(window.innerWidth, window.innerHeight) * 2;
+              const farthestCorner = Math.hypot(
+                plane.clientWidth / 2,
+                plane.clientHeight / 2,
+              );
+              return (farthestCorner * 2.16) / diameter;
+            };
+
+            // The 25vh overlap places this trigger when the hackathon section's
+            // trailing edge has moved to roughly 80% of the viewport.
+            const createFooterRevealObserver = () => {
+              const observer = onScroll({
+                target: cinematicFooter,
+                axis: "y",
+                enter: { target: "start", container: "55%" },
+                leave: { target: "start", container: "0%" },
+                sync: true,
+                repeat: false,
+              });
+              animeObservers.push(observer);
+              return observer;
+            };
+            if (title) {
+              const titleReveal = createFooterRevealObserver();
+              animeAnimations.push(
+                animate(title, {
+                  y: [46, 0],
+                  opacity: [0, 1],
+                  duration: 760,
+                  ease: "out(4)",
+                  autoplay: titleReveal,
+                }),
+              );
+            }
+            if (revealItems.length) {
+              const itemsReveal = createFooterRevealObserver();
+              animeAnimations.push(
+                animate(revealItems, {
+                  y: [26, 0],
+                  opacity: [0, 1],
+                  duration: 650,
+                  delay: stagger(65),
+                  ease: "out(4)",
+                  autoplay: itemsReveal,
+                }),
+              );
+            }
+
+            const footerMatchMedia = gsap.matchMedia();
+            gsapMedia = footerMatchMedia;
+            footerMatchMedia.add(
+              {
+                mobile: "(max-width: 639px)",
+                tablet: "(min-width: 640px) and (max-width: 1023px)",
+                desktop: "(min-width: 1024px)",
+                reduceMotion: "(prefers-reduced-motion: reduce)",
+              },
+              (context) => {
+                const conditions = context.conditions;
+                if (conditions?.reduceMotion) {
+                  if (background) {
+                    gsap.set(background, { backgroundColor: "#090708" });
+                  }
+                  if (colorReveal) {
+                    gsap.set(colorReveal, { scale: getFooterRevealScale() });
+                  }
+                  gsap.set([plane, title, ...revealItems], {
+                    clearProps: "transform,opacity,filter",
+                  });
+                  return;
+                }
+                if (!plane || !background || !title) return;
+
+                const isMobile = Boolean(conditions?.mobile);
+                const isTablet = Boolean(conditions?.tablet);
+                const timeline = gsap.timeline({
+                  defaults: { ease: "none" },
+                  scrollTrigger: {
+                    trigger: cinematicFooter,
+                    start: "top 55%",
+                    end: "top top",
+                    scrub: 0.45,
+                    invalidateOnRefresh: true,
+                  },
+                });
+
+                timeline.fromTo(
+                  plane,
+                  {
+                    scale: isMobile ? 0.99 : isTablet ? 0.985 : 0.98,
+                    z: isMobile ? -18 : isTablet ? -26 : -36,
+                    yPercent: isMobile ? 34 : isTablet ? 37 : 40,
+                    rotateX: isMobile ? 4 : isTablet ? 5 : 6,
+                    rotateY: 0,
+                    opacity: 0.88,
+                    borderRadius: isMobile
+                      ? "40px 40px 0px 0px"
+                      : isTablet
+                        ? "54px 54px 0px 0px"
+                        : "68px 68px 0px 0px",
+                    transformOrigin: "50% 50% 0px",
+                  },
+                  {
+                    scale: 1,
+                    z: 0,
+                    yPercent: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                    opacity: 1,
+                    borderRadius: isMobile
+                      ? "32px 32px 0px 0px"
+                      : isTablet
+                        ? "44px 44px 0px 0px"
+                        : "56px 56px 0px 0px",
+                    duration: 1,
+                  },
+                  0,
+                );
+
+                if (colorReveal) {
+                  timeline.fromTo(
+                    colorReveal,
+                    { scale: 0.015 },
+                    {
+                      scale: getFooterRevealScale,
+                      duration: 1,
+                    },
+                    0,
+                  );
+                }
+
+                if (grid) {
+                  timeline.fromTo(
+                    grid,
+                    { yPercent: isMobile ? 3 : 8, opacity: 0.04 },
+                    { yPercent: -3, opacity: 1, duration: 1 },
+                    0,
+                  );
+                }
+                if (light) {
+                  timeline.fromTo(
+                    light,
+                    { scale: 0.72, opacity: 0.16 },
+                    {
+                      scale: isMobile ? 0.98 : 1.1,
+                      opacity: 0.76,
+                      duration: 1,
+                    },
+                    0,
+                  );
+                }
+                if (orbit) {
+                  timeline.fromTo(
+                    orbit,
+                    { scale: 0.78, rotation: -12, opacity: 0.08 },
+                    { scale: 1, rotation: 0, opacity: 0.55, duration: 1 },
+                    0,
+                  );
+                }
+              },
+            );
+          }
+
           document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => {
             const bounds = el.getBoundingClientRect();
             const initiallyVisible =
@@ -345,7 +538,9 @@ export function MotionLayer() {
           };
 
           document
-            .querySelectorAll<HTMLElement>(".button, .header-contact-link")
+            .querySelectorAll<HTMLElement>(
+              ".button, .header-contact-link, [data-cinematic-footer-link]",
+            )
             .forEach((element) => {
               bindArrowFeedback(
                 element,
@@ -360,8 +555,6 @@ export function MotionLayer() {
                 element.querySelector<SVGElement>(".project-open-btn svg"),
               );
             });
-
-
 
           const refreshMotion = () => {
             if (disposed) return;
