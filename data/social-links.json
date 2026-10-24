@@ -35,12 +35,12 @@
   {
     "id": "twitter",
     "createdAt": "2025-01-01",
-    "updatedAt": "2025-01-01",
+    "updatedAt": "2026-10-24T12:04:01.413Z",
     "sortOrder": 3,
     "isPublished": true,
-    "label": "X / Twitter",
-    "href": "https://x.com/",
-    "handle": "@alexbuilds",
+    "label": "X",
+    "href": "https://x.com/TakneekiTanmay",
+    "handle": "@TakneekiTanmay",
     "icon": "𝕏"
   }
 ]

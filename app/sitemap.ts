@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const projects = await repos.projects.getAll();
   return [
     "",
-    "/experience",
+    "/about",
     "/projects",
     "/hackshastra",
     "/hackathons",

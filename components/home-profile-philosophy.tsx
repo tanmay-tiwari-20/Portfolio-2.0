@@ -291,8 +291,8 @@ export default function HomeProfilePhilosophy({
           </p>
 
           <div className="philosophy-actions" data-profile-reveal>
-            <Link href="/experience" className="button button-secondary mr-3">
-              <span>View The Journey</span>
+            <Link href="/about" className="button button-secondary mr-3">
+              <span>About Me</span>
               <ArrowUpRight size={18} />
             </Link>
             <Link href="/contact" className="button button-primary">

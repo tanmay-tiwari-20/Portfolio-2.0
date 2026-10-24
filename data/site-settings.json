@@ -2,11 +2,52 @@
   {
     "id": "settings-main",
     "createdAt": "2025-01-01",
-    "updatedAt": "2026-10-22T11:07:48.820Z",
+    "updatedAt": "2026-10-24T13:37:36.864Z",
     "sortOrder": 0,
     "isPublished": true,
     "title": "Tanmay Tiwari — Creative Developer",
     "description": "Independent creative developer and community builder based in New Delhi, India.",
-    "accent": "#e62429"
+    "accent": "#e62429",
+    "aboutPopOut": {
+      "centerId": "about-2eea7181-46fb-47ba-9e38-26bab407cc9a",
+      "images": [
+        {
+          "id": "about-2eea7181-46fb-47ba-9e38-26bab407cc9a",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+          "publicId": "portfolio/about/iaunufoqabnr1cfwcfai",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.14 (2).jpeg"
+        },
+        {
+          "id": "about-847f7306-e5ee-4697-983b-818f8c6d1152",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+          "publicId": "portfolio/about/knj0xsyxznfhob6iukko",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.12.jpeg"
+        },
+        {
+          "id": "about-9cdf88c6-b706-4aa2-8c0c-a1b5786fb254",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+          "publicId": "portfolio/about/kuylnce9wchqy5mnatri",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.08 (1).jpeg"
+        },
+        {
+          "id": "about-eb02576f-d2bc-4cf6-9fe9-52e8a3a18d03",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+          "publicId": "portfolio/about/dgzfrl0j9pt0q3av1qrk",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.14.jpeg"
+        },
+        {
+          "id": "about-8a6cb378-1dd3-44c7-b146-75db20f8f00d",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+          "publicId": "portfolio/about/lwwyc3rir4mrky5hc0ib",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.15 (2).jpeg"
+        },
+        {
+          "id": "about-04d0f011-ecdd-4433-a20a-a56230783c80",
+          "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+          "publicId": "portfolio/about/owqu2yu17n2sv7tqxu95",
+          "alt": "WhatsApp Image 2026-10-24 at 17.05.08.jpeg"
+        }
+      ]
+    }
   }
 ]

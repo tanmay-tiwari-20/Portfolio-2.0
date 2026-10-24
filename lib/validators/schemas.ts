@@ -7,7 +7,34 @@ export const projectSchema = baseRecord.extend({ title: z.string(), slug: z.stri
 export const eventSchema = baseRecord.extend({ title: z.string(), date: z.string(), venue: z.string(), status: z.enum(["upcoming", "past"]), description: z.string(), attendees: z.number(), link: z.string().optional(), image: imageSchema.optional() });
 export const hackathonSchema = baseRecord.extend({ name: z.string(), role: z.enum(["Judge", "Mentor", "Organizer"]), date: z.string(), organizer: z.string(), description: z.string(), teams: z.number(), link: z.string().optional() });
 export const socialSchema = baseRecord.extend({ label: z.string(), href: z.string().url(), handle: z.string(), icon: z.string() });
-export const settingsSchema = baseRecord.extend({ title: z.string(), description: z.string(), ogImage: imageSchema.optional(), accent: z.string().default("#e62429") });
+export const aboutPopOutImageSchema = z.object({
+  id: z.string().min(1).max(160),
+  url: z.string().url(),
+  publicId: z.string().min(1).max(300).optional(),
+  alt: z.string().max(300).default(""),
+});
+export const aboutPopOutSchema = z.object({
+  centerId: z.string().min(1).max(160),
+  images: z.array(aboutPopOutImageSchema).min(1),
+}).superRefine((gallery, context) => {
+  const ids = new Set<string>();
+  for (const [index, image] of gallery.images.entries()) {
+    if (ids.has(image.id)) {
+      context.addIssue({ code: "custom", path: ["images", index, "id"], message: "Image IDs must be unique." });
+    }
+    ids.add(image.id);
+  }
+  if (!ids.has(gallery.centerId)) {
+    context.addIssue({ code: "custom", path: ["centerId"], message: "Choose a center image from the gallery." });
+  }
+});
+export const settingsSchema = baseRecord.extend({
+  title: z.string(),
+  description: z.string(),
+  ogImage: imageSchema.optional(),
+  accent: z.string().default("#e62429"),
+  aboutPopOut: aboutPopOutSchema.optional(),
+});
 export type ImageAsset = z.infer<typeof imageSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 export type Experience = z.infer<typeof experienceSchema>;
@@ -16,3 +43,5 @@ export type CommunityEvent = z.infer<typeof eventSchema>;
 export type Hackathon = z.infer<typeof hackathonSchema>;
 export type SocialLink = z.infer<typeof socialSchema>;
 export type SiteSettings = z.infer<typeof settingsSchema>;
+export type AboutPopOutImage = z.infer<typeof aboutPopOutImageSchema>;
+export type AboutPopOutConfig = z.infer<typeof aboutPopOutSchema>;

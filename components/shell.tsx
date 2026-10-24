@@ -4,14 +4,15 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { ArrowUpRight, ArrowUp } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import type { SocialLink } from "@/lib/validators/schemas";
 
 import StaggeredMenu from "@/components/animations/staggered-menu";
 
 const navItems = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
+  { label: "About", href: "/about", sublabel: "Journey & Vision" },
   { label: "Work", href: "/projects", sublabel: "Featured Works" },
-  { label: "Experience", href: "/experience", sublabel: "Career & Roles" },
   {
     label: "HackShastra",
     href: "/hackshastra",
@@ -21,15 +22,7 @@ const navItems = [
   { label: "Contact", href: "/contact", sublabel: "Direct Communication" },
 ];
 
-const socialItems = [
-  { label: "GitHub", href: "https://github.com/" },
-  { label: "LinkedIn", href: "https://linkedin.com/" },
-  { label: "X / Twitter", href: "https://x.com/" },
-  { label: "WhatsApp", href: "https://wa.me/910000000000" },
-  { label: "Instagram", href: "https://instagram.com/" },
-];
-
-export function SiteNav() {
+export function SiteNav({ socials }: { socials: SocialLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -56,7 +49,7 @@ export function SiteNav() {
         </Link>
         <StaggeredMenu
           items={navItems}
-          socials={socialItems}
+          socials={socials}
           prelayerColors={["#1c1516", "#ef463e"]}
           accentColor="#ef463e"
           onStateChange={setMenuOpen}
@@ -66,66 +59,9 @@ export function SiteNav() {
   );
 }
 
-export function Footer({
-  name = "Tanmay Tiwari",
-  email = "workwithtakneekitanmay@gmail.com",
-}: {
-  name?: string;
-  email?: string;
-}) {
-  const pathname = usePathname();
-
-  // Hide footer on admin panel pages
-  if (
-    pathname === "/" ||
-    pathname?.startsWith("/secret-admin") ||
-    pathname?.startsWith("/admin")
-  ) {
-    return null;
-  }
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  return (
-    <footer className="footer-modern section-shell">
-      <div className="footer-top">
-        <div>
-          <h2 className="display">
-            Turning bold concepts into
-            <br />
-            <em>enduring software.</em>
-          </h2>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 14,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <a href={`mailto:${email}`} className="button button-primary">
-            Initiate Contact <ArrowUpRight size={18} />
-          </a>
-          <button
-            onClick={scrollToTop}
-            className="button button-secondary"
-            aria-label="Back to top"
-          >
-            Back to top <ArrowUp size={16} />
-          </button>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <span>
-          © {new Date().getFullYear()} {name}. All rights reserved.
-        </span>
-        <span>Engineered with architectural discipline & precision.</span>
-      </div>
-    </footer>
-  );
+export function Footer(_props: { name?: string; email?: string }) {
+  void _props;
+  return null;
 }
 
 export function MotionLayer() {

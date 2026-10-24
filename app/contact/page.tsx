@@ -3,6 +3,7 @@ import ContactForm from "@/components/contact-form";
 import { repos } from "@/lib/db";
 import { ArrowUpRight, Mail, Share2 } from "lucide-react";
 import { MotionLayer } from "@/components/shell";
+import { getSocialDisplayLabel } from "@/lib/social-label";
 
 export const dynamic = "force-dynamic";
 
@@ -47,51 +48,54 @@ export default async function Contact() {
               FREQUENCY & RADAR
             </div>
             <div style={{ display: "grid", gap: 14 }}>
-              {socials.map((s) => (
-                <a
-                  className="timeline-card"
-                  style={{
-                    margin: 0,
-                    padding: "20px 24px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  key={s.id}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <span
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "var(--radius-pill)",
-                        backgroundColor: "var(--spidey-dark-700)",
-                        display: "grid",
-                        placeItems: "center",
-                        fontSize: 16,
-                        color: "var(--spidey-red)",
-                        border: "1px solid var(--line)",
-                      }}
-                    >
-                      <Share2 size={16} />
-                    </span>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 16, color: "#ffffff" }}>
-                        {s.label}
-                      </div>
-                      <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>
-                        {s.handle}
+              {socials.map((s) => {
+                const label = getSocialDisplayLabel(s.label, s.href);
+                return (
+                  <a
+                    className="timeline-card"
+                    style={{
+                      margin: 0,
+                      padding: "20px 24px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={s.id}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                      <span
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: "var(--radius-pill)",
+                          backgroundColor: "var(--spidey-dark-700)",
+                          display: "grid",
+                          placeItems: "center",
+                          fontSize: 16,
+                          color: "var(--spidey-red)",
+                          border: "1px solid var(--line)",
+                        }}
+                      >
+                        <Share2 size={16} />
+                      </span>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 16, color: "#ffffff" }}>
+                          {label}
+                        </div>
+                        <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>
+                          {s.handle}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span className="project-open-btn" style={{ position: "static", width: 36, height: 36 }}>
-                    <ArrowUpRight size={16} />
-                  </span>
-                </a>
-              ))}
+                    <span className="project-open-btn" style={{ position: "static", width: 36, height: 36 }}>
+                      <ArrowUpRight size={16} />
+                    </span>
+                  </a>
+                );
+              })}
 
               {person?.email && (
                 <a

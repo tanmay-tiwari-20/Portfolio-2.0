@@ -9,10 +9,11 @@ import {
   FaYoutube,
 } from "react-icons/fa6";
 import type { SocialLink } from "@/lib/validators/schemas";
+import { getSocialDisplayLabel } from "@/lib/social-label";
 
 const footerLinks = [
   { label: "Projects", href: "/projects" },
-  { label: "Experience", href: "/experience" },
+  { label: "About", href: "/about" },
   { label: "HackShastra", href: "/hackshastra" },
   { label: "Hackathons", href: "/hackathons" },
 ];
@@ -172,21 +173,24 @@ export default function CinematicFooter({
               data-footer-reveal
               className="flex items-center gap-2"
             >
-              {socials.map((social) => (
-                <a
-                  key={social.id}
-                  href={social.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={social.label}
-                  title={social.label}
-                  className="group grid h-10 w-10 place-items-center rounded-full border border-white/30 text-white/85 transition-[transform,background-color,border-color,color] duration-300 hover:-translate-y-1 hover:scale-105 hover:border-white/75 hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none"
-                >
-                  <span className="h-4.5 w-4.5">
-                    <SocialIcon social={social} />
-                  </span>
-                </a>
-              ))}
+              {socials.map((social) => {
+                const label = getSocialDisplayLabel(social.label, social.href);
+                return (
+                  <a
+                    key={social.id}
+                    href={social.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    title={label}
+                    className="group grid h-10 w-10 place-items-center rounded-full border border-white/30 text-white/85 transition-[transform,background-color,border-color,color] duration-300 hover:-translate-y-1 hover:scale-105 hover:border-white/75 hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none"
+                  >
+                    <span className="h-4.5 w-4.5">
+                      <SocialIcon social={social} />
+                    </span>
+                  </a>
+                );
+              })}
             </nav>
 
             <div

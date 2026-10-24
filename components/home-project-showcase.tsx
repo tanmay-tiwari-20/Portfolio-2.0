@@ -37,6 +37,17 @@ export type ProjectShowcaseItem = {
   githubUrl?: string;
 };
 
+function getValidLiveUrl(value?: string) {
+  if (!value || value.trim() === "" || value.trim() === "#") return undefined;
+
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:" ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 type Props = {
   projects: ProjectShowcaseItem[];
   totalProjectCount: number;
@@ -66,6 +77,7 @@ export default function HomeProjectShowcase({
   const scrollTriggerRef = useRef<ScrollTriggerPlugin | null>(null);
 
   const activeProject = projects[activeIndex] || projects[0];
+  const activeLiveUrl = getValidLiveUrl(activeProject?.liveUrl);
   const activeCoverFit = activeProject?.cover.fit ||
     (activeProject?.cover.url.toLowerCase().includes("screenshot") ? "contain" : "cover");
 
@@ -186,7 +198,7 @@ export default function HomeProjectShowcase({
   // 3. 3D Mouse Tilt with Cursor Light Glare
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
-      if (isReducedMotion || !card3dRef.current || !gsapRef.current) return;
+      if (e.pointerType !== "mouse" || isReducedMotion || !card3dRef.current || !gsapRef.current) return;
       const rect = e.currentTarget.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -372,26 +384,47 @@ export default function HomeProjectShowcase({
                   </div>
 
                   {/* Frosted Production URL Capsule */}
-                  <div className="studio-url-capsule" title={activeProject.title}>
-                    <svg
-                      className="studio-lock-icon"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      aria-hidden="true"
+                  {activeLiveUrl ? (
+                    <a
+                      className="studio-url-capsule"
+                      href={activeLiveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit ${activeProject.title} live website (opens in a new tab)`}
+                      title={`Visit ${activeProject.title}`}
                     >
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                    <span className="studio-url-text">
-                      {activeProject.liveUrl && activeProject.liveUrl !== "#"
-                        ? activeProject.liveUrl
-                            .replace(/^https?:\/\//, "")
-                            .replace(/\/$/, "")
-                        : `${activeProject.slug}.tanmaytiwari.dev`}
-                    </span>
-                  </div>
+                      <svg
+                        className="studio-lock-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      <span className="studio-url-text">
+                        {activeLiveUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      </span>
+                      <ExternalLink className="studio-url-external" size={12} aria-hidden="true" />
+                    </a>
+                  ) : (
+                    <div className="studio-url-capsule is-unavailable" aria-label="Live preview unavailable">
+                      <svg
+                        className="studio-lock-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.2"
+                        aria-hidden="true"
+                      >
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                      <span className="studio-url-text">Live preview unavailable</span>
+                    </div>
+                  )}
 
                   {/* Editorial Architectural Meta */}
                   <div className="studio-meta-tag">
@@ -471,9 +504,9 @@ export default function HomeProjectShowcase({
 
               {/* Direct Action Suite */}
               <div className="showcase-actions">
-                {activeProject.liveUrl && activeProject.liveUrl !== "#" ? (
+                {activeLiveUrl ? (
                   <a
-                    href={activeProject.liveUrl}
+                    href={activeLiveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="button button-primary showcase-live-btn"
@@ -570,6 +603,7 @@ export default function HomeProjectShowcase({
           {projects.map((p, i) => {
             const coverFit = p.cover.fit ||
               (p.cover.url.toLowerCase().includes("screenshot") ? "contain" : "cover");
+            const liveUrl = getValidLiveUrl(p.liveUrl);
             return (
             <div key={p.id} className="showcase-grid-card">
               <Link
@@ -625,9 +659,9 @@ export default function HomeProjectShowcase({
                     <ArrowUpRight size={14} />
                   </Link>
 
-                  {p.liveUrl && p.liveUrl !== "#" ? (
+                  {liveUrl ? (
                     <a
-                      href={p.liveUrl}
+                      href={liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="grid-live-badge"

@@ -47,7 +47,7 @@ function isKey(value: unknown): value is Key {
 }
 
 function refresh() {
-  for (const path of ["/", "/experience", "/projects", "/hackshastra", "/hackathons", "/contact"]) {
+  for (const path of ["/", "/about", "/projects", "/hackshastra", "/hackathons", "/contact"]) {
     revalidatePath(path);
   }
   revalidatePath("/projects/[slug]", "page");
@@ -56,6 +56,15 @@ function refresh() {
 function allowedOrigin(req: Request) {
   const origin = req.headers.get("origin");
   return !origin || origin === new URL(req.url).origin;
+}
+function hasSafeAboutPopOutUrls(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const images = (value as Record<string, unknown>).images;
+  return Array.isArray(images) && images.every((image) => {
+    if (!image || typeof image !== "object" || Array.isArray(image)) return false;
+    const url = (image as Record<string, unknown>).url;
+    return typeof url === "string" && isCloudinaryImageUrl(url);
+  });
 }
 export async function GET(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -87,6 +96,9 @@ export async function POST(req: Request) {
     if (typeof imageUrl !== "string" || !isCloudinaryImageUrl(imageUrl)) {
       return NextResponse.json({ error: "Event poster must be a valid HTTPS Cloudinary image URL" }, { status: 400 });
     }
+  }
+  if (body.collection === "settings" && item.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(item.aboutPopOut)) {
+    return NextResponse.json({ error: "About gallery images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
   }
   if (body.collection === "hackathons" && item.role !== "Judge" && item.role !== "Mentor") {
     return NextResponse.json({ error: "Role must be Judge or Mentor" }, { status: 400 });
@@ -132,6 +144,9 @@ export async function PATCH(req: Request) {
     if (typeof imageUrl !== "string" || !isCloudinaryImageUrl(imageUrl)) {
       return NextResponse.json({ error: "Event poster must be a valid HTTPS Cloudinary image URL" }, { status: 400 });
     }
+  }
+  if (collection === "settings" && parsedPatch.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(parsedPatch.aboutPopOut)) {
+    return NextResponse.json({ error: "About gallery images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
   }
 
   const entry = entries[collection];

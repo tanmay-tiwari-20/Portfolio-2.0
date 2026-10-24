@@ -12,6 +12,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ArrowUpRight } from "lucide-react";
+import {
+  FaDiscord,
+  FaGithub,
+  FaInstagram,
+  FaLink,
+  FaLinkedinIn,
+  FaTelegram,
+  FaTiktok,
+  FaWhatsapp,
+  FaXTwitter,
+  FaYoutube,
+} from "react-icons/fa6";
+import type { IconType } from "react-icons";
+import { getSocialDisplayLabel } from "@/lib/social-label";
 
 export interface StaggeredMenuItem {
   label: string;
@@ -22,6 +36,8 @@ export interface StaggeredMenuItem {
 export interface StaggeredMenuSocialItem {
   label: string;
   href: string;
+  handle?: string;
+  id?: string;
 }
 
 export interface StaggeredMenuProps {
@@ -34,24 +50,26 @@ export interface StaggeredMenuProps {
 
 const DEFAULT_ITEMS: StaggeredMenuItem[] = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
+  { label: "About", href: "/about", sublabel: "Journey & Vision" },
   { label: "Work", href: "/projects", sublabel: "Featured Works" },
-  { label: "Experience", href: "/experience", sublabel: "Career & Roles" },
-  {
-    label: "HackShastra",
-    href: "/hackshastra",
-    sublabel: "Flagship Hackathon",
-  },
+  { label: "HackShastra", href: "/hackshastra", sublabel: "Tech Community" },
   { label: "Hackathons", href: "/hackathons", sublabel: "Awards & Builds" },
   { label: "Contact", href: "/contact", sublabel: "Direct Communication" },
 ];
 
-const DEFAULT_SOCIALS: StaggeredMenuSocialItem[] = [
-  { label: "GitHub", href: "https://github.com/" },
-  { label: "LinkedIn", href: "https://linkedin.com/" },
-  { label: "X / Twitter", href: "https://x.com/" },
-  { label: "WhatsApp", href: "https://wa.me/910000000000" },
-  { label: "Instagram", href: "https://instagram.com/" },
-];
+function getSocialIcon(social: StaggeredMenuSocialItem): IconType {
+  const value = `${social.label} ${social.href}`.toLowerCase();
+  if (value.includes("github")) return FaGithub;
+  if (value.includes("linkedin")) return FaLinkedinIn;
+  if (value.includes("instagram")) return FaInstagram;
+  if (value.includes("twitter") || value.includes("x.com")) return FaXTwitter;
+  if (value.includes("whatsapp") || value.includes("wa.me")) return FaWhatsapp;
+  if (value.includes("youtube") || value.includes("youtu.be")) return FaYoutube;
+  if (value.includes("discord")) return FaDiscord;
+  if (value.includes("telegram") || value.includes("t.me")) return FaTelegram;
+  if (value.includes("tiktok")) return FaTiktok;
+  return FaLink;
+}
 
 const prefersReducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -61,7 +79,7 @@ const getServerMountedSnapshot = () => false;
 
 export default function StaggeredMenu({
   items = DEFAULT_ITEMS,
-  socials = DEFAULT_SOCIALS,
+  socials = [],
   prelayerColors = ["#161720", "#ff1a4b"], // Obsidian Charcoal -> Radiant Carmine Red
   accentColor = "#ff003c",
   onStateChange,
@@ -596,30 +614,39 @@ export default function StaggeredMenu({
               {/* Bottom Panel Section: Socials & Coordinates Only (No Direct Action Box) */}
               <div className="sm-bottom-section">
                 <div className="panel-footer-row">
-                  <div className="panel-socials">
-                    <span className="socials-kicker">CONNECT WITH ME</span>
-                    <div className="socials-links-grid">
-                      {socials.map((soc) => (
-                        <a
-                          key={soc.label}
-                          href={soc.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="social-pill-link"
-                        >
-                          <span>{soc.label}</span>
-                          <ArrowUpRight
-                            size={11}
-                            className="social-pill-arrow"
-                          />
-                        </a>
-                      ))}
+                  <nav className="panel-socials" aria-label="Social links">
+                    <div className="socials-heading-row">
+                      <div>
+                        <p className="socials-heading">Find me online</p>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="panel-coordinates">
-                    <span>NEW DELHI, IN</span>
-                  </div>
+                    {socials.length > 0 ? (
+                      <div className="socials-links-grid">
+                        {socials.map((soc) => {
+                          const Icon = getSocialIcon(soc);
+                          const label = getSocialDisplayLabel(soc.label, soc.href);
+                          return (
+                            <a
+                              key={soc.id || `${soc.label}-${soc.href}`}
+                              href={soc.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="social-pill-link"
+                              aria-label={`Visit ${label}${soc.handle ? `, ${soc.handle}` : ""} (opens in a new tab)`}
+                              title={`${label}${soc.handle ? ` · ${soc.handle}` : ""}`}
+                            >
+                              <span className="social-icon-wrap">
+                                <Icon aria-hidden="true" />
+                              </span>
+                              <span className="social-link-label">{label}</span>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <p className="socials-empty">Social links will appear here.</p>
+                    )}
+                  </nav>
                 </div>
               </div>
             </aside>

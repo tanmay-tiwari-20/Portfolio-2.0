@@ -249,8 +249,8 @@ export default function HomeExperienceJourney({ experiences }: Props) {
         </h2>
         <div className="journey-heading-aside">
           <p className="journey-overview">{overview}</p>
-          <Link href="/experience" className="journey-more-link">
-            Explore the full journey
+          <Link href="/about" className="journey-more-link">
+            More About Me
             <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
         </div>

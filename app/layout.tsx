@@ -5,7 +5,7 @@ import "./globals.css";
 import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
 import Preloader from "@/components/animations/preloader";
-import { repos } from "@/lib/db";
+import { published, repos } from "@/lib/db";
 import { Analytics } from "@vercel/analytics/next";
 
 export const dynamic = "force-dynamic";
@@ -59,7 +59,10 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const [profile] = await repos.profile.getAll();
+  const [profile, socials] = await Promise.all([
+    repos.profile.getAll().then(([item]) => item),
+    published(repos.socials),
+  ]);
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body id="top" className="font-body bg-spidey-dark-900 text-spidey-paper">
@@ -68,7 +71,7 @@ export default async function RootLayout({
         </a>
         <Analytics />
         <Preloader />
-        <SiteNav />
+        <SiteNav socials={socials} />
         <main id="main">
           <PageTransition>{children}</PageTransition>
         </main>

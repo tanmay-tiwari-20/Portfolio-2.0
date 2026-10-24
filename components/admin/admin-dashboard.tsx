@@ -27,6 +27,7 @@ import {
   Shield,
 } from "lucide-react";
 import SortableList from "@/components/admin/sortable-list";
+import AboutGalleryEditor from "@/components/admin/about-gallery-editor";
 import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 import type {
   Project,
@@ -947,7 +948,7 @@ export default function AdminDashboard() {
                 Social Channels & Links
               </h2>
               <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-                Add or edit your GitHub, LinkedIn, Twitter/X, and communication links.
+                Add or edit your GitHub, LinkedIn, X, and communication links.
               </p>
             </div>
             <button
@@ -1087,6 +1088,13 @@ export default function AdminDashboard() {
               {loading ? "Saving..." : "Save Settings"} <Check size={16} />
             </button>
           </form>
+
+          <AboutGalleryEditor
+            key={settings.updatedAt}
+            value={settings.aboutPopOut}
+            profileImage={profile?.avatar}
+            onSave={(aboutPopOut) => saveItem("settings", { ...settings, aboutPopOut }, false)}
+          />
         </section>
       )}
 
