@@ -1,212 +1,457 @@
 "use client";
 
-import Image from "next/image";
-import { useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import {
+  AnimatePresence,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { Images } from "lucide-react";
 import type { AboutPopOutConfig } from "@/lib/validators/schemas";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 
-type Props = {
-  gallery: AboutPopOutConfig;
+export type RadialPopOutItem = {
+  src: string;
+  alt?: string;
+  id?: string;
+};
+
+export type RadialPopOutProps = {
+  gallery?: AboutPopOutConfig;
+  hero?: RadialPopOutItem;
+  items?: RadialPopOutItem[];
+  cardSize?: number;
+  heroSize?: number;
+  radius?: number;
+  jitter?: number;
+  stagger?: number;
+  maxTilt?: number;
+  shift?: number;
   className?: string;
 };
 
-export default function RadialPopOut({ gallery, className }: Props) {
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+export default function RadialPopOut({
+  gallery,
+  hero: customHero,
+  items: customItems,
+  cardSize = 245,
+  heroSize = 310,
+  radius = 290,
+  jitter = 7,
+  stagger = 0.025,
+  maxTilt = 10,
+  shift = 0.16,
+  className = "",
+}: RadialPopOutProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
-  const [expanded, setExpanded] = useState(false);
-  const [failedImages, setFailedImages] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const lastPointerType =
-    useRef<PointerEvent<HTMLButtonElement>["pointerType"]>("mouse");
-  const center =
-    gallery.images.find((image) => image.id === gallery.centerId) ??
-    gallery.images[0];
-  const orbit = gallery.images.filter((image) => image.id !== center?.id);
+  const centerCardRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const isTouchDeviceRef = useRef(false);
 
-  function markFailed(id: string) {
-    setFailedImages((current) => new Set(current).add(id));
-  }
+  // Resolve hero and items from props or gallery
+  const { hero, items } = useMemo(() => {
+    if (customHero && customItems) {
+      return { hero: customHero, items: customItems };
+    }
+    if (gallery && gallery.images?.length > 0) {
+      const centerImg =
+        gallery.images.find((image) => image.id === gallery.centerId) ??
+        gallery.images[0];
+      const orbitImgs = gallery.images.filter(
+        (image) => image.id !== centerImg?.id,
+      );
+      return {
+        hero: {
+          src: getOptimizedUrl(centerImg.url, 1200),
+          alt: centerImg.alt || "Tanmay Tiwari",
+          id: centerImg.id,
+        },
+        items: orbitImgs.map((img) => ({
+          src: getOptimizedUrl(img.url, 960),
+          alt: img.alt || "Moment",
+          id: img.id,
+        })),
+      };
+    }
+    return {
+      hero: customHero || { src: "", alt: "Featured" },
+      items: customItems || [],
+    };
+  }, [gallery, customHero, customItems]);
 
-  function handlePointerEnter(event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType !== "touch") setExpanded(true);
-  }
+  const effectiveRadius = radius ?? Math.round(1.2 * cardSize);
+  const effectiveHeroSize = heroSize ?? Math.round(1.28 * cardSize);
 
-  function handlePointerMove(event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType !== "mouse" || !rootRef.current) return;
-    const bounds = rootRef.current.getBoundingClientRect();
-    rootRef.current.style.setProperty(
-      "--spot-x",
-      `${((event.clientX - bounds.left) / bounds.width) * 100}%`,
-    );
-    rootRef.current.style.setProperty(
-      "--spot-y",
-      `${((event.clientY - bounds.top) / bounds.height) * 100}%`,
-    );
-  }
+  // True bounding diameter: from center to outer card edge
+  const baseDimension = Math.round((effectiveRadius + cardSize * 0.55) * 2);
 
-  function handlePointerLeave(event: PointerEvent<HTMLDivElement>) {
-    if (event.pointerType !== "touch") setExpanded(false);
-    event.currentTarget.style.setProperty("--spot-x", "50%");
-    event.currentTarget.style.setProperty("--spot-y", "50%");
-  }
+  useIsomorphicLayoutEffect(() => {
+    const parent = rootRef.current?.parentElement;
+    if (!parent) return;
 
-  const rootClassName = [
-    "relative isolate mx-auto aspect-square w-full max-w-[500px] min-[681px]:max-w-[720px] [--spot-x:50%] [--spot-y:50%] motion-reduce:[&_*]:transition-none",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+    const updateScale = () => {
+      const parentRect = parent.getBoundingClientRect();
+      const parentWidth = parentRect.width;
+
+      // Strict viewport height bounding:
+      // Leave ~80px vertical breathing room so the enlarged cards never exceed view height
+      const viewportHeight = window.innerHeight;
+      const maxAvailableHeight = Math.max(300, viewportHeight - 80);
+      const parentHeight = parentRect.height > 0 ? parentRect.height : maxAvailableHeight;
+      const effectiveHeight = Math.min(parentHeight, maxAvailableHeight);
+
+      const availableDimension = Math.min(
+        parentWidth > 0 ? parentWidth : baseDimension,
+        effectiveHeight,
+      );
+
+      if (availableDimension > 0) {
+        setScale(Math.min(1, availableDimension / baseDimension));
+      }
+    };
+
+    updateScale();
+
+    const observer = new ResizeObserver(() => {
+      updateScale();
+    });
+
+    observer.observe(parent);
+    window.addEventListener("resize", updateScale);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateScale);
+    };
+  }, [baseDimension]);
+
+  // Touch outside listener on mobile to dismiss pop-out cleanly
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleOutsideInteraction = (e: Event) => {
+      if (
+        centerCardRef.current &&
+        !centerCardRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+        resetTilt();
+      }
+    };
+
+    window.addEventListener("pointerdown", handleOutsideInteraction);
+    return () => {
+      window.removeEventListener("pointerdown", handleOutsideInteraction);
+    };
+  }, [isOpen]);
+
+  const scaledCardSize = cardSize * scale;
+  const scaledHeroSize = effectiveHeroSize * scale;
+  const scaledRadius = effectiveRadius * scale;
+  const itemCount = items.length;
+
+  // Deterministic jitter and radial coordinates (starting from 12 o'clock / -90deg)
+  const positions = useMemo(() => {
+    return items.map((_, index) => {
+      const angle = (index / Math.max(itemCount, 1)) * Math.PI * 2 - Math.PI / 2;
+      const pseudoRandom = 233280 * Math.sin(9301 * index + 49297);
+      const frac = pseudoRandom - Math.floor(pseudoRandom);
+      const rotate = (frac * 2 - 1) * jitter;
+      return {
+        x: Math.cos(angle) * scaledRadius,
+        y: Math.sin(angle) * scaledRadius,
+        rotate,
+      };
+    });
+  }, [items, itemCount, scaledRadius, jitter]);
+
+  const containerDimension = baseDimension * scale;
+
+  // Interactive 3D tilt & magnetic cursor spring physics
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springConfig = {
+    stiffness: 140,
+    damping: 22,
+    mass: 0.7,
+    restDelta: 0.001,
+  };
+  const smoothMouseX = useSpring(mouseX, springConfig);
+  const smoothMouseY = useSpring(mouseY, springConfig);
+
+  const shiftAmount = scaledHeroSize * shift;
+  const translateX = useTransform(smoothMouseX, [-1, 1], [-shiftAmount, shiftAmount]);
+  const translateY = useTransform(smoothMouseY, [-1, 1], [-shiftAmount, shiftAmount]);
+  const rotateY = useTransform(smoothMouseX, [-1, 1], [-maxTilt, maxTilt]);
+  const rotateX = useTransform(smoothMouseY, [-1, 1], [maxTilt, -maxTilt]);
+
+  const heroTransform = useMotionTemplate`translate3d(${translateX}px, ${translateY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+  const resetTilt = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  // DESKTOP: ONLY HOVER over center image opens it; leaving center image IMMEDIATELY closes it.
+  // MOBILE: ONLY TOUCH/TAP on center image toggles it; tapping outside dismisses it.
+  const handleCenterPointerEnter = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse") {
+      isTouchDeviceRef.current = false;
+      setIsOpen(true);
+    }
+  };
+
+  const handleCenterPointerLeave = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse") {
+      setIsOpen(false);
+      resetTilt();
+    }
+  };
+
+  const handleCenterPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch" || e.pointerType === "pen") {
+      isTouchDeviceRef.current = true;
+      setIsOpen((prev) => !prev);
+    }
+  };
 
   return (
     <div
       ref={rootRef}
-      className={rootClassName}
-      data-open={expanded}
-      onPointerLeave={handlePointerLeave}
-      onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-          setExpanded(false);
+      className={`relative mx-auto flex items-center justify-center select-none ${className}`}
+      style={{
+        width: containerDimension,
+        height: containerDimension,
+        perspective: 1000,
       }}
     >
-      <span
-        className="pointer-events-none absolute inset-0 -z-[2] rounded-full bg-[radial-gradient(240px_circle_at_var(--spot-x)_var(--spot-y),rgba(255,250,247,0.075),transparent_70%)]"
-        aria-hidden="true"
-      />
-      <span
-        className="pointer-events-none absolute inset-0 -z-[2] rounded-full bg-[radial-gradient(circle_at_50%_47%,rgba(239,70,62,0.16),transparent_39%),radial-gradient(circle_at_50%_50%,rgba(255,250,247,0.045),transparent_69%)]"
-        aria-hidden="true"
-      />
-      <span
-        className="pointer-events-none absolute inset-[6%] -z-[1] rounded-full border border-white/[0.08]"
-        aria-hidden="true"
-      />
-      <span
-        className="pointer-events-none absolute inset-[13%] -z-[1] rounded-full border border-white/[0.06]"
-        aria-hidden="true"
-      />
-
+      {/* Ambient background orbital guides and cosmic glow */}
       <div
-        className="pointer-events-none absolute inset-0 z-[1]"
-        aria-hidden={!expanded}
+        className="pointer-events-none absolute inset-0 flex items-center justify-center -z-10"
+        aria-hidden="true"
       >
-        <span
-          className={`pointer-events-none absolute inset-[4%] rounded-full border border-dashed border-white/[0.09] transition-[opacity,transform] duration-500 ease-out ${expanded ? "scale-[1.035] opacity-100" : "opacity-70"}`}
-          aria-hidden="true"
+        {/* Soft crimson core spotlight */}
+        <div
+          className={`absolute rounded-full transition-all duration-700 ease-out ${
+            isOpen
+              ? "scale-110 opacity-100"
+              : "scale-90 opacity-60"
+          }`}
+          style={{
+            width: scaledRadius * 2.15,
+            height: scaledRadius * 2.15,
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(239,70,62,0.2) 0%, rgba(239,70,62,0.06) 45%, transparent 70%)",
+          }}
         />
-        <span
-          className={`pointer-events-none absolute inset-[22%] rounded-full border border-[#ef463e]/[0.14] transition-[opacity,transform] duration-500 ease-out ${expanded ? "scale-[1.08] opacity-40" : "scale-[0.92] opacity-70"}`}
-          aria-hidden="true"
-        />
-        {orbit.map((image, index) => {
-          const angle =
-            -90 +
-            (360 * index) / Math.max(orbit.length, 1) +
-            (index % 2 ? 5 : -4);
-          const radians = (angle * Math.PI) / 180;
-          const radius = 37 + (index % 3 === 1 ? -2 : index % 3 === 2 ? 1 : 0);
-          const style = {
-            "--orbit-x": `${Math.cos(radians) * radius}%`,
-            "--orbit-y": `${Math.sin(radians) * radius}%`,
-            "--stack-x": `${Math.cos(radians) * 17}%`,
-            "--stack-y": `${Math.sin(radians) * 17}%`,
-            "--orbit-depth": `${index}`,
-            "--card-turn": `${((index % 3) - 1) * 4}deg`,
-          } as CSSProperties;
 
-          return (
-            <div
-              className={`absolute aspect-square w-[clamp(110px,31%,165px)] overflow-hidden rounded-[8px] border border-[#fffaf7]/[0.56] bg-[#211718] shadow-[0_12px_36px_rgba(0,0,0,0.32)] [z-index:calc(2+var(--orbit-depth))] [transform-origin:center] [transition:top_760ms_cubic-bezier(0.16,1.08,0.3,1),left_760ms_cubic-bezier(0.16,1.08,0.3,1),transform_760ms_cubic-bezier(0.16,1.08,0.3,1),opacity_420ms_ease,filter_580ms_ease,box-shadow_360ms_ease] [transition-delay:calc(var(--orbit-depth)*22ms)] min-[681px]:w-[clamp(100px,27%,170px)] min-[1001px]:w-[clamp(118px,29%,210px)] ${expanded ? "left-[calc(50%_+_var(--orbit-x))] top-[calc(50%_+_var(--orbit-y))] [transform:translate3d(-50%,-50%,0)_rotate(var(--card-turn))_scale(1)] opacity-100 saturate-100 brightness-100" : "left-[calc(50%_+_var(--stack-x))] top-[calc(50%_+_var(--stack-y))] [transform:translate3d(-50%,-50%,0)_rotate(calc(var(--card-turn)*1.7))_scale(0.74)] opacity-[0.74] saturate-[0.78] brightness-[0.78]"}`}
-              key={image.id}
-              style={style}
-            >
-              <ImageFrame
-                image={image}
-                failed={failedImages.has(image.id)}
-                onFail={markFailed}
-              />
-            </div>
-          );
-        })}
+        {/* Orbit ring dashed */}
+        <div
+          className={`absolute rounded-full border border-dashed transition-all duration-700 ease-out ${
+            isOpen
+              ? "scale-105 border-[#ef463e]/30 opacity-100"
+              : "scale-100 border-white/[0.08] opacity-60"
+          }`}
+          style={{
+            width: scaledRadius * 2,
+            height: scaledRadius * 2,
+          }}
+        />
+
+        {/* Outer subtle boundary ring */}
+        <div
+          className="absolute rounded-full border border-white/[0.04]"
+          style={{
+            width: scaledRadius * 2.35,
+            height: scaledRadius * 2.35,
+          }}
+        />
       </div>
 
-      {center && (
-        <button
-          className={`absolute left-1/2 top-1/2 z-[50] grid aspect-[0.88] w-[clamp(170px,44%,230px)] -translate-x-1/2 -translate-y-1/2 place-items-stretch overflow-hidden rounded-[11px] bg-[#211718] p-0 text-[#fffaf7] transition-[transform,box-shadow,border-color] duration-700 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] hover:rotate-0 hover:scale-[0.96] hover:border-[#fffaf7]/[0.96] focus-visible:rotate-0 focus-visible:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#fffaf7] focus-visible:ring-offset-[3px] focus-visible:ring-offset-[#ef463e] min-[681px]:w-[clamp(184px,40%,250px)] min-[681px]:rounded-xl min-[1001px]:w-[clamp(210px,40%,304px)] ${expanded ? "rotate-0 scale-[0.96] border border-[#fffaf7]/[0.96] shadow-[0_32px_90px_rgba(0,0,0,0.56),0_0_0_7px_rgba(239,70,62,0.13),0_0_84px_rgba(239,70,62,0.16)]" : "rotate-[-2.5deg] border border-[#fffaf7]/80 shadow-[0_28px_78px_rgba(0,0,0,0.5),0_0_0_7px_rgba(255,250,247,0.055),0_0_62px_rgba(239,70,62,0.12)]"}`}
-          type="button"
-          aria-label={`${center.alt ? `${center.alt}. ` : ""}${expanded ? "Gather the surrounding photos" : "Reveal the surrounding photos"}`}
-          aria-expanded={expanded}
-          onPointerEnter={handlePointerEnter}
-          onPointerMove={handlePointerMove}
-          onPointerDown={(event) => {
-            lastPointerType.current = event.pointerType;
+      {/* Scattered Radial Cards — pointer-events-none ensures hovering off center card isn't blocked */}
+      <AnimatePresence>
+        {isOpen &&
+          items.map((item, index) => {
+            const pos = positions[index] || { x: 0, y: 0, rotate: 0 };
+            return (
+              <motion.div
+                key={item.id ?? `${index}-${item.src}`}
+                aria-hidden={true}
+                className="pointer-events-none absolute z-20"
+                style={{
+                  width: scaledCardSize,
+                  height: scaledCardSize,
+                }}
+                initial={{
+                  x: 0,
+                  y: 0,
+                  rotate: 0,
+                  scale: 0.55,
+                  opacity: 0,
+                }}
+                animate={
+                  shouldReduceMotion
+                    ? {
+                        x: pos.x,
+                        y: pos.y,
+                        rotate: pos.rotate,
+                        scale: 1,
+                        opacity: 1,
+                        transition: { duration: 0.15 },
+                      }
+                    : {
+                        x: pos.x,
+                        y: pos.y,
+                        rotate: pos.rotate,
+                        scale: 1,
+                        opacity: 1,
+                        transition: {
+                          type: "spring",
+                          stiffness: 260,
+                          damping: 22,
+                          mass: 0.8,
+                          restDelta: 0.001,
+                          delay: index * stagger,
+                        },
+                      }
+                }
+                exit={{
+                  x: 0,
+                  y: 0,
+                  rotate: 0,
+                  scale: 0.7,
+                  opacity: 0,
+                  transition: {
+                    duration: 0.2,
+                    ease: [0.22, 1, 0.36, 1],
+                  },
+                }}
+              >
+                <CardItem src={item.src} alt={item.alt || ""} />
+              </motion.div>
+            );
+          })}
+      </AnimatePresence>
+
+      {/* Center Hero Card — hover on mouse, tap on touch */}
+      {hero && (
+        <div
+          ref={centerCardRef}
+          className="relative z-30 touch-manipulation"
+          style={{
+            width: scaledHeroSize,
+            height: scaledHeroSize,
           }}
-          onClick={(event) => {
-            if (event.detail === 0 || lastPointerType.current === "touch") {
-              setExpanded((current) => !current);
-            }
+          onPointerEnter={handleCenterPointerEnter}
+          onPointerLeave={handleCenterPointerLeave}
+          onPointerDown={handleCenterPointerDown}
+          onMouseMove={(e) => {
+            if (shouldReduceMotion || isTouchDeviceRef.current) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+            mouseX.set(Math.max(-1, Math.min(1, nx)));
+            mouseY.set(Math.max(-1, Math.min(1, ny)));
           }}
         >
-          <ImageFrame
-            image={center}
-            failed={failedImages.has(center.id)}
-            onFail={markFailed}
-          />
-          <span
-            className={`absolute bottom-[7px] left-[7px] right-[7px] flex min-h-[30px] items-center justify-center gap-2 rounded-full border border-[#fffaf7]/[0.24] bg-[#0f0b0c]/[0.76] text-[7px] font-bold uppercase tracking-[0.15em] text-[#fffaf7] backdrop-blur-[10px] transition-[transform,opacity] duration-[350ms] min-[681px]:bottom-[9px] min-[681px]:left-[9px] min-[681px]:right-[9px] min-[681px]:min-h-[34px] min-[681px]:text-[8px] ${expanded ? "translate-y-1 opacity-0" : "opacity-100"}`}
+          <motion.div
+            className="group relative block h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/25 bg-[#160f10] p-0 shadow-[0_22px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(239,70,62,0.22)] ring-1 ring-white/20 transition-all duration-300 hover:border-[#ff6558]/70 hover:ring-[#ef463e]/40 focus:outline-none"
+            style={{
+              transform: heroTransform,
+              transformStyle: "preserve-3d",
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={
+              hero.alt
+                ? `${hero.alt}. ${isOpen ? "Close gallery photos" : "Hover or tap to reveal gallery photos"}`
+                : "Reveal gallery moments"
+            }
+            aria-expanded={isOpen}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsOpen((prev) => !prev);
+              }
+            }}
           >
-            <Images size={14} aria-hidden="true" />
-            <span>
-              {expanded ? "Move away to gather" : "Hover or tap to explore"}
+            <CardItem src={hero.src} alt={hero.alt || ""} isHero={true} />
+
+            {/* Clean instruction badge (strictly non-pulsing) */}
+            <span
+              className={`pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-3 py-1 text-[9px] font-semibold uppercase tracking-wider text-white/85 shadow-[0_4px_14px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all duration-300 ${
+                isOpen
+                  ? "scale-90 opacity-0"
+                  : "scale-100 opacity-90 group-hover:opacity-100 group-hover:border-white/35"
+              }`}
+            >
+              <Images size={11} className="text-[#ff6558]" aria-hidden="true" />
+              <span className="hidden sm:inline">Hover to expand</span>
+              <span className="inline sm:hidden">Tap to view</span>
             </span>
-          </span>
-        </button>
+          </motion.div>
+        </div>
       )}
 
-      <span
-        className="absolute bottom-[2%] right-[3%] z-[60] text-[8px] font-bold tracking-[0.18em] text-white/75 [text-shadow:0_1px_8px_rgba(0,0,0,0.8)] min-[681px]:bottom-[4%] min-[681px]:right-[4%] min-[681px]:text-[9px]"
-        aria-hidden="true"
-      >
-        {String(orbit.length + (center ? 1 : 0)).padStart(2, "0")}{" "}
-        <i className="px-1 not-italic text-[#ef463e]">/</i> MOMENTS
-      </span>
+      {/* Screen reader status */}
       <span className="sr-only" role="status" aria-live="polite">
-        {expanded
-          ? `${orbit.length} surrounding images revealed`
-          : "Radial photo collection"}
+        {isOpen
+          ? `${items.length} orbiting cards popped out`
+          : "Radial pop out collection"}
       </span>
     </div>
   );
 }
 
-function ImageFrame({
-  image,
-  failed,
-  onFail,
+function CardItem({
+  src,
+  alt,
+  isHero = false,
 }: {
-  image: AboutPopOutConfig["images"][number];
-  failed: boolean;
-  onFail: (id: string) => void;
+  src: string;
+  alt: string;
+  isHero?: boolean;
 }) {
-  if (failed) {
-    return (
-      <span className="grid h-full w-full place-items-center bg-[linear-gradient(145deg,#402326,#1f1719)] p-3 text-center text-[11px] text-white/70">
-        Image unavailable
-      </span>
-    );
-  }
+  const [failed, setFailed] = useState(false);
 
-  // Keep the source aspect ratio at the CDN too; a square c_fill transform crops before object-contain can help.
   return (
-    <Image
-      src={getOptimizedUrl(image.url, 960)}
-      alt={image.alt}
-      fill
-      sizes="(max-width: 680px) 31vw, (max-width: 1000px) 170px, 210px"
-      unoptimized
-      draggable={false}
-      className="select-none object-contain"
-      onError={() => onFail(image.id)}
-    />
+    <div
+      className={`relative h-full w-full overflow-hidden bg-[#160f10] ${
+        isHero
+          ? "rounded-3xl"
+          : "rounded-2xl border border-white/20 shadow-[0_16px_42px_rgba(0,0,0,0.7),0_0_28px_rgba(239,70,62,0.18)] ring-1 ring-white/15"
+      }`}
+    >
+      {failed || !src ? (
+        <div className="flex h-full w-full flex-col items-center justify-center bg-[linear-gradient(145deg,#25191b,#120c0d)] p-3 text-center text-[10px] font-medium text-white/50">
+          <Images size={18} className="mb-1 text-[#ef463e]/60" />
+          <span>Archive</span>
+        </div>
+      ) : (
+        <img
+          src={src}
+          alt={alt}
+          draggable={false}
+          loading="lazy"
+          decoding="async"
+          onError={() => setFailed(true)}
+          className="pointer-events-none h-full w-full select-none object-cover transition-transform duration-500 ease-out hover:scale-105"
+        />
+      )}
+    </div>
   );
 }

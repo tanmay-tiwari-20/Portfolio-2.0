@@ -5,6 +5,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Code2,
+  Compass,
   Sparkles,
   UsersRound,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import { resolveAboutPopOut } from "@/lib/about-gallery";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 import { hackathonMoments } from "@/data/hackathon-moments";
 import RadialPopOut from "@/components/about/radial-pop-out";
+import SkiperTextReveal from "@/components/about/skiper-text-reveal";
 import AboutMotion from "@/components/about/about-motion";
 import { MotionLayer } from "@/components/shell";
 
@@ -54,117 +56,168 @@ export default async function AboutPage() {
   const moments = hackathonMoments.slice(0, 3);
   const featuredHackathons = hackathons.slice(0, 3);
 
+  const coreInterests = [
+    {
+      icon: Sparkles,
+      label: "Creative Dev & Motion",
+      tagline: "Physics, GSAP, WebGL & tactile micro-interactions",
+      badge: "Craft",
+    },
+    {
+      icon: UsersRound,
+      label: "Community & Hackathons",
+      tagline: "Co-founded HackShastra · 3,000+ builders",
+      badge: "Culture",
+    },
+    {
+      icon: Code2,
+      label: "Full-Stack Architecture",
+      tagline: "Next.js, TypeScript, resilient data pipelines",
+      badge: "Systems",
+    },
+    {
+      icon: Compass,
+      label: "Editorial Design",
+      tagline: "Cinematic dark UI, bold typography, craft",
+      badge: "Aesthetics",
+    },
+  ];
+
   return (
-    <div className="relative isolate overflow-clip bg-[#090708] bg-[linear-gradient(rgba(255,250,247,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,250,247,0.012)_1px,transparent_1px),radial-gradient(ellipse_at_80%_3%,rgba(239,70,62,0.1),transparent_38rem)] bg-size-[72px_72px,72px_72px,auto] text-[#fffaf7]">
+    <div className="relative isolate overflow-clip bg-[#090708] bg-[linear-gradient(rgba(255,250,247,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,250,247,0.012)_1px,transparent_1px),radial-gradient(ellipse_at_80%_3%,rgba(239,70,62,0.12),transparent_42rem)] bg-size-[72px_72px,72px_72px,auto] text-[#fffaf7]">
+      {/* ── HERO ── Strict single screen height (100svh), perfectly balanced layout ── */}
       <section
         className={
-          "relative isolate mx-auto grid min-h-[min(860px,100svh)] grid-cols-[minmax(0,1.02fr)_minmax(400px,0.98fr)] items-center gap-[clamp(12px,2vw,36px)] px-0 pb-[clamp(64px,10vh,120px)] pt-[clamp(132px,16vh,190px)] before:absolute before:right-[-6%] before:-z-10 before:top-[10%] before:aspect-square before:w-[min(55vw,720px)] before:rounded-full before:border before:border-white/[0.035] before:bg-[radial-gradient(circle,rgba(239,70,62,0.08),transparent_68%)] before:content-[''] max-[1000px]:min-h-0 max-[1000px]:grid-cols-[minmax(0,0.95fr)_minmax(330px,1.05fr)] max-[760px]:grid-cols-1 max-[760px]:gap-5.5 max-[760px]:pb-9 max-[760px]:pt-33 " +
+          "relative isolate mx-auto grid min-h-[100svh] lg:h-[100svh] lg:max-h-[100svh] grid-cols-[minmax(0,1.15fr)_minmax(380px,0.85fr)] items-center gap-[clamp(24px,3.5vw,56px)] px-0 pt-[clamp(80px,10vh,115px)] pb-[clamp(24px,3vh,44px)] overflow-clip max-[1060px]:h-auto max-[1060px]:min-h-0 max-[1060px]:max-h-none max-[1060px]:grid-cols-1 max-[1060px]:gap-12 max-[1060px]:py-24 max-[760px]:pb-12 max-[760px]:pt-28 " +
           wrap
         }
         aria-labelledby="about-title"
       >
-        <div className="relative z-2">
-          <p className="mb-6.75 flex items-center gap-2.75 text-[10px] font-bold uppercase leading-[1.4] tracking-[0.2em] text-[#938783] max-[420px]:text-[8px] max-[420px]:tracking-[0.16em]">
-            <span
-              className="h-1.75 w-1.75 shrink-0 rounded-full bg-[#ef463e] shadow-[0_0_18px_rgba(239,70,62,0.28)]"
-              aria-hidden="true"
-            />
-            {role}
-            <span
-              className="mx-0.75 h-3.75 w-px bg-[#ef463e]/55"
-              aria-hidden="true"
-            />
-            {location}
-          </p>
+        {/* Ambient atmospheric red lighting behind visual */}
+        <div
+          className="pointer-events-none absolute -right-[10%] -z-10 top-[4%] aspect-square w-[min(62vw,800px)] rounded-full border border-white/[0.025] bg-[radial-gradient(circle,rgba(239,70,62,0.1),transparent_68%)]"
+          aria-hidden="true"
+        />
 
+        {/* ─── Left Column: Rich, Balanced Editorial Story Content ─── */}
+        <div className="relative z-2 flex flex-col justify-center">
+          {/* Top Kicker — Clean static editorial text (no live pulse badge) */}
+          <div
+            className="mb-[clamp(10px,1.8vh,18px)] flex flex-wrap items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#938783]"
+            data-about-kicker
+          >
+            <span className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1 text-[9px] font-bold text-[#ffd2c4]">
+              {role}
+            </span>
+            <span className="text-white/20">/</span>
+            <span className="text-[rgba(255,250,247,0.65)]">{location}</span>
+          </div>
+
+          {/* Giant Display Name */}
           <h1
             id="about-title"
-            className="mb-0 ml-[-0.07em] font-[var(--font-display)] text-[clamp(4.6rem,9.2vw,8.7rem)] font-black uppercase leading-[0.79] tracking-[-0.095em] text-nowrap max-[760px]:text-[clamp(3.4rem,13vw,6.3rem)] max-[420px]:text-[clamp(3.15rem,14.4vw,3.75rem)]"
+            className="m-0 ml-[-0.06em] font-[var(--font-display)] text-[clamp(3.8rem,7.4vw,6.8rem)] font-black uppercase leading-[0.84] tracking-[-0.085em] max-[760px]:text-[clamp(3.2rem,13vw,5.2rem)] max-[420px]:text-[clamp(2.6rem,15vw,3.8rem)]"
+            aria-label={name}
           >
             <span
-              className="block w-fit max-w-full overflow-hidden px-[0.12em] pb-[0.12em] pl-[0.07em]"
+              className="block w-fit max-w-full overflow-hidden text-[#fffaf7]"
               data-about-hero-line
             >
               {firstName}
             </span>
             <span
-              className="block w-fit max-w-full overflow-hidden px-[0.12em] pb-[0.12em] pl-[0.07em] text-[#ffd2c4] [text-shadow:0_0_44px_rgba(239,70,62,0.13)]"
+              className="block w-fit max-w-full overflow-hidden text-[#ffd2c4]"
               data-about-hero-line
             >
-              {familyName}.
+              {familyName}
+              <span className="text-[#fffaf7]">.</span>
             </span>
           </h1>
 
+          {/* Manifesto / Subtitle */}
           <p
-            className="mt-[29px] max-w-[520px] text-[clamp(15px,1.25vw,18px)] leading-[1.72] text-white/80 max-[760px]:mt-[22px] max-[760px]:text-[15px]"
+            className="mt-[clamp(10px,1.5vh,16px)] max-w-[560px] font-[var(--font-display)] text-[clamp(16px,1.5vw,22px)] font-bold leading-[1.2] tracking-[-0.035em] text-[rgba(255,250,247,0.9)] max-[760px]:text-[clamp(15px,4vw,20px)]"
             data-about-intro
           >
-            I care about the whole product experience: sturdy engineering,
-            thoughtful interfaces, and the details that make software feel
-            right.
-          </p>
-          <p
-            className="mt-[26px] flex max-w-[480px] items-center gap-3 text-[11px] font-semibold uppercase leading-[1.6] tracking-[0.08em] text-[#ffd2c4] max-[760px]:mt-[18px] max-[760px]:text-[9px] max-[420px]:items-start"
-            data-about-intro
-          >
-            <span
-              className="h-px w-[34px] shrink-0 bg-[#ef463e]"
-              aria-hidden="true"
-            />
-            {location}
-            <span aria-hidden="true">·</span>
-            <Link
-              className="inline-flex items-center gap-1 underline decoration-[#ffd2c4]/40 underline-offset-4 transition-colors hover:text-white hover:decoration-current"
-              href="/hackshastra"
-            >
-              Co-founder, HackShastra{" "}
-              <ArrowUpRight size={12} aria-hidden="true" />
-            </Link>
+            Curiosity in code. Obsession with craft.
           </p>
 
-          <div
-            className="mt-[26px] flex items-center gap-[17px] max-[420px]:gap-[11px]"
-            data-about-intro
-          >
-            <Link
-              className="inline-flex min-h-11 items-center gap-[13px] rounded-full border border-white/20 bg-[#ef463e] px-[17px] text-[10px] font-extrabold uppercase tracking-[0.1em] text-[#fffaf7] no-underline shadow-[0_8px_26px_rgba(239,70,62,0.2)] transition duration-300 hover:-translate-y-[3px] hover:bg-[#ff6558] hover:shadow-[0_12px_32px_rgba(239,70,62,0.28)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none motion-reduce:hover:transform-none"
-              href="#experience"
+          {/* Exact Skiper70 Text Animation with Specially Highlighted HackShastra Link */}
+          <div className="mt-[clamp(10px,1.5vh,16px)] max-w-[560px]" data-about-intro>
+            <SkiperTextReveal
+              highlight="HackShastra"
+              highlightLink="https://hackshastra.in"
+              highlightTextClass="!text-[#ff8c7e] font-extrabold hover:!text-white"
+              highlightBgClass="!bg-[#ef463e]/20 border border-[#ef463e]/60 shadow-[0_0_20px_rgba(239,70,62,0.35)]"
+              className="text-[clamp(13px,1.08vw,15.5px)] leading-[1.72]"
             >
-              The journey <ArrowUpRight size={15} aria-hidden="true" />
-            </Link>
-            <span className="inline-flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.14em] text-[#938783] max-[420px]:text-[8px]">
-              <i
-                className="h-[6px] w-[6px] animate-pulse rounded-full bg-[#ff6558] shadow-[0_0_14px_rgba(239,70,62,0.28)] motion-reduce:animate-none"
-                aria-hidden="true"
-              />
-              Scroll-led story
-            </span>
+              {`I'm Tanmay Tiwari, an independent creative developer and community architect based in New Delhi.
+I build at the intersection of sturdy full-stack engineering and fluid digital experiences. Co-founder of HackShastra, empowering 3,000+ builders across India to ship real software.`}
+            </SkiperTextReveal>
           </div>
 
+          {/* Core Craft Badges Bar — Fills middle space so it never looks empty */}
+          <div
+            className="mt-[clamp(12px,1.8vh,18px)] flex flex-wrap items-center gap-1.5"
+            data-about-intro
+          >
+            {[
+              "Creative Dev & Motion",
+              "Founder @ HackShastra",
+              "Full-Stack Systems",
+            ].map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-[linear-gradient(145deg,rgba(255,250,247,0.04),rgba(255,250,247,0.01))] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#d0c7c2] shadow-xs"
+              >
+                <span className="h-1 w-1 rounded-full bg-[#ff6558]/80" />
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div
+            className="mt-[clamp(12px,2vh,22px)] flex flex-wrap items-center gap-2.5 max-[420px]:gap-2"
+            data-about-intro
+          >
+            <Link
+              className="inline-flex min-h-[42px] items-center gap-2 rounded-full border border-white/20 bg-[#ef463e] px-5 text-[10.5px] font-extrabold uppercase tracking-[0.1em] text-[#fffaf7] no-underline shadow-[0_6px_22px_rgba(239,70,62,0.28)] transition duration-300 hover:-translate-y-[2px] hover:bg-[#ff6558]"
+              href="#the-person"
+            >
+              Explore the journey <ArrowRight size={13} aria-hidden="true" />
+            </Link>
+            <Link
+              className="inline-flex min-h-[42px] items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.04] px-4 text-[10.5px] font-bold uppercase tracking-[0.1em] text-[#ffd2c4] no-underline transition hover:border-white/30 hover:bg-white/10 hover:text-white"
+              href="/hackshastra"
+            >
+              HackShastra Story <ArrowUpRight size={12} aria-hidden="true" />
+            </Link>
+          </div>
+
+          {/* Key Milestones & Metrics */}
           {highlights.length > 0 && (
             <div
-              className="mt-[clamp(27px,3vw,42px)] grid max-w-[540px] grid-cols-3 gap-4 border-t border-white/15 pt-[15px]"
+              className="mt-[clamp(12px,2vh,22px)] grid max-w-[460px] grid-cols-3 gap-3 border-t border-white/10 pt-[clamp(10px,1.5vh,15px)] max-[420px]:gap-2"
               role="group"
               aria-label="Portfolio highlights"
             >
               {highlights.map((highlight, index) => (
                 <div
-                  className="relative grid min-w-0 gap-[5px]"
+                  className="relative grid min-w-0 gap-0.5"
                   data-about-stat
                   key={highlight.label}
                 >
-                  <strong className="font-[var(--font-display)] text-[clamp(25px,3vw,37px)] font-extrabold leading-[0.95] tracking-[-0.08em] text-[#fffaf7]">
+                  <strong className="font-[var(--font-display)] text-[clamp(20px,2.2vw,28px)] font-extrabold leading-none tracking-[-0.06em] text-[#fffaf7]">
                     {highlight.value}
-                    <sup className="ml-0.5 align-top text-[0.52em] text-[#ff6558]">
-                      +
-                    </sup>
+                    <sup className="ml-0.5 text-[0.52em] text-[#ff6558]">+</sup>
                   </strong>
-                  <span className="text-[8px] font-bold uppercase leading-[1.4] tracking-[0.12em] text-[#938783] max-[420px]:text-[7px] max-[420px]:tracking-[0.08em]">
+                  <span className="text-[8px] font-bold uppercase leading-tight tracking-[0.1em] text-[#938783] max-[420px]:text-[7px]">
                     {highlight.label}
                   </span>
                   {index < highlights.length - 1 && (
                     <i
-                      className="absolute right-0 top-[3px] h-[35px] w-px bg-white/10"
+                      className="absolute right-0 top-1 h-5 w-px bg-white/10"
                       aria-hidden="true"
                     />
                   )}
@@ -174,29 +227,33 @@ export default async function AboutPage() {
           )}
         </div>
 
+        {/* ─── Right Column: Enlarged Radial Pop-Out Component ─── */}
         <div
-          className="relative grid min-h-[clamp(560px,48vw,690px)] min-w-0 -translate-y-[clamp(14px,3.5vw,42px)] place-items-center max-[1000px]:min-h-[470px] max-[760px]:mx-auto max-[760px]:min-h-[clamp(390px,105vw,490px)] max-[760px]:w-full max-[760px]:max-w-[440px] max-[760px]:-translate-y-[clamp(10px,3vw,18px)] before:absolute before:left-[4%] before:top-[4%] before:z-0 before:aspect-square before:w-[92%] before:animate-spin before:rounded-full before:border before:border-white/[0.055] before:border-t-[#ff6558]/40 before:shadow-[0_0_0_22px_rgba(255,250,247,0.012)] before:content-[''] motion-reduce:before:animate-none"
+          className="relative flex h-full w-full items-center justify-center max-[1060px]:min-h-[380px]"
           data-about-visual
         >
-          <p
-            className="absolute right-0 top-[4%] z-[3] text-right text-[9px] font-bold uppercase tracking-[0.18em] text-white/70 max-[760px]:right-[2%] max-[760px]:top-[7%]"
+          {/* Background Rotating Orbit Guide */}
+          <div
+            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            <span className="mb-2 mt-0 block font-[var(--font-display)] text-[15px] tracking-[0.06em] text-[#fffaf7]">
-              01 / {String(gallery.images.length).padStart(2, "0")}
-            </span>
-            A life in motion
-            <span className="mt-[5px] block text-[#ef463e]">
-              People · Projects · Possibility
-            </span>
-          </p>
-          <RadialPopOut gallery={gallery} />
-          <span
-            className="absolute bottom-[4%] left-[1%] text-[8px] font-bold uppercase tracking-[0.16em] text-white/50"
+            <div className="aspect-square w-[min(92%,540px)] rounded-full border border-dashed border-white/[0.04] animate-[spin_90s_linear_infinite] motion-reduce:animate-none" />
+          </div>
+
+          {/* Inner concentric circle guide */}
+          <div
+            className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
             aria-hidden="true"
           >
-            New Delhi / India
-          </span>
+            <div className="aspect-square w-[min(60%,340px)] rounded-full border border-white/[0.025]" />
+          </div>
+
+          <RadialPopOut
+            gallery={gallery}
+            cardSize={245}
+            heroSize={310}
+            radius={290}
+          />
         </div>
       </section>
 
@@ -315,6 +372,42 @@ export default async function AboutPage() {
                   Curiosity in motion
                 </small>
               </article>
+            </div>
+
+            <div className="mt-9 border-t border-white/10 pt-7">
+              <div className="mb-4 flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.16em] text-[#938783]">
+                <span className="flex items-center gap-2">
+                  <span className="h-px w-3 bg-[#ef463e]" aria-hidden="true" />
+                  Core Passions & Focus Areas
+                </span>
+                <span className="text-[#ef463e]">04 Disciplines</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 max-[540px]:grid-cols-1">
+                {coreInterests.map((interest) => (
+                  <div
+                    key={interest.label}
+                    data-about-anime-item
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,250,247,0.035),rgba(255,250,247,0.01))] p-4 shadow-[inset_0_1px_0_rgba(255,250,247,0.035)] transition duration-300 hover:-translate-y-1 hover:border-[#ff6558]/50 hover:bg-[#ef463e]/10"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-[#171011] text-[#ff6558] transition-colors group-hover:border-[#ff6558]/60 group-hover:bg-[#ef463e]/20">
+                        <interest.icon size={15} aria-hidden="true" />
+                      </div>
+                      <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[8px] font-extrabold uppercase tracking-[0.12em] text-[#ff8c7e]">
+                        {interest.badge}
+                      </span>
+                    </div>
+                    <div className="mt-2.5">
+                      <strong className="block text-[12px] font-bold leading-tight text-[#fffaf7] transition-colors group-hover:text-[#ffd2c4]">
+                        {interest.label}
+                      </strong>
+                      <small className="mt-1 block text-[10px] leading-relaxed text-[#938783] group-hover:text-[#d0c7c2]">
+                        {interest.tagline}
+                      </small>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

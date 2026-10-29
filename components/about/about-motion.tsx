@@ -44,6 +44,12 @@ export default function AboutMotion() {
               "-=0.42",
             )
             .fromTo(
+              "[data-about-interest]",
+              { y: 18, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, stagger: 0.08 },
+              "-=0.36",
+            )
+            .fromTo(
               "[data-about-stat]",
               { y: 16, opacity: 0 },
               { y: 0, opacity: 1, duration: 0.55, stagger: 0.1 },
