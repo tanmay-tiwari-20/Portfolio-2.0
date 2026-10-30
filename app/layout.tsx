@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Poppins, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
@@ -10,16 +10,22 @@ import { Analytics } from "@vercel/analytics/next";
 
 export const dynamic = "force-dynamic";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+const poppins = localFont({
+  src: [
+    { path: "./fonts/poppins-latin-400.woff2", weight: "400" },
+    { path: "./fonts/poppins-latin-500.woff2", weight: "500" },
+    { path: "./fonts/poppins-latin-600.woff2", weight: "600" },
+    { path: "./fonts/poppins-latin-700.woff2", weight: "700" },
+    { path: "./fonts/poppins-latin-800.woff2", weight: "800" },
+    { path: "./fonts/poppins-latin-900.woff2", weight: "900" },
+  ],
   variable: "--font-poppins",
   display: "swap",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
+  weight: "300 700",
   variable: "--font-inter",
   display: "swap",
 });
