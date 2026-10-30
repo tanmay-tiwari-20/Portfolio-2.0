@@ -5,11 +5,10 @@ import Link from "next/link";
 import {
   FolderKanban,
   Briefcase,
-  User,
+  Image as ImageIcon,
   Trophy,
   Users,
   Share2,
-  Settings as SettingsIcon,
   Database,
   Plus,
   Trash2,
@@ -43,11 +42,10 @@ import type {
 type Tab =
   | "projects"
   | "experience"
-  | "profile"
   | "hackathons"
   | "events"
   | "socials"
-  | "settings";
+  | "about";
 
 interface MongoStatus {
   success: boolean;
@@ -335,12 +333,6 @@ export default function AdminDashboard() {
           <Briefcase size={16} /> Experience ({experiences.length})
         </button>
         <button
-          onClick={() => setActiveTab("profile")}
-          className={`admin-nav-tab ${activeTab === "profile" ? "active" : ""}`}
-        >
-          <User size={16} /> Profile & Hero
-        </button>
-        <button
           onClick={() => setActiveTab("hackathons")}
           className={`admin-nav-tab ${activeTab === "hackathons" ? "active" : ""}`}
         >
@@ -359,10 +351,10 @@ export default function AdminDashboard() {
           <Share2 size={16} /> Social Links ({socials.length})
         </button>
         <button
-          onClick={() => setActiveTab("settings")}
-          className={`admin-nav-tab ${activeTab === "settings" ? "active" : ""}`}
+          onClick={() => setActiveTab("about")}
+          className={`admin-nav-tab ${activeTab === "about" ? "active" : ""}`}
         >
-          <SettingsIcon size={16} /> Settings
+          <ImageIcon size={16} /> About
         </button>
       </nav>
 
@@ -613,151 +605,7 @@ export default function AdminDashboard() {
         </section>
       )}
 
-      {/* ==================== TAB 3: PROFILE & HERO ==================== */}
-      {activeTab === "profile" && profile && (
-        <section className="admin-content-card">
-          <div style={{ marginBottom: 24 }}>
-            <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
-              Profile & Hero Customization
-            </h2>
-            <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-              Edit your name, headline, bio, contact details, and hero metric numbers.
-            </p>
-          </div>
-
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              await saveItem("profile", profile, false);
-            }}
-            style={{ display: "grid", gap: 20 }}
-          >
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
-              <div>
-                <label className="form-label">Full Name</label>
-                <input
-                  value={profile.name}
-                  onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-              <div>
-                <label className="form-label">Professional Role</label>
-                <input
-                  value={profile.role}
-                  onChange={(e) => setProfile({ ...profile, role: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="form-label">Hero Headline Title</label>
-              <input
-                value={profile.heroTitle}
-                onChange={(e) => setProfile({ ...profile, heroTitle: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="form-label">Tagline Summary</label>
-              <input
-                value={profile.tagline}
-                onChange={(e) => setProfile({ ...profile, tagline: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="form-label">About Bio</label>
-              <textarea
-                value={profile.bio}
-                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                className="form-textarea"
-                rows={3}
-                required
-              />
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20 }}>
-              <div>
-                <label className="form-label">Location</label>
-                <input
-                  value={profile.location}
-                  onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-              <div>
-                <label className="form-label">Email Address</label>
-                <input
-                  value={profile.email}
-                  onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                  className="form-input"
-                  type="email"
-                  required
-                />
-              </div>
-              <div>
-                <label className="form-label">Resume URL (Optional)</label>
-                <input
-                  value={profile.resumeUrl || ""}
-                  onChange={(e) => setProfile({ ...profile, resumeUrl: e.target.value })}
-                  className="form-input"
-                  placeholder="https://..."
-                />
-              </div>
-            </div>
-
-            {/* Dynamic Hero Stats */}
-            <div style={{ marginTop: 8 }}>
-              <label className="form-label">Hero Metric Numbers</label>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
-                {profile.stats.map((stat, idx) => (
-                  <div key={idx} className="timeline-card" style={{ margin: 0, padding: 16 }}>
-                    <div style={{ fontSize: 12, color: "var(--spidey-muted)", marginBottom: 6 }}>
-                      Metric #{idx + 1}
-                    </div>
-                    <input
-                      type="number"
-                      value={stat.value}
-                      onChange={(e) => {
-                        const newStats = [...profile.stats];
-                        newStats[idx].value = Number(e.target.value);
-                        setProfile({ ...profile, stats: newStats });
-                      }}
-                      className="form-input"
-                      style={{ marginBottom: 8 }}
-                    />
-                    <input
-                      type="text"
-                      value={stat.label}
-                      onChange={(e) => {
-                        const newStats = [...profile.stats];
-                        newStats[idx].label = e.target.value;
-                        setProfile({ ...profile, stats: newStats });
-                      }}
-                      className="form-input"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 12 }}>
-              {loading ? "Saving..." : "Save Profile Details"} <Check size={16} />
-            </button>
-          </form>
-        </section>
-      )}
-
-      {/* ==================== TAB 4: HACKATHONS ==================== */}
+      {/* ==================== TAB 3: HACKATHONS ==================== */}
       {activeTab === "hackathons" && (
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
@@ -843,7 +691,7 @@ export default function AdminDashboard() {
         </section>
       )}
 
-      {/* ==================== TAB 5: COMMUNITY EVENTS ==================== */}
+      {/* ==================== TAB 4: COMMUNITY EVENTS ==================== */}
       {activeTab === "events" && (
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
@@ -939,7 +787,7 @@ export default function AdminDashboard() {
         </section>
       )}
 
-      {/* ==================== TAB 6: SOCIAL LINKS ==================== */}
+      {/* ==================== TAB 5: SOCIAL LINKS ==================== */}
       {activeTab === "socials" && (
         <section className="admin-content-card">
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
@@ -1026,77 +874,23 @@ export default function AdminDashboard() {
         </section>
       )}
 
-      {/* ==================== TAB 7: SETTINGS ==================== */}
-      {activeTab === "settings" && settings && (
-        <section className="admin-content-card">
-          <div style={{ marginBottom: 24 }}>
-            <h2 className="display" style={{ fontSize: 24, margin: 0 }}>
-              Global Site Settings & SEO
-            </h2>
-            <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-              Update default page title, meta description, and theme accent color.
-            </p>
-          </div>
-
-          <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              await saveItem("settings", settings, false);
-            }}
-            style={{ display: "grid", gap: 20, maxWidth: 640 }}
-          >
-            <div>
-              <label className="form-label">Default Site Title</label>
-              <input
-                value={settings.title}
-                onChange={(e) => setSettings({ ...settings, title: e.target.value })}
-                className="form-input"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="form-label">SEO Meta Description</label>
-              <textarea
-                value={settings.description}
-                onChange={(e) => setSettings({ ...settings, description: e.target.value })}
-                className="form-textarea"
-                rows={3}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="form-label">Theme Accent Hex Color</label>
-              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                <input
-                  type="color"
-                  value={settings.accent || "#ff1e27"}
-                  onChange={(e) => setSettings({ ...settings, accent: e.target.value })}
-                  style={{ width: 44, height: 44, borderRadius: "var(--radius-sm)", border: "none", cursor: "pointer", background: "none" }}
-                />
-                <input
-                  value={settings.accent || "#ff1e27"}
-                  onChange={(e) => setSettings({ ...settings, accent: e.target.value })}
-                  className="form-input"
-                  style={{ width: 140 }}
-                />
-              </div>
-            </div>
-
-            <button type="submit" disabled={loading} className="button button-primary" style={{ marginTop: 10 }}>
-              {loading ? "Saving..." : "Save Settings"} <Check size={16} />
-            </button>
-          </form>
-
-          <AboutGalleryEditor
-            key={settings.updatedAt}
-            value={settings.aboutPopOut}
-            moments={settings.aboutMoments}
-            profileImage={profile?.avatar}
-            onSave={(aboutPopOut, aboutMoments) => saveItem("settings", { ...settings, aboutPopOut, aboutMoments }, false)}
-          />
-        </section>
+      {/* ==================== ABOUT PAGE IMAGES ==================== */}
+      {activeTab === "about" && settings && (
+        <AboutGalleryEditor
+          key={settings.updatedAt}
+          value={settings.aboutPopOut}
+          moments={settings.aboutMoments}
+          practiceImage={settings.aboutPracticeImage}
+          practiceImage2={settings.aboutPracticeImage2}
+          profileImage={profile?.avatar}
+          onSave={(aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2) =>
+            saveItem(
+              "settings",
+              { ...settings, aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2 },
+              false,
+            )
+          }
+        />
       )}
 
       {/* ==================== PROJECT EDIT/CREATE MODAL ==================== */}

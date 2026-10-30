@@ -30,35 +30,35 @@ const inter = localFont({
   display: "swap",
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const [settings] = await repos.settings.getAll();
-  const title =
-    settings?.title || "Tanmay Tiwari — Creative Developer & Architect";
-  const description =
-    settings?.description ||
-    "Creative developer and technical architect building high-performance web applications.";
-  const image = settings?.ogImage?.url || "/og.svg";
-  return {
-    title: { default: title, template: "%s — Tanmay Tiwari" },
-    description,
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-    ),
-    icons: {
-      icon: "/icon.svg",
-      shortcut: "/icon.svg",
-      apple: "/icon.svg",
-    },
-    openGraph: { title, description, type: "website", images: [image] },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [image],
-    },
-    robots: { index: true, follow: true },
-  };
-}
+const siteTitle = "Tanmay Tiwari — Creative Developer & Architect";
+const siteDescription =
+  "Creative developer and technical architect building high-performance web applications.";
+
+export const metadata: Metadata = {
+  title: { default: siteTitle, template: "%s — Tanmay Tiwari" },
+  description: siteDescription,
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  ),
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
+  openGraph: {
+    title: siteTitle,
+    description: siteDescription,
+    type: "website",
+    images: ["/og.svg"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: ["/og.svg"],
+  },
+  robots: { index: true, follow: true },
+};
 
 export default async function RootLayout({
   children,

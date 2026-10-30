@@ -3,6 +3,7 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { BUILDERS_MENTORED_COUNT } from "@/lib/profile-metrics";
 
 type StatItem = {
   label: string;
@@ -116,9 +117,9 @@ export default function HomeProfilePhilosophy({
   role,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
-  const projectsCount = stats?.[0]?.value || 18;
-  const buildersCount = stats?.[1]?.value || 240;
-  const yearsCount = stats?.[2]?.value || 3;
+  const projectsCount = stats?.[0]?.value ?? 0;
+  const buildersCount = stats?.[1]?.value ?? BUILDERS_MENTORED_COUNT;
+  const yearsCount = stats?.[2]?.value ?? 1;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -353,7 +354,7 @@ export default function HomeProfilePhilosophy({
         <div className="philosophy-stat-shell" data-profile-reveal>
           <TactileStatCard
             index="02"
-            number={`${buildersCount > 500 ? buildersCount : "3,000"}+`}
+            number={`${buildersCount.toLocaleString()}+`}
             label="Builders Mentored"
             subtitle="HackShastra & Hackathons"
           >
@@ -448,7 +449,7 @@ export default function HomeProfilePhilosophy({
         <div className="philosophy-stat-shell" data-profile-reveal>
           <TactileStatCard
             index="04"
-            number={`0${yearsCount}+`}
+            number={`${String(yearsCount).padStart(2, "0")}+`}
             label="Years Creating"
             subtitle="First Principles & 60 FPS Craft"
           >

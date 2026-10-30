@@ -15,6 +15,14 @@ import { useEffect, useRef, useState } from "react";
 
 type AboutPracticeStoryProps = {
   builders: number;
+  practiceImage?: {
+    src: string;
+    alt: string;
+  };
+  practiceImage2?: {
+    src: string;
+    alt: string;
+  };
   communityImage: {
     src: string;
     alt: string;
@@ -57,6 +65,8 @@ const chapters: Chapter[] = [
 
 export default function AboutPracticeStory({
   builders,
+  practiceImage,
+  practiceImage2,
   communityImage,
 }: AboutPracticeStoryProps) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -125,6 +135,8 @@ export default function AboutPracticeStory({
                     builders={builders}
                     chapter={chapter}
                     communityImage={communityImage}
+                    practiceImage={practiceImage}
+                    practiceImage2={practiceImage2}
                     index={index}
                     key={chapter.number}
                     reducedMotion
@@ -136,6 +148,8 @@ export default function AboutPracticeStory({
                     builders={builders}
                     chapter={chapters[activeChapter]}
                     communityImage={communityImage}
+                    practiceImage={practiceImage}
+                    practiceImage2={practiceImage2}
                     index={activeChapter}
                     key={chapters[activeChapter].number}
                     reducedMotion={false}
@@ -154,11 +168,15 @@ function PracticeScene({
   builders,
   chapter,
   communityImage,
+  practiceImage,
+  practiceImage2,
   index,
   reducedMotion,
 }: {
   builders: number;
   chapter: Chapter;
+  practiceImage?: AboutPracticeStoryProps["practiceImage"];
+  practiceImage2?: AboutPracticeStoryProps["practiceImage2"];
   communityImage: AboutPracticeStoryProps["communityImage"];
   index: number;
   reducedMotion: boolean;
@@ -192,13 +210,16 @@ function PracticeScene({
         )}
       </div>
 
-      <div className={`about-practice-visual about-practice-visual-${index + 1}`} aria-hidden="true">
+      <div
+        className={`about-practice-visual about-practice-visual-${index + 1}`}
+        aria-hidden={index === 0 || (index === 1 && !practiceImage)}
+      >
         {index === 0 && (
           <div className="about-system-card">
             <div className="about-system-topline">
               <span><i /><i /><i /></span>
               <small>PRODUCT / SYSTEMS</small>
-              <span>01:24</span>
+              <span>20:09</span>
             </div>
             <div className="about-system-stack">
               <span className="about-system-node about-system-node-top">A clear interface</span>
@@ -213,7 +234,20 @@ function PracticeScene({
             <div className="about-system-foot"><span>STRUCTURE FIRST</span><span>READY TO GROW <b>↗</b></span></div>
           </div>
         )}
-        {index === 1 && (
+        {index === 1 && practiceImage && (
+          <div className="about-practice-photo">
+            <Image
+              src={practiceImage.src}
+              alt={practiceImage.alt || "A moment from the craft and interaction practice"}
+              width={960}
+              height={720}
+              sizes="(max-width: 760px) 78vw, 430px"
+              unoptimized
+            />
+            <span className="about-practice-photo-label">02 / CRAFT &amp; INTERACTION</span>
+          </div>
+        )}
+        {index === 1 && !practiceImage && (
           <div className="about-craft-card">
             <span className="about-craft-caption">DETAIL CHANGES THE FEELING</span>
             <div className="about-craft-type">Aa<span>.</span></div>
@@ -225,8 +259,8 @@ function PracticeScene({
         {index === 2 && (
           <div className="about-community-scene-image">
             <Image
-              src={communityImage.src}
-              alt={communityImage.alt}
+              src={practiceImage2?.src || communityImage.src}
+              alt={practiceImage2?.alt || communityImage.alt}
               width={communityImage.width}
               height={communityImage.height}
               sizes="(max-width: 760px) 75vw, 440px"

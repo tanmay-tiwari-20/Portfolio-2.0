@@ -1,7 +1,13 @@
 import { hackathonMoments } from "@/data/hackathon-moments";
 import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 import type { AboutMoment, ImageAsset, AboutPopOutConfig, AboutPopOutImage } from "@/lib/validators/schemas";
-import { aboutMomentsSchema, aboutPopOutSchema } from "@/lib/validators/schemas";
+import { aboutMomentsSchema, aboutPopOutSchema, imageSchema } from "@/lib/validators/schemas";
+
+export function resolveAboutPracticeImage(value: unknown): ImageAsset | undefined {
+  const parsed = imageSchema.safeParse(value);
+  if (!parsed.success || !isCloudinaryImageUrl(parsed.data.url)) return undefined;
+  return parsed.data;
+}
 
 export function createDefaultAboutMoments(): AboutMoment[] {
   return hackathonMoments.slice(0, 3).map((moment, index) => ({

@@ -43,6 +43,8 @@ export const settingsSchema = baseRecord.extend({
   accent: z.string().default("#e62429"),
   aboutPopOut: aboutPopOutSchema.optional(),
   aboutMoments: aboutMomentsSchema.optional(),
+  aboutPracticeImage: imageSchema.nullable().optional(),
+  aboutPracticeImage2: imageSchema.nullable().optional(),
 });
 export type ImageAsset = z.infer<typeof imageSchema>;
 export type Profile = z.infer<typeof profileSchema>;

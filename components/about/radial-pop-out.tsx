@@ -118,14 +118,17 @@ export default function RadialPopOut({
     if (!parent) return;
 
     const updateScale = () => {
-      const parentRect = parent.getBoundingClientRect();
-      const parentWidth = parentRect.width;
+      // Use layout dimensions, not getBoundingClientRect(), because that
+      // includes the page transition's temporary transform on first entry.
+      const parentWidth = parent.clientWidth;
 
       // Strict viewport height bounding:
       // Leave ~80px vertical breathing room so the enlarged cards never exceed view height
       const viewportHeight = window.innerHeight;
       const maxAvailableHeight = Math.max(300, viewportHeight - 80);
-      const parentHeight = parentRect.height > 0 ? parentRect.height : maxAvailableHeight;
+      const parentHeight = parent.clientHeight > 0
+        ? parent.clientHeight
+        : maxAvailableHeight;
       const effectiveHeight = Math.min(parentHeight, maxAvailableHeight);
 
       const availableDimension = Math.min(
@@ -139,6 +142,7 @@ export default function RadialPopOut({
     };
 
     updateScale();
+    const layoutFrame = window.requestAnimationFrame(updateScale);
 
     const observer = new ResizeObserver(() => {
       updateScale();
@@ -147,6 +151,7 @@ export default function RadialPopOut({
     observer.observe(parent);
     window.addEventListener("resize", updateScale);
     return () => {
+      window.cancelAnimationFrame(layoutFrame);
       observer.disconnect();
       window.removeEventListener("resize", updateScale);
     };

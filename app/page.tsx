@@ -10,6 +10,7 @@ import HomeExperienceJourney from "@/components/home-experience-journey";
 import HomeHackShastraStory from "@/components/home-hackshastra-story";
 import HomeHackathonsJourney from "@/components/home-hackathons-journey";
 import CinematicFooter from "@/components/cinematic-footer";
+import { getPortfolioMetrics } from "@/lib/profile-metrics";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,7 @@ export default async function Home() {
     ]);
 
   const person = profile[0];
+  const portfolioMetrics = getPortfolioMetrics(projects, experience);
   const featured = projects.filter((p) => p.featured).slice(0, 4);
   const hackathonStoryEvents = hackathons
     .filter((event) => event.role === "Judge" || event.role === "Mentor")
@@ -110,15 +112,9 @@ export default async function Home() {
               </Link>
             </div>
             <div className="hero-metrics-strip">
-              {(
-                person?.stats || [
-                  { value: 18, label: "Projects shipped" },
-                  { value: 240, label: "Builders mentored" },
-                  { value: 3, label: "Years creating" },
-                ]
-              ).map((st, i) => (
+              {portfolioMetrics.map((st, i) => (
                 <div key={i} className="hero-metric-item">
-                  <span className="hero-metric-val">{st.value}+</span>
+                  <span className="hero-metric-val">{st.value.toLocaleString()}+</span>
                   <span className="hero-metric-lbl">{st.label}</span>
                 </div>
               ))}
@@ -178,7 +174,7 @@ export default async function Home() {
         bio={person?.bio}
         name={person?.name}
         role={person?.role}
-        stats={person?.stats}
+        stats={portfolioMetrics}
         eventsCount={events.length}
         hackathonsCount={hackathons.length}
       />

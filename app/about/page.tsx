@@ -6,8 +6,13 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { published, repos } from "@/lib/db";
-import { resolveAboutMoments, resolveAboutPopOut } from "@/lib/about-gallery";
+import {
+  resolveAboutMoments,
+  resolveAboutPopOut,
+  resolveAboutPracticeImage,
+} from "@/lib/about-gallery";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
+import { BUILDERS_MENTORED_COUNT } from "@/lib/profile-metrics";
 import { hackathonMoments } from "@/data/hackathon-moments";
 import RadialPopOut from "@/components/about/radial-pop-out";
 import AboutPracticeStory from "@/components/about/about-practice-story";
@@ -42,10 +47,10 @@ export default async function AboutPage() {
   const biographyParts = biography.split(/(HackShastra)/i);
   const gallery = resolveAboutPopOut(settings?.aboutPopOut, profile?.avatar);
   const moments = resolveAboutMoments(settings?.aboutMoments);
+  const practiceImage = resolveAboutPracticeImage(settings?.aboutPracticeImage);
+  const practiceImage2 = resolveAboutPracticeImage(settings?.aboutPracticeImage2);
   const featuredHackathons = hackathons.slice(0, 4);
-  const builderCount =
-    profile?.stats?.find((stat) => /builder|mentor/i.test(stat.label))?.value ??
-    3000;
+  const builderCount = BUILDERS_MENTORED_COUNT;
 
   return (
     <div className="about-page relative isolate overflow-hidden bg-[#090708] text-[#fffaf7]">
@@ -159,6 +164,8 @@ export default async function AboutPage() {
 
       <AboutPracticeStory
         builders={builderCount}
+        practiceImage={practiceImage ? { src: practiceImage.url, alt: practiceImage.alt } : undefined}
+        practiceImage2={practiceImage2 ? { src: practiceImage2.url, alt: practiceImage2.alt } : undefined}
         communityImage={{
           src: moments[0].url,
           alt: moments[0].alt,

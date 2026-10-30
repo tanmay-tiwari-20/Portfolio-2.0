@@ -76,6 +76,14 @@ function hasSafeAboutMomentsUrls(value: unknown) {
 function hasSafeAboutImageSettings(value: Record<string, unknown>) {
   if (value.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(value.aboutPopOut)) return false;
   if (value.aboutMoments !== undefined && !hasSafeAboutMomentsUrls(value.aboutMoments)) return false;
+  for (const field of ["aboutPracticeImage", "aboutPracticeImage2"]) {
+    const image = value[field];
+    if (image !== undefined && image !== null) {
+      if (typeof image !== "object" || Array.isArray(image)) return false;
+      const url = (image as Record<string, unknown>).url;
+      if (typeof url !== "string" || !isCloudinaryImageUrl(url)) return false;
+    }
+  }
   return true;
 }
 export async function GET(req: Request) {
