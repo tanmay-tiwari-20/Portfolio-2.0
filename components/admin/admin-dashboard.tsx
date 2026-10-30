@@ -1092,8 +1092,9 @@ export default function AdminDashboard() {
           <AboutGalleryEditor
             key={settings.updatedAt}
             value={settings.aboutPopOut}
+            moments={settings.aboutMoments}
             profileImage={profile?.avatar}
-            onSave={(aboutPopOut) => saveItem("settings", { ...settings, aboutPopOut }, false)}
+            onSave={(aboutPopOut, aboutMoments) => saveItem("settings", { ...settings, aboutPopOut, aboutMoments }, false)}
           />
         </section>
       )}

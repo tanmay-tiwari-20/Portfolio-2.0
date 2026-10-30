@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
   animate,
   motion,
@@ -36,12 +36,33 @@ export default function SkiperTextReveal({
   highlightBgClass = "!bg-[#ef463e]/20 border border-[#ef463e]/50 shadow-[0_0_18px_rgba(239,70,62,0.35)]",
   highlightLink = "https://hackshastra.in",
   className = "",
-  duration = 2.4,
+  duration = 1.8,
 }: SkiperTextRevealProps) {
   const shouldReduceMotion = useReducedMotion();
   const progress = useMotionValue(shouldReduceMotion ? 1 : 0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [preloaderComplete, setPreloaderComplete] = useState(false);
   const uniqueId = useId();
+
+  useEffect(() => {
+    const markReady = () => setPreloaderComplete(true);
+    const root = document.documentElement;
+
+    if (
+      root.dataset.preloaderComplete === "true" ||
+      (!root.classList.contains("portfolio-loading") &&
+        !document.querySelector(".site-preloader"))
+    ) {
+      markReady();
+      return;
+    }
+
+    window.addEventListener("portfolio:preloader-complete", markReady, {
+      once: true,
+    });
+    return () =>
+      window.removeEventListener("portfolio:preloader-complete", markReady);
+  }, []);
 
   // Split lines and words according to skiper70 specification
   const lines = children.split(/\n+/);
@@ -74,15 +95,16 @@ export default function SkiperTextReveal({
       progress.set(1);
       return;
     }
+    if (!preloaderComplete) return;
 
     const controls = animate(progress, 1, {
       duration,
-      ease: [0.16, 1, 0.3, 1],
-      delay: 0.25,
+      ease: "linear",
+      delay: 0.16,
     });
 
     return () => controls.stop();
-  }, [progress, shouldReduceMotion, duration]);
+  }, [progress, shouldReduceMotion, preloaderComplete, duration]);
 
   return (
     <div
@@ -91,12 +113,11 @@ export default function SkiperTextReveal({
     >
       {lines.map((line, lIdx) => {
         const lineWords = line.split(/\s+/).filter((w) => w.length > 0);
+        const lineStart = wordsList.findIndex((item) => item.lineIndex === lIdx);
         return (
           <div key={`${uniqueId}-line-${lIdx}`} className="flex flex-wrap items-center">
             {lineWords.map((rawWord, wIdx) => {
-              const overallIdx = wordsList.findIndex(
-                (item) => item.lineIndex === lIdx && item.wordIndex === wIdx,
-              );
+              const overallIdx = lineStart + wIdx;
               const wordItem = wordsList[overallIdx];
               if (!wordItem) return null;
 
@@ -113,6 +134,7 @@ export default function SkiperTextReveal({
                   highlightTextClass={highlightTextClass}
                   highlightBgClass={highlightBgClass}
                   highlightLink={highlightLink}
+                  revealActive={preloaderComplete && !shouldReduceMotion}
                 />
               );
             })}
@@ -134,6 +156,7 @@ function WordReveal({
   highlightTextClass,
   highlightBgClass,
   highlightLink,
+  revealActive,
 }: {
   progress: MotionValue<number>;
   wordIndex: number;
@@ -145,22 +168,21 @@ function WordReveal({
   highlightTextClass: string;
   highlightBgClass: string;
   highlightLink: string;
+  revealActive: boolean;
 }) {
   // Skiper70 exact mathematical distribution formula
   const m = wordIndex / totalWords;
-  const f =
-    1 /
-    Math.min(
-      1 + 15 / totalWords,
-      1 + (totalWords - 1) / totalWords + 15 / totalWords,
-    );
+  const spread = 15 / totalWords;
+  const f = 1 / (1 + spread);
   const p = m * f;
-  const x = (m + 15 / totalWords) * f;
+  const x = (m + spread) * f;
   const h = x - p;
 
   const g = useTransform(progress, [p, x], [0, 1]);
-  const b = useTransform(progress, [p + 0.9 * h, x], [1, 0]);
-  const v = useTransform(progress, [p + 0.9 * h, x], [0, 1]);
+  const b = useTransform(progress, [p + 0.55 * h, x], [0.72, 0]);
+  const v = useTransform(progress, [p + 0.55 * h, x], [0, 1]);
+  const lift = useTransform(progress, [p, x], [8, 0]);
+  const blur = useTransform(progress, [p, x], ["blur(6px)", "blur(0px)"]);
 
   const isHighlighted = cleanWord.toLowerCase() === highlight.toLowerCase();
 
@@ -168,7 +190,11 @@ function WordReveal({
     return (
       <motion.span
         className="relative mx-1 my-0.5 inline-flex items-center"
-        style={{ opacity: g }}
+        style={{
+          opacity: revealActive ? g : 1,
+          y: revealActive ? lift : 0,
+          filter: revealActive ? blur : "blur(0px)",
+        }}
       >
         {/* Persistent highlighted pill with link to HackShastra */}
         <a
@@ -197,15 +223,22 @@ function WordReveal({
   return (
     <motion.span
       className="relative mx-1 inline-block text-white/90 lg:mx-1.5"
-      style={{ opacity: g }}
+      style={{
+        opacity: revealActive ? g : 1,
+        y: revealActive ? lift : 0,
+        filter: revealActive ? blur : "blur(0px)",
+      }}
     >
       {/* Skiper70 box background that flashes during the reveal */}
       <motion.div
-        className="absolute left-1/2 top-1/2 h-[82%] w-[108%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white/10"
-        style={{ opacity: b }}
+        className="absolute left-1/2 top-1/2 h-[88%] w-[112%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white/30 shadow-[0_0_16px_rgba(255,255,255,0.14)]"
+        style={{ opacity: revealActive ? b : 0 }}
       />
       {/* Word text */}
-      <motion.span className="relative z-10" style={{ opacity: v }}>
+      <motion.span
+        className="relative z-10"
+        style={{ opacity: revealActive ? v : 1 }}
+      >
         {rawWord}
       </motion.span>
     </motion.span>

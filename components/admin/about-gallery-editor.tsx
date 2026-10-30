@@ -1,18 +1,19 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { ArrowDown, ArrowUp, RefreshCw, Star } from "lucide-react";
 import styles from "./about-gallery-editor.module.css";
-import CloudinaryUpload from "@/components/admin/cloudinary-upload";
 import RadialPopOut from "@/components/about/radial-pop-out";
-import { resolveAboutPopOut } from "@/lib/about-gallery";
-import type { AboutPopOutConfig, ImageAsset } from "@/lib/validators/schemas";
+import { resolveAboutMoments, resolveAboutPopOut } from "@/lib/about-gallery";
+import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
+import type { AboutMoment, AboutPopOutConfig, ImageAsset } from "@/lib/validators/schemas";
 
 type MediaAsset = ImageAsset & { format?: string };
 type Props = {
   value?: AboutPopOutConfig;
+  moments?: AboutMoment[];
   profileImage?: ImageAsset;
-  onSave: (value: AboutPopOutConfig) => Promise<boolean>;
+  onSave: (value: AboutPopOutConfig, moments: AboutMoment[]) => Promise<boolean>;
 };
 
 function imageKey(image: Pick<ImageAsset, "url" | "publicId">) {
@@ -23,26 +24,21 @@ function newImageId() {
   return `about-${crypto.randomUUID()}`;
 }
 
-export default function AboutGalleryEditor({ value, profileImage, onSave }: Props) {
+export default function AboutGalleryEditor({ value, moments: initialMoments, profileImage, onSave }: Props) {
   const [gallery, setGallery] = useState<AboutPopOutConfig>(() =>
     resolveAboutPopOut(value, profileImage),
   );
+  const [moments, setMoments] = useState<AboutMoment[]>(() => resolveAboutMoments(initialMoments));
+  const [cloudinaryUrl, setCloudinaryUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
   const [library, setLibrary] = useState<MediaAsset[]>([]);
   const [libraryLoading, setLibraryLoading] = useState(false);
   const [libraryError, setLibraryError] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("");
-  const galleryRef = useRef(gallery);
-  const uploadKeys = useRef(new Set<string>());
-  const removedKeys = useRef(new Set<string>());
 
   const updateGallery = useCallback((update: (current: AboutPopOutConfig) => AboutPopOutConfig) => {
-    setGallery((current) => {
-      const next = update(current);
-      galleryRef.current = next;
-      return next;
-    });
+    setGallery((current) => update(current));
   }, []);
 
   const loadLibrary = useCallback(async () => {
@@ -61,33 +57,27 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
     }
   }, []);
 
-  function handleUploadChange(assets: ImageAsset[]) {
-    updateGallery((current) => {
-      const incomingKeys = new Set(assets.map(imageKey));
-      const nextImages = current.images.filter((image) =>
-        !uploadKeys.current.has(imageKey(image)) || incomingKeys.has(imageKey(image)),
-      );
-      const existingKeys = new Set(nextImages.map(imageKey));
-
-      for (const asset of assets) {
-        const key = imageKey(asset);
-        uploadKeys.current.add(key);
-        if (removedKeys.current.has(key) || existingKeys.has(key)) continue;
-        nextImages.push({ ...asset, id: newImageId(), alt: asset.alt || "" });
-        existingKeys.add(key);
-      }
-
-      const centerId = nextImages.some((image) => image.id === current.centerId)
-        ? current.centerId
-        : nextImages[0]?.id || "";
-      return { centerId, images: nextImages };
-    });
+  function addCloudinaryImage() {
+    const url = cloudinaryUrl.trim();
+    if (!isCloudinaryImageUrl(url)) {
+      setUrlError("Paste a valid HTTPS Cloudinary image URL.");
+      return;
+    }
+    if (gallery.images.some((image) => image.url === url)) {
+      setUrlError("That image is already in the radial collection.");
+      return;
+    }
+    updateGallery((current) => ({
+      ...current,
+      images: [...current.images, { id: newImageId(), url, alt: "" }],
+    }));
+    setCloudinaryUrl("");
+    setUrlError("");
     setStatus("");
   }
 
   function addLibraryAsset(asset: MediaAsset) {
     const key = imageKey(asset);
-    removedKeys.current.delete(key);
     updateGallery((current) => current.images.some((image) => imageKey(image) === key)
       ? current
       : { ...current, images: [...current.images, { ...asset, id: newImageId(), alt: asset.alt || asset.publicId?.split("/").pop() || "Portfolio photo" }] });
@@ -95,8 +85,6 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
   }
 
   function removeImage(id: string) {
-    const image = galleryRef.current.images.find((candidate) => candidate.id === id);
-    if (image) removedKeys.current.add(imageKey(image));
     updateGallery((current) => {
       const images = current.images.filter((candidate) => candidate.id !== id);
       return {
@@ -124,8 +112,14 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
       if (!gallery.images.some((image) => image.id === gallery.centerId)) {
         throw new Error("Choose one of the gallery images as the center image.");
       }
-      const saved = await onSave(gallery);
-      setStatus(saved ? "About gallery saved." : "The gallery could not be saved. Review the admin message and try again.");
+      if (gallery.images.some((image) => !isCloudinaryImageUrl(image.url))) {
+        throw new Error("Every radial image must use a valid HTTPS Cloudinary URL.");
+      }
+      if (moments.length !== 3 || moments.some((moment) => !isCloudinaryImageUrl(moment.url))) {
+        throw new Error("Enter a valid HTTPS Cloudinary URL for each of the three building-together photos.");
+      }
+      const saved = await onSave(gallery, moments);
+      setStatus(saved ? "About page images saved." : "The images could not be saved. Review the admin message and try again.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "The gallery could not be saved.");
     } finally {
@@ -136,10 +130,10 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
   return (
     <section className="admin-card" style={{ maxWidth: "none", margin: "32px 0 0" }} aria-labelledby="about-gallery-title">
       <div style={{ marginBottom: 22 }}>
-        <p className="eyebrow" style={{ margin: "0 0 8px" }}>ABOUT PAGE · HERO VISUAL</p>
-        <h3 id="about-gallery-title" className="display" style={{ margin: 0, fontSize: 22 }}>Radial photo collection</h3>
+        <p className="eyebrow" style={{ margin: "0 0 8px" }}>ABOUT PAGE · IMAGES</p>
+        <h3 id="about-gallery-title" className="display" style={{ margin: 0, fontSize: 22 }}>About page image controls</h3>
         <p className="form-note" style={{ maxWidth: 720, marginTop: 7 }}>
-          Choose images for the About hero, set the center image, and reorder the surrounding photos. The homepage profile portrait and existing hackathon photos are used until you save a custom collection.
+          Set every About page photo with a direct Cloudinary URL. The radial set controls the hero; the three building-together photos also appear in the scroll story.
         </p>
       </div>
 
@@ -154,13 +148,25 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
 
         <div style={{ minWidth: 0, display: "grid", gap: 24 }}>
           <div>
-            <h4 className="form-label" style={{ fontSize: 12, marginBottom: 10 }}>Upload images</h4>
-            <CloudinaryUpload
-              section="about"
-              multiple
-              onUploadingChange={setUploading}
-              onChange={handleUploadChange}
-            />
+            <h4 className="form-label" style={{ fontSize: 12, marginBottom: 10 }}>Add a radial image by Cloudinary URL</h4>
+            <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) auto", gap: 8, alignItems: "end" }}>
+              <label className="form-note">
+                HTTPS image delivery URL
+                <input
+                  className="form-input"
+                  type="url"
+                  value={cloudinaryUrl}
+                  onChange={(event) => { setCloudinaryUrl(event.target.value); setUrlError(""); }}
+                  onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addCloudinaryImage(); } }}
+                  placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
+                  style={{ marginTop: 5, minHeight: 42 }}
+                />
+              </label>
+              <button type="button" className="button button-secondary" onClick={addCloudinaryImage} style={{ minHeight: 42, paddingInline: 14 }}>
+                Add image
+              </button>
+            </div>
+            {urlError && <p className="form-note" role="alert" style={{ color: "#ffaaa2" }}>{urlError}</p>}
           </div>
 
           <details className="about-media-library" onToggle={(event) => {
@@ -208,6 +214,19 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
                     <div style={{ minWidth: 0 }}>
                       <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "var(--spidey-paper)", fontSize: 11 }}>{image.publicId?.split("/").pop() || `Photo ${index + 1}`}</span>
                       <label className="form-note" style={{ display: "block", marginTop: 4 }}>
+                        Cloudinary URL
+                        <input
+                          className="form-input"
+                          type="url"
+                          value={image.url}
+                          onChange={(event) => updateGallery((current) => ({
+                            ...current,
+                            images: current.images.map((candidate) => candidate.id === image.id ? { ...candidate, url: event.target.value } : candidate),
+                          }))}
+                          style={{ minHeight: 32, marginTop: 3, padding: "4px 8px", fontSize: 10 }}
+                        />
+                      </label>
+                      <label className="form-note" style={{ display: "block", marginTop: 6 }}>
                         Alt text
                         <input
                           className="form-input"
@@ -236,12 +255,46 @@ export default function AboutGalleryEditor({ value, profileImage, onSave }: Prop
             {gallery.images.length === 1 && <p className="form-note">Add another image to show the surrounding radial cards.</p>}
           </div>
 
+          <div>
+            <h4 className="form-label" style={{ fontSize: 12, marginBottom: 5 }}>Building-together photos</h4>
+            <p className="form-note" style={{ margin: "0 0 10px" }}>These three photos appear in the community section and the final practice chapter.</p>
+            <div style={{ display: "grid", gap: 10 }}>
+              {moments.map((moment, index) => (
+                <div key={moment.id} style={{ display: "grid", gridTemplateColumns: "76px minmax(0, 1fr)", gap: 10, alignItems: "center", padding: 9, border: "1px solid var(--line)", borderRadius: 10, background: "var(--spidey-dark-850)" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={moment.url} alt="" loading="lazy" style={{ width: 76, height: 64, objectFit: "cover", borderRadius: 7, background: "var(--spidey-dark-700)" }} />
+                  <div style={{ minWidth: 0, display: "grid", gap: 6 }}>
+                    <label className="form-note">
+                      Photo {index + 1} · Cloudinary URL
+                      <input
+                        className="form-input"
+                        type="url"
+                        value={moment.url}
+                        onChange={(event) => setMoments((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, url: event.target.value } : item))}
+                        style={{ minHeight: 34, marginTop: 3, padding: "5px 8px", fontSize: 10 }}
+                      />
+                    </label>
+                    <label className="form-note">
+                      Alt text
+                      <input
+                        className="form-input"
+                        value={moment.alt}
+                        maxLength={300}
+                        onChange={(event) => setMoments((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, alt: event.target.value } : item))}
+                        style={{ minHeight: 32, marginTop: 3, padding: "4px 8px", fontSize: 10 }}
+                      />
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
-            <button type="button" className="button button-primary" onClick={() => void save()} disabled={saving || uploading || gallery.images.length === 0}>
-              {saving ? "Saving…" : "Save About gallery"}
+            <button type="button" className="button button-primary" onClick={() => void save()} disabled={saving || gallery.images.length === 0}>
+              {saving ? "Saving…" : "Save About page images"}
             </button>
             {status && <span className="form-note" role="status">{status}</span>}
-            {uploading && <span className="form-note" role="status">Uploading images…</span>}
           </div>
         </div>
       </div>

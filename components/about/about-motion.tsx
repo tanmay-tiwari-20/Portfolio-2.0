@@ -5,177 +5,215 @@ import { useEffect } from "react";
 export default function AboutMotion() {
   useEffect(() => {
     let disposed = false;
+    let initialized = false;
+    let readyListener: (() => void) | undefined;
     let context: { revert: () => void } | undefined;
-    const animeRuns: Array<{ revert: () => unknown }> = [];
-    const animeObservers: Array<{ revert: () => unknown }> = [];
 
-    void Promise.all([
-      import("gsap"),
-      import("gsap/ScrollTrigger"),
-      import("animejs"),
-    ])
-      .then(([{ gsap }, { ScrollTrigger }, { animate, onScroll }]) => {
+    const showContentWithoutMotion = () => {
+      document
+        .querySelectorAll<HTMLElement>(
+          "[data-about-kicker], [data-about-intro], [data-about-visual], [data-about-heading], [data-about-reveal], [data-about-experience], [data-about-image]",
+        )
+        .forEach((element) => {
+          element.style.opacity = "1";
+          element.style.visibility = "visible";
+          element.style.transform = "none";
+          element.style.clipPath = "none";
+        });
+    };
+
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
+      .then(([{ gsap }, { ScrollTrigger }]) => {
         if (disposed) return;
         gsap.registerPlugin(ScrollTrigger);
 
-        context = gsap.context(() => {
-          const reducedMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
-          if (reducedMotion) return;
+        const initialize = () => {
+          if (disposed || initialized) return;
+          initialized = true;
 
-          const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
-          entrance
-            .fromTo(
+          context = gsap.context(() => {
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+              return;
+
+            const entrance = gsap.timeline({
+              defaults: { ease: "power3.out" },
+            });
+            const kickers = gsap.utils.toArray<HTMLElement>(
               "[data-about-kicker]",
-              { y: 18, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.55 },
-            )
-            .fromTo(
-              "[data-about-hero-line]",
-              { yPercent: 115, rotate: 2 },
-              { yPercent: 0, rotate: 0, duration: 0.85, stagger: 0.09 },
-              "-=0.28",
-            )
-            .fromTo(
+            );
+            const intro = gsap.utils.toArray<HTMLElement>(
               "[data-about-intro]",
-              { y: 22, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.65 },
-              "-=0.42",
-            )
-            .fromTo(
-              "[data-about-interest]",
-              { y: 18, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, stagger: 0.08 },
-              "-=0.36",
-            )
-            .fromTo(
-              "[data-about-stat]",
-              { y: 16, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.55, stagger: 0.1 },
-              "-=0.34",
-            )
-            .fromTo(
+            );
+            const visuals = gsap.utils.toArray<HTMLElement>(
               "[data-about-visual]",
-              { y: 26, scale: 0.94, rotate: 2, opacity: 0 },
-              { y: 0, scale: 1, rotate: 0, opacity: 1, duration: 0.9 },
-              "-=0.58",
             );
 
-          const marqueeTrack = document.querySelector<HTMLElement>(
-            "[data-about-marquee-track]",
-          );
-          if (marqueeTrack) {
-            gsap.to(marqueeTrack, {
-              xPercent: -50,
-              duration: 32,
-              ease: "none",
-              repeat: -1,
-            });
-          }
+            if (kickers.length) {
+              entrance.fromTo(
+                kickers,
+                { y: 14, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.42 },
+              );
+            }
+            if (intro.length) {
+              entrance.fromTo(
+                intro,
+                { y: 14, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.48, stagger: 0.075 },
+                "-=0.2",
+              );
+            }
+            if (visuals.length) {
+              entrance.fromTo(
+                visuals,
+                { y: 18, scale: 0.975, autoAlpha: 0 },
+                { y: 0, scale: 1, autoAlpha: 1, duration: 0.62 },
+                "-=0.44",
+              );
+            }
 
-          gsap.utils
-            .toArray<HTMLElement>("[data-about-heading]")
-            .forEach((heading) => {
+            gsap.utils
+              .toArray<HTMLElement>("[data-about-heading]")
+              .forEach((heading) => {
+                gsap.fromTo(
+                  heading,
+                  { y: 26, autoAlpha: 0.35 },
+                  {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.76,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: heading,
+                      start: "top 84%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+            gsap.utils
+              .toArray<HTMLElement>("[data-about-reveal]")
+              .forEach((element, index) => {
+                gsap.fromTo(
+                  element,
+                  { y: 22, autoAlpha: 0 },
+                  {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.58,
+                    delay: (index % 4) * 0.055,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: element,
+                      start: "top 88%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+            gsap.utils
+              .toArray<HTMLElement>("[data-about-experience]")
+              .forEach((entry, index) => {
+                gsap.fromTo(
+                  entry,
+                  { x: 24, autoAlpha: 0 },
+                  {
+                    x: 0,
+                    autoAlpha: 1,
+                    duration: 0.65,
+                    delay: index * 0.08,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: entry,
+                      start: "top 86%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+            gsap.utils
+              .toArray<HTMLElement>("[data-about-image]")
+              .forEach((image) => {
+                gsap.fromTo(
+                  image,
+                  { clipPath: "inset(7% 0 0 0)", scale: 1.025 },
+                  {
+                    clipPath: "inset(0% 0 0 0)",
+                    scale: 1,
+                    duration: 0.78,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                      trigger: image,
+                      start: "top 88%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+            const thread = document.querySelector<HTMLElement>(
+              "[data-about-thread]",
+            );
+            if (thread) {
               gsap.fromTo(
-                heading,
-                { x: -30, opacity: 0, clipPath: "inset(0 0 12% 0)" },
+                thread,
+                { scaleY: 0 },
                 {
-                  x: 0,
-                  opacity: 1,
-                  clipPath: "inset(0 0 0% 0)",
-                  duration: 0.82,
-                  ease: "power3.out",
+                  scaleY: 1,
+                  ease: "none",
                   scrollTrigger: {
-                    trigger: heading,
-                    start: "top 82%",
-                    once: true,
+                    trigger: thread.parentElement,
+                    start: "top 76%",
+                    end: "bottom 76%",
+                    scrub: 0.65,
+                    invalidateOnRefresh: true,
                   },
                 },
               );
-            });
+            }
+          });
 
-          const thread = document.querySelector<HTMLElement>(
-            "[data-about-thread]",
+          ScrollTrigger.refresh();
+        };
+
+        const root = document.documentElement;
+        const preloaderAlreadyComplete =
+          root.dataset.preloaderComplete === "true" ||
+          (!root.classList.contains("portfolio-loading") &&
+            !document.querySelector(".site-preloader"));
+
+        if (preloaderAlreadyComplete) {
+          initialize();
+        } else {
+          readyListener = initialize;
+          window.addEventListener(
+            "portfolio:preloader-complete",
+            initialize,
+            { once: true },
           );
-          if (thread) {
-            gsap.fromTo(
-              thread,
-              { scaleY: 0, transformOrigin: "top center" },
-              {
-                scaleY: 1,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: thread,
-                  start: "top 76%",
-                  end: "bottom 78%",
-                  scrub: 0.5,
-                },
-              },
-            );
-          }
-
-          const details = Array.from(
-            document.querySelectorAll<HTMLElement>("[data-about-experience]"),
-          );
-          if (details.length) {
-            gsap.fromTo(
-              details,
-              { x: 28, opacity: 0 },
-              {
-                x: 0,
-                opacity: 1,
-                stagger: 0.12,
-                duration: 0.7,
-                ease: "power3.out",
-                scrollTrigger: {
-                  trigger: details[0],
-                  start: "top 82%",
-                  once: true,
-                },
-              },
-            );
-          }
-
-          document
-            .querySelectorAll<HTMLElement>("[data-about-anime-item]")
-            .forEach((item, index) => {
-              const bounds = item.getBoundingClientRect();
-              if (bounds.top < window.innerHeight && bounds.bottom > 0) return;
-              const observer = onScroll({
-                target: item,
-                axis: "y",
-                enter: { target: "start", container: "90%" },
-                leave: { target: "start", container: "72%" },
-                sync: true,
-                repeat: false,
-              });
-              animeObservers.push(observer);
-              animeRuns.push(
-                animate(item, {
-                  translateY: [24, 0],
-                  opacity: [0, 1],
-                  ease: "out(3)",
-                  duration: 620,
-                  delay: Math.min(index * 55, 330),
-                  autoplay: observer,
-                }),
-              );
-            });
-        });
-
-        ScrollTrigger.refresh();
+        }
       })
       .catch(() => {
+        if (disposed) return;
+        if (readyListener)
+          window.removeEventListener(
+            "portfolio:preloader-complete",
+            readyListener,
+          );
         context?.revert();
-        animeObservers.forEach((observer) => observer.revert());
-        animeRuns.forEach((animation) => animation.revert());
+        showContentWithoutMotion();
       });
 
     return () => {
       disposed = true;
-      animeObservers.forEach((observer) => observer.revert());
-      animeRuns.forEach((animation) => animation.revert());
+      if (readyListener)
+        window.removeEventListener(
+          "portfolio:preloader-complete",
+          readyListener,
+        );
       context?.revert();
     };
   }, []);

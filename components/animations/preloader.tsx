@@ -19,8 +19,14 @@ export default function Preloader() {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (phase === "done") root.classList.remove("portfolio-loading");
-    else root.classList.add("portfolio-loading");
+    if (phase === "done") {
+      root.classList.remove("portfolio-loading");
+      root.dataset.preloaderComplete = "true";
+      window.dispatchEvent(new Event("portfolio:preloader-complete"));
+    } else {
+      root.dataset.preloaderComplete = "false";
+      root.classList.add("portfolio-loading");
+    }
   }, [phase]);
 
   useEffect(

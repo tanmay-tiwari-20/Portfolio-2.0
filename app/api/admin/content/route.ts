@@ -66,6 +66,18 @@ function hasSafeAboutPopOutUrls(value: unknown) {
     return typeof url === "string" && isCloudinaryImageUrl(url);
   });
 }
+function hasSafeAboutMomentsUrls(value: unknown) {
+  return Array.isArray(value) && value.length === 3 && value.every((moment) => {
+    if (!moment || typeof moment !== "object" || Array.isArray(moment)) return false;
+    const url = (moment as Record<string, unknown>).url;
+    return typeof url === "string" && isCloudinaryImageUrl(url);
+  });
+}
+function hasSafeAboutImageSettings(value: Record<string, unknown>) {
+  if (value.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(value.aboutPopOut)) return false;
+  if (value.aboutMoments !== undefined && !hasSafeAboutMomentsUrls(value.aboutMoments)) return false;
+  return true;
+}
 export async function GET(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const key = new URL(req.url).searchParams.get("collection");
@@ -97,8 +109,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Event poster must be a valid HTTPS Cloudinary image URL" }, { status: 400 });
     }
   }
-  if (body.collection === "settings" && item.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(item.aboutPopOut)) {
-    return NextResponse.json({ error: "About gallery images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
+  if (body.collection === "settings" && !hasSafeAboutImageSettings(item)) {
+    return NextResponse.json({ error: "About page images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
   }
   if (body.collection === "hackathons" && item.role !== "Judge" && item.role !== "Mentor") {
     return NextResponse.json({ error: "Role must be Judge or Mentor" }, { status: 400 });
@@ -145,8 +157,8 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Event poster must be a valid HTTPS Cloudinary image URL" }, { status: 400 });
     }
   }
-  if (collection === "settings" && parsedPatch.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(parsedPatch.aboutPopOut)) {
-    return NextResponse.json({ error: "About gallery images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
+  if (collection === "settings" && !hasSafeAboutImageSettings(parsedPatch)) {
+    return NextResponse.json({ error: "About page images must be valid HTTPS Cloudinary image URLs." }, { status: 400 });
   }
 
   const entry = entries[collection];

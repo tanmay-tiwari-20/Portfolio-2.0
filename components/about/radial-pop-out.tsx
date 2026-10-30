@@ -17,7 +17,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { Images } from "lucide-react";
+import { ArrowUpRight, Images } from "lucide-react";
 import type { AboutPopOutConfig } from "@/lib/validators/schemas";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 
@@ -53,8 +53,8 @@ export default function RadialPopOut({
   radius = 290,
   jitter = 7,
   stagger = 0.025,
-  maxTilt = 10,
-  shift = 0.16,
+  maxTilt = 3.5,
+  shift = 0.055,
   className = "",
 }: RadialPopOutProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,6 +94,18 @@ export default function RadialPopOut({
       items: customItems || [],
     };
   }, [gallery, customHero, customItems]);
+
+  useEffect(() => {
+    // Warm the first orbit cards before hover so the motion never reveals a
+    // blank frame while the browser starts fetching an image.
+    items.slice(0, 6).forEach((item) => {
+      if (!item.src) return;
+      const image = new window.Image();
+      image.decoding = "async";
+      image.fetchPriority = "low";
+      image.src = item.src;
+    });
+  }, [items]);
 
   const effectiveRadius = radius ?? Math.round(1.2 * cardSize);
   const effectiveHeroSize = heroSize ?? Math.round(1.28 * cardSize);
@@ -185,9 +197,9 @@ export default function RadialPopOut({
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springConfig = {
-    stiffness: 140,
-    damping: 22,
-    mass: 0.7,
+    stiffness: 180,
+    damping: 24,
+    mass: 0.75,
     restDelta: 0.001,
   };
   const smoothMouseX = useSpring(mouseX, springConfig);
@@ -206,8 +218,8 @@ export default function RadialPopOut({
     mouseY.set(0);
   };
 
-  // DESKTOP: ONLY HOVER over center image opens it; leaving center image IMMEDIATELY closes it.
-  // MOBILE: ONLY TOUCH/TAP on center image toggles it; tapping outside dismisses it.
+  // The fan follows the portrait's hover state. Orbit cards are decorative,
+  // so leaving the portrait starts the same smooth motion back to center.
   const handleCenterPointerEnter = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse") {
       isTouchDeviceRef.current = false;
@@ -295,13 +307,16 @@ export default function RadialPopOut({
                 style={{
                   width: scaledCardSize,
                   height: scaledCardSize,
+                  left: "50%",
+                  top: "50%",
+                  marginLeft: -scaledCardSize / 2,
+                  marginTop: -scaledCardSize / 2,
                 }}
                 initial={{
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                  scale: 0.55,
-                  opacity: 0,
+                  x: pos.x * 0.08,
+                  y: pos.y * 0.08,
+                  rotate: pos.rotate * 0.25,
+                  scale: 0.92,
                 }}
                 animate={
                   shouldReduceMotion
@@ -310,21 +325,17 @@ export default function RadialPopOut({
                         y: pos.y,
                         rotate: pos.rotate,
                         scale: 1,
-                        opacity: 1,
-                        transition: { duration: 0.15 },
+                        transition: { duration: 0.12, ease: "easeOut" },
                       }
                     : {
                         x: pos.x,
                         y: pos.y,
                         rotate: pos.rotate,
                         scale: 1,
-                        opacity: 1,
                         transition: {
-                          type: "spring",
-                          stiffness: 260,
-                          damping: 22,
-                          mass: 0.8,
-                          restDelta: 0.001,
+                          type: "tween",
+                          duration: 0.36,
+                          ease: [0.22, 1, 0.36, 1],
                           delay: index * stagger,
                         },
                       }
@@ -333,12 +344,15 @@ export default function RadialPopOut({
                   x: 0,
                   y: 0,
                   rotate: 0,
-                  scale: 0.7,
-                  opacity: 0,
-                  transition: {
-                    duration: 0.2,
-                    ease: [0.22, 1, 0.36, 1],
-                  },
+                  scale: 0.96,
+                  transition: shouldReduceMotion
+                    ? { duration: 0.1, ease: "easeOut" }
+                    : {
+                        type: "tween",
+                        duration: 0.22,
+                        ease: [0.55, 0, 1, 0.45],
+                        delay: index * 0.008,
+                      },
                 }}
               >
                 <CardItem src={item.src} alt={item.alt || ""} />
@@ -359,8 +373,13 @@ export default function RadialPopOut({
           onPointerEnter={handleCenterPointerEnter}
           onPointerLeave={handleCenterPointerLeave}
           onPointerDown={handleCenterPointerDown}
-          onMouseMove={(e) => {
-            if (shouldReduceMotion || isTouchDeviceRef.current) return;
+          onPointerMove={(e) => {
+            if (
+              e.pointerType !== "mouse" ||
+              shouldReduceMotion ||
+              isTouchDeviceRef.current
+            )
+              return;
             const rect = e.currentTarget.getBoundingClientRect();
             const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
             const ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
@@ -369,7 +388,7 @@ export default function RadialPopOut({
           }}
         >
           <motion.div
-            className="group relative block h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/25 bg-[#160f10] p-0 shadow-[0_22px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(239,70,62,0.22)] ring-1 ring-white/20 transition-all duration-300 hover:border-[#ff6558]/70 hover:ring-[#ef463e]/40 focus:outline-none"
+            className="group relative block h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/25 bg-[#160f10] p-0 shadow-[0_22px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(239,70,62,0.22)] ring-1 ring-white/20 transition-all duration-300 hover:border-[#ff6558]/70 hover:ring-[#ef463e]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9b78] focus-visible:ring-offset-4 focus-visible:ring-offset-[#090708]"
             style={{
               transform: heroTransform,
               transformStyle: "preserve-3d",
@@ -391,17 +410,15 @@ export default function RadialPopOut({
           >
             <CardItem src={hero.src} alt={hero.alt || ""} isHero={true} />
 
-            {/* Clean instruction badge (strictly non-pulsing) */}
+            {/* A quiet corner cue keeps the portrait itself unobstructed. */}
             <span
-              className={`pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 rounded-full border border-white/20 bg-black/70 px-3 py-1 text-[9px] font-semibold uppercase tracking-wider text-white/85 shadow-[0_4px_14px_rgba(0,0,0,0.6)] backdrop-blur-md transition-all duration-300 ${
+              className={`pointer-events-none absolute bottom-4 right-4 z-10 flex size-9 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white/70 shadow-[0_3px_14px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-300 ${
                 isOpen
                   ? "scale-90 opacity-0"
-                  : "scale-100 opacity-90 group-hover:opacity-100 group-hover:border-white/35"
+                  : "scale-100 opacity-55 group-hover:opacity-75 group-hover:border-white/40"
               }`}
             >
-              <Images size={11} className="text-[#ff6558]" aria-hidden="true" />
-              <span className="hidden sm:inline">Hover to expand</span>
-              <span className="inline sm:hidden">Tap to view</span>
+              <ArrowUpRight size={17} className="text-[#ffd1a0]" aria-hidden="true" />
             </span>
           </motion.div>
         </div>

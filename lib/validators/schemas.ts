@@ -28,12 +28,21 @@ export const aboutPopOutSchema = z.object({
     context.addIssue({ code: "custom", path: ["centerId"], message: "Choose a center image from the gallery." });
   }
 });
+export const aboutMomentSchema = z.object({
+  id: z.string().min(1).max(160),
+  url: z.string().url(),
+  alt: z.string().max(300).default(""),
+  title: z.string().min(1).max(140),
+  caption: z.string().max(600),
+});
+export const aboutMomentsSchema = z.array(aboutMomentSchema).length(3);
 export const settingsSchema = baseRecord.extend({
   title: z.string(),
   description: z.string(),
   ogImage: imageSchema.optional(),
   accent: z.string().default("#e62429"),
   aboutPopOut: aboutPopOutSchema.optional(),
+  aboutMoments: aboutMomentsSchema.optional(),
 });
 export type ImageAsset = z.infer<typeof imageSchema>;
 export type Profile = z.infer<typeof profileSchema>;
@@ -45,3 +54,4 @@ export type SocialLink = z.infer<typeof socialSchema>;
 export type SiteSettings = z.infer<typeof settingsSchema>;
 export type AboutPopOutImage = z.infer<typeof aboutPopOutImageSchema>;
 export type AboutPopOutConfig = z.infer<typeof aboutPopOutSchema>;
+export type AboutMoment = z.infer<typeof aboutMomentSchema>;
