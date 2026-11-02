@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -9,7 +10,6 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import {
-  AnimatePresence,
   motion,
   useMotionTemplate,
   useMotionValue,
@@ -20,6 +20,7 @@ import {
 import { ArrowUpRight, Images } from "lucide-react";
 import type { AboutPopOutConfig } from "@/lib/validators/schemas";
 import { getOptimizedUrl } from "@/lib/cloudinary/urls";
+import { createRadialPopLayout } from "@/lib/radial-pop-layout";
 
 export type RadialPopOutItem = {
   src: string;
@@ -110,8 +111,18 @@ export default function RadialPopOut({
   const effectiveRadius = radius ?? Math.round(1.2 * cardSize);
   const effectiveHeroSize = heroSize ?? Math.round(1.28 * cardSize);
 
-  // True bounding diameter: from center to outer card edge
-  const baseDimension = Math.round((effectiveRadius + cardSize * 0.55) * 2);
+  const layout = useMemo(
+    () => createRadialPopLayout({
+      count: items.length,
+      cardSize,
+      heroSize: effectiveHeroSize,
+      heroPadding: effectiveHeroSize * Math.abs(shift),
+      radius: effectiveRadius,
+      jitter,
+    }),
+    [items.length, cardSize, effectiveHeroSize, effectiveRadius, jitter, shift],
+  );
+  const baseDimension = layout.dimension;
 
   useIsomorphicLayoutEffect(() => {
     const parent = rootRef.current?.parentElement;
@@ -157,46 +168,11 @@ export default function RadialPopOut({
     };
   }, [baseDimension]);
 
-  // Touch outside listener on mobile to dismiss pop-out cleanly
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleOutsideInteraction = (e: Event) => {
-      if (
-        centerCardRef.current &&
-        !centerCardRef.current.contains(e.target as Node)
-      ) {
-        setIsOpen(false);
-        resetTilt();
-      }
-    };
-
-    window.addEventListener("pointerdown", handleOutsideInteraction);
-    return () => {
-      window.removeEventListener("pointerdown", handleOutsideInteraction);
-    };
-  }, [isOpen]);
-
   const scaledCardSize = cardSize * scale;
   const scaledHeroSize = effectiveHeroSize * scale;
   const scaledRadius = effectiveRadius * scale;
-  const itemCount = items.length;
-
-  // Deterministic jitter and radial coordinates (starting from 12 o'clock / -90deg)
-  const positions = useMemo(() => {
-    return items.map((_, index) => {
-      const angle = (index / Math.max(itemCount, 1)) * Math.PI * 2 - Math.PI / 2;
-      const pseudoRandom = 233280 * Math.sin(9301 * index + 49297);
-      const frac = pseudoRandom - Math.floor(pseudoRandom);
-      const rotate = (frac * 2 - 1) * jitter;
-      return {
-        x: Math.cos(angle) * scaledRadius,
-        y: Math.sin(angle) * scaledRadius,
-        rotate,
-      };
-    });
-  }, [items, itemCount, scaledRadius, jitter]);
-
   const containerDimension = baseDimension * scale;
+  const closedCardScale = Math.min(0.9, (effectiveHeroSize / cardSize) * 0.85);
 
   // Interactive 3D tilt & magnetic cursor spring physics
   const mouseX = useMotionValue(0);
@@ -218,10 +194,29 @@ export default function RadialPopOut({
 
   const heroTransform = useMotionTemplate`translate3d(${translateX}px, ${translateY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
-  const resetTilt = () => {
+  const resetTilt = useCallback(() => {
     mouseX.set(0);
     mouseY.set(0);
-  };
+  }, [mouseX, mouseY]);
+
+  // Touch outside listener on mobile to dismiss pop-out cleanly.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleOutsideInteraction = (e: Event) => {
+      if (
+        centerCardRef.current &&
+        !centerCardRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+        resetTilt();
+      }
+    };
+
+    window.addEventListener("pointerdown", handleOutsideInteraction);
+    return () => {
+      window.removeEventListener("pointerdown", handleOutsideInteraction);
+    };
+  }, [isOpen, resetTilt]);
 
   // The fan follows the portrait's hover state. Orbit cards are decorative,
   // so leaving the portrait starts the same smooth motion back to center.
@@ -263,7 +258,7 @@ export default function RadialPopOut({
       >
         {/* Soft crimson core spotlight */}
         <div
-          className={`absolute rounded-full transition-all duration-700 ease-out ${
+          className={`absolute rounded-full transition-all duration-700 ease-out motion-reduce:transition-none ${
             isOpen
               ? "scale-110 opacity-100"
               : "scale-90 opacity-60"
@@ -278,7 +273,7 @@ export default function RadialPopOut({
 
         {/* Orbit ring dashed */}
         <div
-          className={`absolute rounded-full border border-dashed transition-all duration-700 ease-out ${
+          className={`absolute rounded-full border border-dashed transition-all duration-700 ease-out motion-reduce:transition-none ${
             isOpen
               ? "scale-105 border-[#ef463e]/30 opacity-100"
               : "scale-100 border-white/[0.08] opacity-60"
@@ -299,72 +294,50 @@ export default function RadialPopOut({
         />
       </div>
 
-      {/* Scattered Radial Cards — pointer-events-none ensures hovering off center card isn't blocked */}
-      <AnimatePresence>
-        {isOpen &&
-          items.map((item, index) => {
-            const pos = positions[index] || { x: 0, y: 0, rotate: 0 };
-            return (
-              <motion.div
-                key={item.id ?? `${index}-${item.src}`}
-                aria-hidden={true}
-                className="pointer-events-none absolute z-20"
-                style={{
-                  width: scaledCardSize,
-                  height: scaledCardSize,
-                  left: "50%",
-                  top: "50%",
-                  marginLeft: -scaledCardSize / 2,
-                  marginTop: -scaledCardSize / 2,
-                }}
-                initial={{
-                  x: pos.x * 0.08,
-                  y: pos.y * 0.08,
-                  rotate: pos.rotate * 0.25,
-                  scale: 0.92,
-                }}
-                animate={
-                  shouldReduceMotion
-                    ? {
-                        x: pos.x,
-                        y: pos.y,
-                        rotate: pos.rotate,
-                        scale: 1,
-                        transition: { duration: 0.12, ease: "easeOut" },
-                      }
-                    : {
-                        x: pos.x,
-                        y: pos.y,
-                        rotate: pos.rotate,
-                        scale: 1,
-                        transition: {
-                          type: "tween",
-                          duration: 0.36,
-                          ease: [0.22, 1, 0.36, 1],
-                          delay: index * stagger,
-                        },
-                      }
-                }
-                exit={{
-                  x: 0,
-                  y: 0,
-                  rotate: 0,
-                  scale: 0.96,
-                  transition: shouldReduceMotion
-                    ? { duration: 0.1, ease: "easeOut" }
-                    : {
-                        type: "tween",
-                        duration: 0.22,
-                        ease: [0.55, 0, 1, 0.45],
-                        delay: index * 0.008,
-                      },
-                }}
-              >
-                <CardItem src={item.src} alt={item.alt || ""} />
-              </motion.div>
-            );
-          })}
-      </AnimatePresence>
+      {/* Keep the cards mounted so a hover reversal continues from the current
+          position and velocity instead of restarting an entrance animation. */}
+      {items.map((item, index) => {
+        const pos = layout.positions[index];
+        return (
+          <motion.div
+            key={item.id ?? `${index}-${item.src}`}
+            aria-hidden={true}
+            className="pointer-events-none absolute z-20"
+            style={{
+              width: scaledCardSize,
+              height: scaledCardSize,
+              left: "50%",
+              top: "50%",
+              marginLeft: -scaledCardSize / 2,
+              marginTop: -scaledCardSize / 2,
+            }}
+            initial={false}
+            animate={{
+              x: isOpen ? pos.x * scale : 0,
+              y: isOpen ? pos.y * scale : 0,
+              rotate: isOpen ? pos.rotate : 0,
+              scale: isOpen ? 1 : closedCardScale,
+              opacity: isOpen ? 1 : 0,
+            }}
+            transition={shouldReduceMotion ? { duration: 0 } : {
+              type: "spring",
+              stiffness: 220,
+              damping: 27,
+              mass: 0.8,
+              restDelta: 0.1,
+              restSpeed: 0.5,
+              delay: isOpen ? Math.min(index * stagger, 0.08) : 0,
+              opacity: {
+                duration: isOpen ? 0.12 : 0.16,
+                delay: isOpen ? 0 : 0.24,
+                ease: "easeOut",
+              },
+            }}
+          >
+            <CardItem key={item.src} src={item.src} alt={item.alt || ""} />
+          </motion.div>
+        );
+      })}
 
       {/* Center Hero Card — hover on mouse, tap on touch */}
       {hero && (
@@ -393,7 +366,7 @@ export default function RadialPopOut({
           }}
         >
           <motion.div
-            className="group relative block h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/25 bg-[#160f10] p-0 shadow-[0_22px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(239,70,62,0.22)] ring-1 ring-white/20 transition-all duration-300 hover:border-[#ff6558]/70 hover:ring-[#ef463e]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9b78] focus-visible:ring-offset-4 focus-visible:ring-offset-[#090708]"
+            className="group relative block h-full w-full cursor-pointer overflow-hidden rounded-3xl border border-white/25 bg-[#160f10] p-0 shadow-[0_22px_60px_rgba(0,0,0,0.7),0_0_45px_rgba(239,70,62,0.22)] ring-1 ring-white/20 transition-[border-color,box-shadow] duration-300 motion-reduce:transition-none hover:border-[#ff6558]/70 hover:ring-[#ef463e]/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff9b78] focus-visible:ring-offset-4 focus-visible:ring-offset-[#090708]"
             style={{
               transform: heroTransform,
               transformStyle: "preserve-3d",
@@ -410,14 +383,17 @@ export default function RadialPopOut({
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 setIsOpen((prev) => !prev);
+              } else if (e.key === "Escape") {
+                setIsOpen(false);
+                resetTilt();
               }
             }}
           >
-            <CardItem src={hero.src} alt={hero.alt || ""} isHero={true} />
+            <CardItem key={hero.src} src={hero.src} alt={hero.alt || ""} isHero={true} />
 
             {/* A quiet corner cue keeps the portrait itself unobstructed. */}
             <span
-              className={`pointer-events-none absolute bottom-4 right-4 z-10 flex size-9 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white/70 shadow-[0_3px_14px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-300 ${
+              className={`pointer-events-none absolute bottom-4 right-4 z-10 flex size-9 items-center justify-center rounded-full border border-white/25 bg-black/20 text-white/70 shadow-[0_3px_14px_rgba(0,0,0,0.22)] backdrop-blur-sm transition-all duration-300 motion-reduce:transition-none ${
                 isOpen
                   ? "scale-90 opacity-0"
                   : "scale-100 opacity-55 group-hover:opacity-75 group-hover:border-white/40"

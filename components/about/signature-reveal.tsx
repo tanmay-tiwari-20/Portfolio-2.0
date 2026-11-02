@@ -176,7 +176,7 @@ export default function SignatureReveal({
   return (
     <div
       ref={rootRef}
-      className={`group/signature relative isolate w-full max-w-[20rem] text-[var(--theme-paper)] ${className}`}
+      className={`group/signature relative isolate w-full max-w-[20rem] text-[var(--theme-paper)] md:max-w-[28rem] ${className}`}
       data-signature-state="waiting"
       role="img"
       aria-label="Tanmay Tiwari, handwritten signature"

@@ -57,7 +57,7 @@ test("ink contours stay padded inside the responsive viewBox at all requested wi
   for (const width of [
     320, 360, 375, 390, 430, 640, 768, 820, 1024, 1280, 1440, 1920,
   ]) {
-    const containerWidth = Math.min(320, width - 44);
+    const containerWidth = Math.min(width >= 768 ? 448 : 320, width - 44);
     const scale = containerWidth / SIGNATURE_WIDTH;
     const containerHeight = SIGNATURE_HEIGHT * scale;
     for (const [x, y] of points) {

@@ -41,10 +41,6 @@ export default async function AboutPage() {
   const profile = profiles[0];
   const settings = settingsRows[0];
   const location = profile?.location || "New Delhi, India";
-  const biography =
-    profile?.bio ||
-    "I’m a creative developer who enjoys the full product experience: sturdy engineering, thoughtful visual details, and bringing people together to make useful things.";
-  const biographyParts = biography.split(/(?<=[.!?])\s+/)[0].split(/(HackShastra)/i);
   const gallery = resolveAboutPopOut(settings?.aboutPopOut, profile?.avatar);
   const centerId =
     gallery.images.find((image) => image.id === gallery.centerId)?.id ??
@@ -65,69 +61,87 @@ export default async function AboutPage() {
         <div className="hero-grid about-hero-grid">
           <div className="about-hero-copy min-w-0">
             <p
-              className="mb-5 flex items-center gap-3 text-[9px] font-bold tracking-[0.2em] text-[var(--theme-paper)]/65 sm:mb-6"
+              className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] leading-normal font-medium tracking-[0.14em] text-[var(--theme-paper)]/65 uppercase sm:mb-7 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mb-4 [@media(min-width:761px)_and_(max-height:600px)]:mb-3"
               data-about-kicker
             >
-              <span className="h-px w-7 bg-[#edbd83]/70" aria-hidden="true" />
-              <span>A LITTLE ABOUT ME</span>
+              <span className="h-px w-6 bg-[#edbd83]" aria-hidden="true" />
+              <span>Tanmay Tiwari</span>
+              <span className="text-[#edbd83]/50" aria-hidden="true">
+                /
+              </span>
+              <span>{location}</span>
             </p>
 
             <h1
               id="about-title"
-              className="m-0 font-[Georgia,serif] text-[clamp(2.875rem,6vw,5.25rem)] leading-[0.98] font-bold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2.875rem,11.5vw,4.75rem)]"
-            >
-              Care is part
-              <span className="block pl-[clamp(0.75rem,2vw,1.75rem)]">
-                of the <em className="text-[#edbd83]">craft.</em>
-              </span>
-            </h1>
-
-            <p
-              className="mt-5 max-w-[32ch] font-display text-[clamp(1rem,1.4vw,1.25rem)] leading-relaxed font-medium tracking-[-0.02em] text-[var(--theme-paper)]/85"
+              className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
               data-about-intro
             >
-              {profile?.tagline || "Making the web a little more human."}
-            </p>
+              <span className="block">From 3D games</span>
+              <em className="mt-1 block font-[Georgia,serif] text-[1.08em] leading-[1.05] font-normal tracking-[-0.055em] text-[#edbd83]">
+                to hackathon halls.
+              </em>
+            </h1>
 
-            <div className="mt-3 max-w-[48ch]" data-about-intro>
-              <p className="m-0 text-[13px] leading-[1.7] text-[var(--theme-paper)]/70 sm:text-sm">
-                {biographyParts.map((part, index) =>
-                  part.toLowerCase() === "hackshastra" ? (
-                    <a
-                      href="https://hackshastra.in"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[#ffe0a6] underline decoration-[#ffe0a6]/40 underline-offset-4 hover:text-white"
-                      key={`${part}-${index}`}
-                    >
-                      {part}
-                    </a>
-                  ) : (
-                    <span key={`${part}-${index}`}>{part}</span>
-                  ),
-                )}
+            <div
+              className="mt-6 max-w-[47ch] text-[14px] leading-[1.75] text-[var(--theme-paper)]/75 sm:text-[15px] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-4 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[13px] [@media(min-width:761px)_and_(max-height:600px)]:mt-3 [@media(min-width:761px)_and_(max-height:600px)]:text-[12px] [@media(min-width:761px)_and_(max-height:600px)]:leading-[1.55]"
+              data-about-intro
+            >
+              <p className="m-0">
+                I’m Tanmay, a full-stack developer and{" "}
+                <span className="whitespace-nowrap">
+                  co-founder of{" "}
+                  <a
+                    href="https://hackshastra.in"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[var(--theme-paper)] underline decoration-[#edbd83]/60 underline-offset-4 transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
+                  >
+                    HackShastra
+                  </a>
+                  .
+                </span>
+              </p>
+              <p className="mt-3 mb-0 [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:450px)]:hidden">
+                I build web products, organise hackathons, and mentor students
+                turning ideas into working projects.
               </p>
             </div>
 
-            <div className="mt-4 w-full max-w-[20rem] sm:mt-5" data-about-intro>
+            <div
+              className="mt-5 w-full max-w-[20rem] md:mt-6 md:max-w-[28rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-3 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:max-w-[min(28rem,56vh)] [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:max-w-[min(24rem,48vh)]"
+              data-about-intro
+            >
               <SignatureReveal imageSources={signatureImageSources} />
-              <p className="mt-1 flex items-center gap-2 text-[9px] leading-relaxed font-medium tracking-[0.12em] text-[var(--theme-paper)]/55 uppercase">
-                <span className="h-px w-5 bg-[#edbd83]/50" aria-hidden="true" />
-                {location}
-              </p>
             </div>
 
-            <div className="about-hero-links" data-about-intro>
-              <Link className="about-hero-link-primary" href="#the-person">
-                How I work <ArrowRight size={15} aria-hidden="true" />
+            <div
+              className="mt-4 flex max-w-[28rem] flex-wrap items-center gap-x-7 gap-y-1 border-t border-[var(--theme-paper)]/20 pt-2 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:pt-0"
+              data-about-intro
+            >
+              <Link
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-semibold text-[var(--theme-paper)] transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
+                href="#the-person"
+              >
+                More about me
+                <ArrowRight
+                  size={14}
+                  className="transition-transform duration-200 motion-safe:group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
               </Link>
               <Link
-                className="about-hero-link-secondary"
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-[var(--theme-paper)]/65 transition-colors duration-200 hover:text-[var(--theme-paper)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
                 href="https://hackshastra.in"
                 target="_blank"
                 rel="noreferrer"
               >
-                HackShastra <ArrowUpRight size={15} aria-hidden="true" />
+                Explore HackShastra
+                <ArrowUpRight
+                  size={14}
+                  className="transition-transform duration-200 motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
               </Link>
             </div>
           </div>
@@ -137,11 +151,12 @@ export default async function AboutPage() {
             <div className="about-art-orbit about-art-orbit-inner" aria-hidden="true" />
             <RadialPopOut
               gallery={gallery}
-              cardSize={285}
+              cardSize={245}
               heroSize={350}
               radius={250}
               jitter={3.5}
               stagger={0.018}
+              shift={0.025}
             />
             <div className="about-gallery-caption" aria-hidden="true">
               <span>PEOPLE, PLACES & PRACTICE</span>
