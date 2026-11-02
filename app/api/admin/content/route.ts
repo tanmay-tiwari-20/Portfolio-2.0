@@ -137,8 +137,11 @@ export async function POST(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid content", details: parsed.error.flatten() }, { status: 400 });
   }
-  if (body.collection === "projects" && existingItems.some((project) => project.slug === parsed.data.slug)) {
-    return NextResponse.json({ error: "A project with this slug already exists." }, { status: 409 });
+  if (body.collection === "projects" && "slug" in parsed.data) {
+    const slug = parsed.data.slug;
+    if (existingItems.some((project) => "slug" in project && project.slug === slug)) {
+      return NextResponse.json({ error: "A project with this slug already exists." }, { status: 409 });
+    }
   }
 
   const created = await entry.repo.create(parsed.data as never);
@@ -180,8 +183,11 @@ export async function PATCH(req: Request) {
   }
   const merged = entry.schema.safeParse({ ...before, ...parsed.data, ...Object.fromEntries(removalFields.map((field) => [field, undefined])) });
   if (!merged.success) return NextResponse.json({ error: "The updated record is incomplete or invalid", details: merged.error.flatten() }, { status: 400 });
-  if (collection === "projects" && (await entry.repo.getAll()).some((project) => project.id !== body.id && project.slug === (merged.data as { slug: string }).slug)) {
-    return NextResponse.json({ error: "A project with this slug already exists." }, { status: 409 });
+  if (collection === "projects" && "slug" in merged.data) {
+    const slug = merged.data.slug;
+    if ((await repos.projects.getAll()).some((project) => project.id !== body.id && project.slug === slug)) {
+      return NextResponse.json({ error: "A project with this slug already exists." }, { status: 409 });
+    }
   }
   const updates = { ...parsed.data, ...Object.fromEntries(removalFields.map((field) => [field, null])) };
   const result = await entry.repo.update(body.id, updates as never);

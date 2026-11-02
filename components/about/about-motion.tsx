@@ -8,6 +8,14 @@ export default function AboutMotion() {
     let initialized = false;
     let readyListener: (() => void) | undefined;
     let context: { revert: () => void } | undefined;
+    const aboutRoot = document.querySelector<HTMLElement>(".about-page");
+    if (aboutRoot) aboutRoot.dataset.aboutEntranceComplete = "false";
+
+    const markEntranceComplete = () => {
+      if (disposed || !aboutRoot?.isConnected) return;
+      aboutRoot.dataset.aboutEntranceComplete = "true";
+      aboutRoot.dispatchEvent(new Event("portfolio:about-entrance-complete"));
+    };
 
     const showContentWithoutMotion = () => {
       document
@@ -32,11 +40,14 @@ export default function AboutMotion() {
           initialized = true;
 
           context = gsap.context(() => {
-            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+              markEntranceComplete();
               return;
+            }
 
             const entrance = gsap.timeline({
               defaults: { ease: "power3.out" },
+              onComplete: markEntranceComplete,
             });
             const kickers = gsap.utils.toArray<HTMLElement>(
               "[data-about-kicker]",
@@ -205,6 +216,7 @@ export default function AboutMotion() {
           );
         context?.revert();
         showContentWithoutMotion();
+        markEntranceComplete();
       });
 
     return () => {
@@ -215,6 +227,7 @@ export default function AboutMotion() {
           readyListener,
         );
       context?.revert();
+      if (aboutRoot) delete aboutRoot.dataset.aboutEntranceComplete;
     };
   }, []);
 

@@ -17,6 +17,7 @@ import { hackathonMoments } from "@/data/hackathon-moments";
 import RadialPopOut from "@/components/about/radial-pop-out";
 import AboutPracticeStory from "@/components/about/about-practice-story";
 import AboutMotion from "@/components/about/about-motion";
+import SignatureReveal from "@/components/about/signature-reveal";
 import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
@@ -39,13 +40,19 @@ export default async function AboutPage() {
 
   const profile = profiles[0];
   const settings = settingsRows[0];
-  const name = profile?.name || "Tanmay Tiwari";
   const location = profile?.location || "New Delhi, India";
   const biography =
     profile?.bio ||
     "I’m a creative developer who enjoys the full product experience: sturdy engineering, thoughtful visual details, and bringing people together to make useful things.";
-  const biographyParts = biography.split(/(HackShastra)/i);
+  const biographyParts = biography.split(/(?<=[.!?])\s+/)[0].split(/(HackShastra)/i);
   const gallery = resolveAboutPopOut(settings?.aboutPopOut, profile?.avatar);
+  const centerId =
+    gallery.images.find((image) => image.id === gallery.centerId)?.id ??
+    gallery.images[0]?.id;
+  const signatureImageSources = gallery.images
+    .filter((image) => image.id !== centerId)
+    .slice(0, 6)
+    .map((image) => getOptimizedUrl(image.url, 960));
   const moments = resolveAboutMoments(settings?.aboutMoments);
   const practiceImage = resolveAboutPracticeImage(settings?.aboutPracticeImage);
   const practiceImage2 = resolveAboutPracticeImage(settings?.aboutPracticeImage2);
@@ -56,30 +63,41 @@ export default async function AboutPage() {
     <div className="about-page relative isolate overflow-hidden bg-[#090708] text-[#fffaf7]">
       <section className="hero about-hero" aria-labelledby="about-title">
         <div className="hero-grid about-hero-grid">
-          <div className="about-hero-copy">
-            <p className="about-hero-kicker" data-about-kicker>
-              <span className="about-hero-kicker-mark" aria-hidden="true" />
-              <span>ABOUT / TANMAY TIWARI</span>
-              <span className="about-hero-kicker-index">01 — 03</span>
+          <div className="about-hero-copy min-w-0">
+            <p
+              className="mb-5 flex items-center gap-3 text-[9px] font-bold tracking-[0.2em] text-[var(--theme-paper)]/65 sm:mb-6"
+              data-about-kicker
+            >
+              <span className="h-px w-7 bg-[#edbd83]/70" aria-hidden="true" />
+              <span>A LITTLE ABOUT ME</span>
             </p>
 
-            <h1 id="about-title" className="about-editorial-title">
+            <h1
+              id="about-title"
+              className="m-0 font-[Georgia,serif] text-[clamp(2.875rem,6vw,5.25rem)] leading-[0.98] font-bold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2.875rem,11.5vw,4.75rem)]"
+            >
               Care is part
-              <span>of the <em>craft.</em></span>
+              <span className="block pl-[clamp(0.75rem,2vw,1.75rem)]">
+                of the <em className="text-[#edbd83]">craft.</em>
+              </span>
             </h1>
 
-            <p className="about-hero-manifesto" data-about-intro>
-              The best part of building is seeing someone else take the idea further.
+            <p
+              className="mt-5 max-w-[32ch] font-display text-[clamp(1rem,1.4vw,1.25rem)] leading-relaxed font-medium tracking-[-0.02em] text-[var(--theme-paper)]/85"
+              data-about-intro
+            >
+              {profile?.tagline || "Making the web a little more human."}
             </p>
 
-            <div className="about-bio-wrap" data-about-intro>
-              <p className="about-hero-bio">
+            <div className="mt-3 max-w-[48ch]" data-about-intro>
+              <p className="m-0 text-[13px] leading-[1.7] text-[var(--theme-paper)]/70 sm:text-sm">
                 {biographyParts.map((part, index) =>
                   part.toLowerCase() === "hackshastra" ? (
                     <a
                       href="https://hackshastra.in"
                       target="_blank"
                       rel="noreferrer"
+                      className="text-[#ffe0a6] underline decoration-[#ffe0a6]/40 underline-offset-4 hover:text-white"
                       key={`${part}-${index}`}
                     >
                       {part}
@@ -91,12 +109,12 @@ export default async function AboutPage() {
               </p>
             </div>
 
-            <div className="about-hero-byline" data-about-intro>
-              <span className="about-hero-byline-index">A / 01</span>
-              <span className="about-hero-byline-rule" aria-hidden="true" />
-              <span>{name}</span>
-              <span className="about-hero-byline-rule" aria-hidden="true" />
-              <span>{location}</span>
+            <div className="mt-4 w-full max-w-[20rem] sm:mt-5" data-about-intro>
+              <SignatureReveal imageSources={signatureImageSources} />
+              <p className="mt-1 flex items-center gap-2 text-[9px] leading-relaxed font-medium tracking-[0.12em] text-[var(--theme-paper)]/55 uppercase">
+                <span className="h-px w-5 bg-[#edbd83]/50" aria-hidden="true" />
+                {location}
+              </p>
             </div>
 
             <div className="about-hero-links" data-about-intro>

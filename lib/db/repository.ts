@@ -17,7 +17,7 @@ export interface Repository<T extends { id: string; sortOrder?: number }> {
 const queues = new Map<string, Promise<unknown>>();
 const dataRoot = () => path.resolve(process.env.DATA_DIR?.trim() || path.join(/*turbopackIgnore: true*/ process.cwd(), "data"));
 
-export class JsonFileRepository<T extends { id: string; sortOrder?: number }> implements Repository<T> {
+export class JsonFileRepository<T extends { id: string; sortOrder?: number; createdAt?: string; updatedAt?: string }> implements Repository<T> {
   constructor(private file: string, private schema: z.ZodType<T>, private seed: T[]) {}
   private path() { return path.join(/*turbopackIgnore: true*/ dataRoot(), this.file); }
 
