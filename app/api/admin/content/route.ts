@@ -5,6 +5,7 @@ import { nanoid } from "nanoid";
 import { currentAdmin } from "@/lib/auth/session";
 import { repos } from "@/lib/db";
 import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
+import { hasSafeAboutPageImageUrls } from "@/lib/about-page-content";
 import {
   experienceSchema,
   eventSchema,
@@ -13,6 +14,7 @@ import {
   profileSchema,
   socialSchema,
   settingsSchema,
+  pickSubmittedPatchFields,
 } from "@/lib/validators/schemas";
 
 const entries = {
@@ -74,6 +76,7 @@ function hasSafeAboutMomentsUrls(value: unknown) {
   });
 }
 function hasSafeAboutImageSettings(value: Record<string, unknown>) {
+  if (value.aboutPage !== undefined && !hasSafeAboutPageImageUrls(value.aboutPage)) return false;
   if (value.aboutPopOut !== undefined && !hasSafeAboutPopOutUrls(value.aboutPopOut)) return false;
   if (value.aboutMoments !== undefined && !hasSafeAboutMomentsUrls(value.aboutMoments)) return false;
   for (const field of ["aboutPracticeImage", "aboutPracticeImage2"]) {
@@ -181,7 +184,10 @@ export async function PATCH(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid content", details: parsed.error.flatten() }, { status: 400 });
   }
-  const merged = entry.schema.safeParse({ ...before, ...parsed.data, ...Object.fromEntries(removalFields.map((field) => [field, undefined])) });
+  const validatedPatch = collection === "settings"
+    ? pickSubmittedPatchFields(parsed.data, parsedPatch)
+    : parsed.data;
+  const merged = entry.schema.safeParse({ ...before, ...validatedPatch, ...Object.fromEntries(removalFields.map((field) => [field, undefined])) });
   if (!merged.success) return NextResponse.json({ error: "The updated record is incomplete or invalid", details: merged.error.flatten() }, { status: 400 });
   if (collection === "projects" && "slug" in merged.data) {
     const slug = merged.data.slug;
@@ -189,7 +195,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "A project with this slug already exists." }, { status: 409 });
     }
   }
-  const updates = { ...parsed.data, ...Object.fromEntries(removalFields.map((field) => [field, null])) };
+  const updates = { ...validatedPatch, ...Object.fromEntries(removalFields.map((field) => [field, null])) };
   const result = await entry.repo.update(body.id, updates as never);
   if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });
   await cleanupOrphanedImages(before, result);

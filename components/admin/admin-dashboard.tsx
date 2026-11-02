@@ -874,7 +874,7 @@ export default function AdminDashboard() {
         </section>
       )}
 
-      {/* ==================== ABOUT PAGE IMAGES ==================== */}
+      {/* ==================== ABOUT PAGE ==================== */}
       {activeTab === "about" && settings && (
         <AboutGalleryEditor
           key={settings.updatedAt}
@@ -882,11 +882,13 @@ export default function AdminDashboard() {
           moments={settings.aboutMoments}
           practiceImage={settings.aboutPracticeImage}
           practiceImage2={settings.aboutPracticeImage2}
+          aboutPage={settings.aboutPage}
+          projects={projects}
           profileImage={profile?.avatar}
-          onSave={(aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2) =>
+          onSave={(aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2, aboutPage) =>
             saveItem(
               "settings",
-              { ...settings, aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2 },
+              { ...settings, aboutPopOut, aboutMoments, aboutPracticeImage, aboutPracticeImage2, aboutPage },
               false,
             )
           }

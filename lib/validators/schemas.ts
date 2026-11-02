@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 const safeUrl = z.string().refine((value) => { if (!value) return true; try { return ["https:", "http:"].includes(new URL(value).protocol); } catch { return false; } }, "Enter a valid HTTP or HTTPS URL.");
 const imageUrl = z.string().url().refine((value) => { try { const host = new URL(value).hostname; return host === "res.cloudinary.com" || host === "images.unsplash.com" || host.endsWith(".cloudinary.com"); } catch { return false; } }, "Use a supported image host.");
 export const imageSchema = z.object({ url: imageUrl, publicId: z.string().optional(), width: z.number().optional(), height: z.number().optional(), alt: z.string().default(""), fit: z.enum(["contain", "cover"]).optional(), position: z.string().optional() });
@@ -38,6 +39,54 @@ export const aboutMomentSchema = z.object({
   caption: z.string().max(600),
 });
 export const aboutMomentsSchema = z.array(aboutMomentSchema).length(3);
+const aboutCopy = (max: number) => z.string().trim().min(1).max(max);
+const aboutPageImageSchema = imageSchema.refine(
+  (image) => isCloudinaryImageUrl(image.url),
+  "Use a valid HTTPS Cloudinary image URL.",
+);
+export const aboutPracticeChapterSchema = z.object({
+  label: aboutCopy(40),
+  title: aboutCopy(40),
+  accent: aboutCopy(40),
+  body: aboutCopy(400),
+  details: z.tuple([aboutCopy(80), aboutCopy(80)]),
+  caption: aboutCopy(160),
+  image: aboutPageImageSchema.nullable().optional(),
+});
+export const aboutPageSchema = z.object({
+  practice: z.object({
+    title: aboutCopy(80),
+    subtitle: aboutCopy(80),
+    accent: aboutCopy(80),
+    note: aboutCopy(300),
+    chapters: z.tuple([
+      aboutPracticeChapterSchema,
+      aboutPracticeChapterSchema,
+      aboutPracticeChapterSchema,
+    ]),
+  }),
+  community: z.object({
+    title: aboutCopy(80),
+    accent: aboutCopy(80),
+    lead: aboutCopy(300),
+    body: aboutCopy(800),
+    noteTitle: aboutCopy(120),
+    noteAccent: aboutCopy(80),
+    noteBody: aboutCopy(600),
+    impactText: aboutCopy(500),
+    archiveTitle: aboutCopy(180),
+  }),
+  experience: z.object({
+    title: aboutCopy(80),
+    accent: aboutCopy(80),
+    body: aboutCopy(600),
+  }),
+  contact: z.object({
+    title: aboutCopy(80),
+    accent: aboutCopy(80),
+    body: aboutCopy(600),
+  }),
+});
 export const settingsSchema = baseRecord.extend({
   title: z.string(),
   description: z.string(),
@@ -47,7 +96,18 @@ export const settingsSchema = baseRecord.extend({
   aboutMoments: aboutMomentsSchema.optional(),
   aboutPracticeImage: imageSchema.nullable().optional(),
   aboutPracticeImage2: imageSchema.nullable().optional(),
+  aboutPage: aboutPageSchema.optional(),
 });
+// Partial Zod schemas can still materialize defaults. A settings patch should
+// update only supplied fields while keeping unknown fields stripped by parsing.
+export function pickSubmittedPatchFields<T extends Record<string, unknown>>(
+  parsed: T,
+  submitted: Record<string, unknown>,
+): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(parsed).filter(([key]) => Object.hasOwn(submitted, key)),
+  ) as Partial<T>;
+}
 export type ImageAsset = z.infer<typeof imageSchema>;
 export type Profile = z.infer<typeof profileSchema>;
 export type Experience = z.infer<typeof experienceSchema>;
@@ -59,3 +119,5 @@ export type SiteSettings = z.infer<typeof settingsSchema>;
 export type AboutPopOutImage = z.infer<typeof aboutPopOutImageSchema>;
 export type AboutPopOutConfig = z.infer<typeof aboutPopOutSchema>;
 export type AboutMoment = z.infer<typeof aboutMomentSchema>;
+export type AboutPageContent = z.infer<typeof aboutPageSchema>;
+export type AboutPracticeChapter = z.infer<typeof aboutPracticeChapterSchema>;

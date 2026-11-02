@@ -8,6 +8,11 @@ export default function AboutMotion() {
     let initialized = false;
     let readyListener: (() => void) | undefined;
     let context: { revert: () => void } | undefined;
+    let detailsContext: { revert: () => void } | undefined;
+    let removeDetailsPreferenceListener: (() => void) | undefined;
+    let detailsObserver: ResizeObserver | undefined;
+    let settleFrame = 0;
+    let refreshFrame = 0;
     const aboutRoot = document.querySelector<HTMLElement>(".about-page");
     if (aboutRoot) aboutRoot.dataset.aboutEntranceComplete = "false";
 
@@ -23,6 +28,7 @@ export default function AboutMotion() {
           "[data-about-kicker], [data-about-intro], [data-about-visual], [data-about-heading], [data-about-reveal], [data-about-experience], [data-about-image]",
         )
         .forEach((element) => {
+          if (element.closest("#the-person")) return;
           element.style.opacity = "1";
           element.style.visibility = "visible";
           element.style.transform = "none";
@@ -30,10 +36,247 @@ export default function AboutMotion() {
         });
     };
 
+    // The practice story owns its Framer Motion values. Never share transform
+    // targets with it, the hero, or another route that is leaving the page.
+    const detailElements = (selector: string) =>
+      Array.from(
+        aboutRoot?.querySelectorAll<HTMLElement>(selector) ?? [],
+      ).filter((element) => !element.closest(".about-hero, #the-person"));
+
+    const showDetailsWithoutMotion = () => {
+      detailElements(
+        "[data-about-heading], [data-about-reveal], [data-about-experience], [data-about-image], [data-about-parallax], [data-about-drift], [data-about-line], [data-about-thread]",
+      ).forEach((element) => {
+        element.style.opacity = "1";
+        element.style.visibility = "visible";
+        element.style.transform = "none";
+        element.style.clipPath = "none";
+      });
+    };
+
     void Promise.all([import("gsap"), import("gsap/ScrollTrigger")])
       .then(([{ gsap }, { ScrollTrigger }]) => {
         if (disposed) return;
         gsap.registerPlugin(ScrollTrigger);
+
+        const detailsPreference = window.matchMedia(
+          "(prefers-reduced-motion: reduce)",
+        );
+
+        const scheduleDetailsRefresh = () => {
+          if (disposed || !initialized) return;
+          window.cancelAnimationFrame(settleFrame);
+          window.cancelAnimationFrame(refreshFrame);
+          // React may commit the stacked/sticky story after the media event.
+          // Wait through that layout, then coalesce measurements into one pass.
+          settleFrame = window.requestAnimationFrame(() => {
+            settleFrame = 0;
+            refreshFrame = window.requestAnimationFrame(() => {
+              refreshFrame = 0;
+              if (!disposed && aboutRoot?.isConnected) ScrollTrigger.refresh();
+            });
+          });
+        };
+
+        const detailsRoot = aboutRoot?.querySelector<HTMLElement>(
+          "[data-about-details]",
+        );
+        if (detailsRoot && typeof ResizeObserver !== "undefined") {
+          let previousWidth = -1;
+          let previousHeight = -1;
+          detailsObserver = new ResizeObserver(([entry]) => {
+            if (!entry) return;
+            // contentRect describes layout size, ignoring parallax transforms.
+            // Unchanged dimensions cannot schedule a refresh feedback loop.
+            const { width, height } = entry.contentRect;
+            if (width === previousWidth && height === previousHeight) return;
+            previousWidth = width;
+            previousHeight = height;
+            scheduleDetailsRefresh();
+          });
+          detailsObserver.observe(detailsRoot);
+        }
+
+        const initializeDetails = () => {
+          detailsContext?.revert();
+          detailsContext = undefined;
+          if (disposed || !aboutRoot || detailsPreference.matches) return;
+
+          // Keep this context separate so preference changes and section-level
+          // failures cannot interrupt or replay the protected hero entrance.
+          const nextContext = gsap.context(() => {}, aboutRoot);
+          detailsContext = nextContext;
+          try {
+            nextContext.add(() => {
+              detailElements("[data-about-heading]").forEach((heading) => {
+                gsap.fromTo(
+                  heading,
+                  { y: 24, autoAlpha: 0.35 },
+                  {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.76,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: heading,
+                      start: "top 84%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+              detailElements(
+                "[data-about-reveal]:not([data-about-heading])",
+              ).forEach((element, index) => {
+                gsap.fromTo(
+                  element,
+                  { y: 18, autoAlpha: 0 },
+                  {
+                    y: 0,
+                    autoAlpha: 1,
+                    duration: 0.62,
+                    delay: (index % 4) * 0.045,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: element,
+                      start: "top 90%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+              detailElements("[data-about-experience]").forEach(
+                (entry, index) => {
+                  gsap.fromTo(
+                    entry,
+                    { y: 22, autoAlpha: 0 },
+                    {
+                      y: 0,
+                      autoAlpha: 1,
+                      duration: 0.7,
+                      delay: Math.min(index * 0.055, 0.165),
+                      ease: "power3.out",
+                      scrollTrigger: {
+                        trigger: entry,
+                        start: "top 88%",
+                        once: true,
+                      },
+                    },
+                  );
+                },
+              );
+
+              detailElements(
+                "[data-about-image]:not([data-about-parallax])",
+              ).forEach((frame) => {
+                gsap.fromTo(
+                  frame,
+                  { clipPath: "inset(8% 0 0 0)" },
+                  {
+                    clipPath: "inset(0% 0 0 0)",
+                    duration: 0.9,
+                    ease: "power3.out",
+                    scrollTrigger: {
+                      trigger: frame,
+                      start: "top 90%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+              detailElements("[data-about-parallax]").forEach((image) => {
+                if (!image.parentElement) return;
+                gsap.fromTo(
+                  image,
+                  { yPercent: -4, scale: 1.1 },
+                  {
+                    yPercent: 4,
+                    scale: 1.1,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: image.parentElement,
+                      start: "top bottom",
+                      end: "bottom top",
+                      scrub: 0.65,
+                      invalidateOnRefresh: true,
+                    },
+                  },
+                );
+              });
+
+              detailElements("[data-about-drift]").forEach((layer) => {
+                gsap.fromTo(
+                  layer,
+                  { yPercent: -3 },
+                  {
+                    yPercent: 3,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: layer.closest("section") ?? layer,
+                      start: "top bottom",
+                      end: "bottom top",
+                      scrub: 1,
+                    },
+                  },
+                );
+              });
+
+              detailElements("[data-about-line]").forEach((line) => {
+                gsap.fromTo(
+                  line,
+                  { scaleX: 0, transformOrigin: "0% 50%" },
+                  {
+                    scaleX: 1,
+                    duration: 0.9,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                      trigger: line,
+                      start: "top 90%",
+                      once: true,
+                    },
+                  },
+                );
+              });
+
+              detailElements("[data-about-thread]").forEach((thread) => {
+                gsap.fromTo(
+                  thread,
+                  { scaleY: 0 },
+                  {
+                    scaleY: 1,
+                    ease: "none",
+                    scrollTrigger: {
+                      trigger: thread.parentElement,
+                      start: "top 76%",
+                      end: "bottom 76%",
+                      scrub: 0.65,
+                      invalidateOnRefresh: true,
+                    },
+                  },
+                );
+              });
+            });
+          } catch {
+            nextContext.revert();
+            detailsContext = undefined;
+            showDetailsWithoutMotion();
+          }
+        };
+
+        const onDetailsPreferenceChange = () => {
+          if (disposed || !initialized) return;
+          initializeDetails();
+          scheduleDetailsRefresh();
+        };
+        detailsPreference.addEventListener("change", onDetailsPreferenceChange);
+        removeDetailsPreferenceListener = () =>
+          detailsPreference.removeEventListener(
+            "change",
+            onDetailsPreferenceChange,
+          );
 
         const initialize = () => {
           if (disposed || initialized) return;
@@ -82,111 +325,9 @@ export default function AboutMotion() {
                 "-=0.44",
               );
             }
-
-            gsap.utils
-              .toArray<HTMLElement>("[data-about-heading]")
-              .forEach((heading) => {
-                gsap.fromTo(
-                  heading,
-                  { y: 26, autoAlpha: 0.35 },
-                  {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.76,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                      trigger: heading,
-                      start: "top 84%",
-                      once: true,
-                    },
-                  },
-                );
-              });
-
-            gsap.utils
-              .toArray<HTMLElement>("[data-about-reveal]")
-              .forEach((element, index) => {
-                gsap.fromTo(
-                  element,
-                  { y: 22, autoAlpha: 0 },
-                  {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.58,
-                    delay: (index % 4) * 0.055,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                      trigger: element,
-                      start: "top 88%",
-                      once: true,
-                    },
-                  },
-                );
-              });
-
-            gsap.utils
-              .toArray<HTMLElement>("[data-about-experience]")
-              .forEach((entry, index) => {
-                gsap.fromTo(
-                  entry,
-                  { x: 24, autoAlpha: 0 },
-                  {
-                    x: 0,
-                    autoAlpha: 1,
-                    duration: 0.65,
-                    delay: index * 0.08,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                      trigger: entry,
-                      start: "top 86%",
-                      once: true,
-                    },
-                  },
-                );
-              });
-
-            gsap.utils
-              .toArray<HTMLElement>("[data-about-image]")
-              .forEach((image) => {
-                gsap.fromTo(
-                  image,
-                  { clipPath: "inset(7% 0 0 0)", scale: 1.025 },
-                  {
-                    clipPath: "inset(0% 0 0 0)",
-                    scale: 1,
-                    duration: 0.78,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                      trigger: image,
-                      start: "top 88%",
-                      once: true,
-                    },
-                  },
-                );
-              });
-
-            const thread = document.querySelector<HTMLElement>(
-              "[data-about-thread]",
-            );
-            if (thread) {
-              gsap.fromTo(
-                thread,
-                { scaleY: 0 },
-                {
-                  scaleY: 1,
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: thread.parentElement,
-                    start: "top 76%",
-                    end: "bottom 76%",
-                    scrub: 0.65,
-                    invalidateOnRefresh: true,
-                  },
-                },
-              );
-            }
           });
 
+          initializeDetails();
           ScrollTrigger.refresh();
         };
 
@@ -200,11 +341,9 @@ export default function AboutMotion() {
           initialize();
         } else {
           readyListener = initialize;
-          window.addEventListener(
-            "portfolio:preloader-complete",
-            initialize,
-            { once: true },
-          );
+          window.addEventListener("portfolio:preloader-complete", initialize, {
+            once: true,
+          });
         }
       })
       .catch(() => {
@@ -215,7 +354,13 @@ export default function AboutMotion() {
             readyListener,
           );
         context?.revert();
+        detailsContext?.revert();
+        removeDetailsPreferenceListener?.();
+        detailsObserver?.disconnect();
+        window.cancelAnimationFrame(settleFrame);
+        window.cancelAnimationFrame(refreshFrame);
         showContentWithoutMotion();
+        showDetailsWithoutMotion();
         markEntranceComplete();
       });
 
@@ -227,6 +372,11 @@ export default function AboutMotion() {
           readyListener,
         );
       context?.revert();
+      detailsContext?.revert();
+      removeDetailsPreferenceListener?.();
+      detailsObserver?.disconnect();
+      window.cancelAnimationFrame(settleFrame);
+      window.cancelAnimationFrame(refreshFrame);
       if (aboutRoot) delete aboutRoot.dataset.aboutEntranceComplete;
     };
   }, []);

@@ -2,161 +2,303 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import {
-  AnimatePresence,
   motion,
-  useMotionValueEvent,
-  useReducedMotion,
   useScroll,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type MouseEvent,
+} from "react";
+import { createDefaultAboutPageContent } from "@/lib/about-page-content";
+import type { AboutPageContent } from "@/lib/validators/schemas";
+import {
+  ABOUT_STORY_MEDIA,
+  ABOUT_STORY_STOPS,
+  aboutStoryActiveChapter,
+  aboutStoryFrame,
+  canPinAboutStory,
+  fitsAboutStoryStage,
+} from "@/lib/about-story-motion";
+import styles from "./about-practice-story.module.css";
+
+type StoryImage = {
+  src: string;
+  alt: string;
+  title?: string;
+  fit?: "cover" | "contain";
+};
 
 type AboutPracticeStoryProps = {
   builders: number;
-  practiceImage?: {
-    src: string;
-    alt: string;
-  };
-  practiceImage2?: {
-    src: string;
-    alt: string;
-  };
-  communityImage: {
-    src: string;
-    alt: string;
-    width: number;
-    height: number;
-  };
+  practiceImage?: StoryImage;
+  practiceImage2?: StoryImage;
+  workImage?: StoryImage;
+  craftImage?: StoryImage;
+  content?: AboutPageContent["practice"];
+  communityImage: StoryImage & { width: number; height: number };
 };
 
-type Chapter = {
-  number: string;
-  label: string;
-  title: string;
-  body: string;
-  tags: string[];
-};
+const defaultContent = createDefaultAboutPageContent().practice;
 
-const chapters: Chapter[] = [
-  {
-    number: "01",
-    label: "Engineering / foundations",
-    title: "Make it hold up.",
-    body: "I like clear structure and reliable foundations. Good engineering should make the next decision easier, from the first interaction to the data behind it.",
-    tags: ["Full stack", "TypeScript", "Product systems"],
-  },
-  {
-    number: "02",
-    label: "Craft / interaction",
-    title: "Make it feel alive.",
-    body: "The details carry intent: hierarchy, movement, type, and the moment an interface responds. I care about making useful things feel natural to use.",
-    tags: ["Interaction", "Motion", "Visual systems"],
-  },
-  {
-    number: "03",
-    label: "Community / practice",
-    title: "Make room to build.",
-    body: "The work gets better when more people can take part. Through HackShastra, I help builders learn by making things together.",
-    tags: ["HackShastra", "Learning by doing", "3,000+ builders"],
-  },
-];
+function subscribeToStoryMedia(onChange: () => void) {
+  const media = window.matchMedia(ABOUT_STORY_MEDIA);
+  media.addEventListener("change", onChange);
+  window.addEventListener("resize", onChange);
+  return () => {
+    media.removeEventListener("change", onChange);
+    window.removeEventListener("resize", onChange);
+  };
+}
+
+const storyViewport = () =>
+  `${window.innerWidth}:${window.innerHeight}:${window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 1 : 0}`;
+const staticServerSnapshot = () => "0:0:1";
+const firstServerChapter = () => 0;
+
+function followChapterLink(event: MouseEvent<HTMLAnchorElement>) {
+  if (
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  )
+    return;
+  if (document.documentElement.classList.contains("lenis")) {
+    // Keep the native hash jump from racing Lenis. The click still bubbles to
+    // its existing anchors:true listener, which owns the complete scroll.
+    event.preventDefault();
+    return;
+  }
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    event.preventDefault();
+    document.getElementById(event.currentTarget.hash.slice(1))?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+  }
+}
 
 export default function AboutPracticeStory({
   builders,
   practiceImage,
   practiceImage2,
+  workImage,
+  craftImage,
+  content = defaultContent,
   communityImage,
 }: AboutPracticeStoryProps) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = useReducedMotion();
-  const [activeChapter, setActiveChapter] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const viewport = useSyncExternalStore(
+    subscribeToStoryMedia,
+    storyViewport,
+    staticServerSnapshot,
+  );
+  const [width, height, reduced] = viewport.split(":").map(Number);
+  const chapters = content.chapters;
+  const contentKey = useMemo(() => JSON.stringify(chapters), [chapters]);
+  const fitKey = `${viewport}:${contentKey}:${workImage?.title ?? ""}:${craftImage?.title ?? ""}:${practiceImage?.title ?? ""}:${practiceImage2?.title ?? ""}:${communityImage.title ?? ""}`;
+  const [overflowKey, setOverflowKey] = useState<string | null>(null);
+  const enhanced =
+    canPinAboutStory(width, height, Boolean(reduced)) && overflowKey !== fitKey;
   const { scrollYProgress } = useScroll({
-    target: sectionRef,
+    target: trackRef,
     offset: ["start start", "end end"],
+    trackContentSize: true,
   });
-  const progressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const subscribeToChapter = useCallback(
+    (onChange: () => void) => scrollYProgress.on("change", onChange),
+    [scrollYProgress],
+  );
+  const currentChapter = useCallback(() => {
+    return aboutStoryActiveChapter(scrollYProgress.get());
+  }, [scrollYProgress]);
+  // React updates only when the chapter changes; the scrub itself bypasses renders.
+  const activeChapter = useSyncExternalStore(
+    subscribeToChapter,
+    currentChapter,
+    firstServerChapter,
+  );
 
   useEffect(() => {
-    const value = scrollYProgress.get();
-    setActiveChapter(value < 0.34 ? 0 : value < 0.67 ? 1 : 2);
-  }, [scrollYProgress]);
+    const stage = stageRef.current;
+    if (!enhanced || !stage) return;
+    let disposed = false;
+    let frame = 0;
+    const measure = () => {
+      if (disposed) return;
+      const fits = [
+        ...stage.querySelectorAll<HTMLElement>("[data-story-chapter]"),
+      ].every((chapter) => {
+        const copy = chapter.querySelector<HTMLElement>("[data-story-copy]");
+        const figure = chapter.querySelector<HTMLElement>(
+          "[data-story-figure]",
+        );
+        const visual = chapter.querySelector<HTMLElement>(
+          "[data-story-visual]",
+        );
+        return (
+          copy &&
+          figure &&
+          visual &&
+          fitsAboutStoryStage({
+            stageHeight: chapter.clientHeight,
+            copyTop: copy.offsetTop,
+            copyHeight: copy.scrollHeight,
+            figureTop: figure.offsetTop,
+            figureHeight: figure.scrollHeight,
+            visualHeight: visual.clientHeight,
+          })
+        );
+      });
+      if (!fits) setOverflowKey(fitKey);
+    };
+    const schedule = () => {
+      if (disposed) return;
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(measure);
+    };
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(schedule)
+        : undefined;
+    observer?.observe(stage);
+    stage
+      .querySelectorAll<HTMLElement>("[data-story-copy], [data-story-figure]")
+      .forEach((element) => observer?.observe(element));
+    schedule();
+    void document.fonts?.ready.then(schedule);
+    return () => {
+      disposed = true;
+      window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
+  }, [enhanced, fitKey]);
 
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    const nextChapter = value < 0.34 ? 0 : value < 0.67 ? 1 : 2;
-    setActiveChapter((current) =>
-      current === nextChapter ? current : nextChapter,
-    );
-  });
+  const fallbackImages = [
+    {
+      ...(workImage || communityImage),
+      product: workImage?.fit
+        ? workImage.fit === "contain"
+        : Boolean(workImage),
+    },
+    {
+      ...(practiceImage2 || craftImage || communityImage),
+      product: practiceImage2?.fit
+        ? practiceImage2.fit === "contain"
+        : practiceImage2
+          ? false
+          : craftImage?.fit
+            ? craftImage.fit === "contain"
+            : Boolean(craftImage),
+    },
+    {
+      ...(practiceImage || communityImage),
+      product: practiceImage?.fit === "contain",
+    },
+  ];
+  const images = chapters.map((chapter, index) =>
+    chapter.image
+      ? {
+          src: chapter.image.url,
+          alt: chapter.image.alt,
+          product: chapter.image.fit === "contain",
+        }
+      : fallbackImages[index],
+  );
 
   return (
     <section
-      ref={sectionRef}
       id="the-person"
-      className={`about-practice${reduceMotion ? " about-practice--reduced" : ""}`}
+      className={styles.story}
       aria-labelledby="about-practice-title"
+      data-enhanced={enhanced ? "true" : undefined}
     >
-      <div className="about-practice-sticky">
-        <div className="section-shell about-practice-shell">
-          <div className="about-practice-lead">
-            <div className="about-section-label">
-              <span>01</span><i aria-hidden="true" /><span>How I work</span>
-            </div>
-            <h2 id="about-practice-title">
-              A practice made of <em>three parts.</em>
-            </h2>
-            <p>
-              Keep scrolling. Each part changes the way I approach the next.
-            </p>
-            <div className="about-practice-steps" aria-label="Practice chapters">
+      <header className={styles.introduction}>
+        <div className={styles.sectionLabel}>
+          <span>01 / THE APPROACH</span>
+          <span className={styles.labelRule} aria-hidden="true" />
+          <span>THREE CONNECTED PARTS</span>
+        </div>
+        <div className={styles.introductionGrid}>
+          <h2 id="about-practice-title" className={styles.sectionTitle}>
+            {content.title}
+            <span>
+              {content.subtitle} <em>{content.accent}</em>
+            </span>
+          </h2>
+          <p className={styles.introductionNote}>
+            {content.note}
+            <ArrowDown size={22} strokeWidth={1.25} aria-hidden="true" />
+          </p>
+        </div>
+      </header>
+
+      <div ref={trackRef} className={styles.track}>
+        {enhanced &&
+          ABOUT_STORY_STOPS.map((stop, index) => (
+            <span
+              key={stop}
+              id={`practice-scroll-stop-${index + 1}`}
+              className={styles.scrollStop}
+              style={{ top: `calc((100% - 100svh) * ${stop})` }}
+              aria-hidden="true"
+            />
+          ))}
+        <div className={styles.sticky}>
+          <div className={styles.chapterBar}>
+            <span className={styles.chapterBarLabel}>A CLOSER LOOK</span>
+            <nav className={styles.chapterNav} aria-label="Explore how I work">
               {chapters.map((chapter, index) => (
-                <div
-                  className={`about-practice-step${activeChapter === index ? " is-active" : ""}`}
-                  aria-current={activeChapter === index ? "step" : undefined}
-                  key={chapter.number}
+                <a
+                  href={`#practice-${enhanced ? "scroll-stop" : "chapter"}-${index + 1}`}
+                  key={index}
+                  onClick={followChapterLink}
+                  aria-controls={`practice-chapter-${index + 1}`}
+                  aria-current={
+                    enhanced && activeChapter === index ? "step" : undefined
+                  }
                 >
-                  <span>{chapter.number}</span>
-                  <span>{chapter.label.split(" /")[0]}</span>
-                </div>
+                  <span>0{index + 1}</span>
+                  <span>{chapter.label}</span>
+                </a>
               ))}
-            </div>
+            </nav>
           </div>
 
-          <div className="about-practice-stage">
-            <div className="about-practice-progress" aria-hidden="true">
-              <motion.span style={{ width: reduceMotion ? "100%" : progressWidth }} />
-            </div>
+          <div ref={stageRef} className={styles.stage}>
+            {chapters.map((chapter, index) => (
+              <PracticeChapter
+                key={index}
+                index={index}
+                chapter={chapter}
+                image={images[index]}
+                builders={builders}
+                progress={scrollYProgress}
+                enhanced={enhanced}
+                active={activeChapter === index}
+              />
+            ))}
+          </div>
 
-            <div className="about-practice-scenes">
-              {reduceMotion ? (
-                chapters.map((chapter, index) => (
-                  <PracticeScene
-                    builders={builders}
-                    chapter={chapter}
-                    communityImage={communityImage}
-                    practiceImage={practiceImage}
-                    practiceImage2={practiceImage2}
-                    index={index}
-                    key={chapter.number}
-                    reducedMotion
-                  />
-                ))
-              ) : (
-                <AnimatePresence initial={false} mode="wait">
-                  <PracticeScene
-                    builders={builders}
-                    chapter={chapters[activeChapter]}
-                    communityImage={communityImage}
-                    practiceImage={practiceImage}
-                    practiceImage2={practiceImage2}
-                    index={activeChapter}
-                    key={chapters[activeChapter].number}
-                    reducedMotion={false}
-                  />
-                </AnimatePresence>
-              )}
+          <div className={styles.storyFooter} aria-hidden="true">
+            <span>0{activeChapter + 1} / 03</span>
+            <div className={styles.progressTrack}>
+              <motion.span style={{ scaleX: enhanced ? scrollYProgress : 1 }} />
             </div>
+            <span>
+              KEEP EXPLORING <ArrowDown size={13} />
+            </span>
           </div>
         </div>
       </div>
@@ -164,115 +306,125 @@ export default function AboutPracticeStory({
   );
 }
 
-function PracticeScene({
-  builders,
+function PracticeChapter({
   chapter,
-  communityImage,
-  practiceImage,
-  practiceImage2,
   index,
-  reducedMotion,
+  image,
+  builders,
+  progress,
+  enhanced,
+  active,
 }: {
-  builders: number;
-  chapter: Chapter;
-  practiceImage?: AboutPracticeStoryProps["practiceImage"];
-  practiceImage2?: AboutPracticeStoryProps["practiceImage2"];
-  communityImage: AboutPracticeStoryProps["communityImage"];
+  chapter: AboutPageContent["practice"]["chapters"][number];
   index: number;
-  reducedMotion: boolean;
+  image: StoryImage & { product: boolean };
+  builders: number;
+  progress: MotionValue<number>;
+  enhanced: boolean;
+  active: boolean;
 }) {
+  const opacity = useTransform(
+    progress,
+    (value) => aboutStoryFrame(index, value).opacity,
+  );
+  const travel = useTransform(
+    progress,
+    (value) => aboutStoryFrame(index, value).y,
+  );
+  const imageScale = useTransform(
+    progress,
+    (value) => aboutStoryFrame(index, value).imageScale,
+  );
+  const imageClip = useTransform(
+    progress,
+    (value) => `inset(${aboutStoryFrame(index, value).revealInset}% 0% 0% 0%)`,
+  );
+
   return (
     <motion.article
-      className={`about-practice-scene about-practice-scene-${index + 1}`}
-      initial={reducedMotion ? false : { opacity: 0, y: 18, scale: 0.985 }}
-      animate={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-      exit={reducedMotion ? undefined : { opacity: 0, y: -18, scale: 0.99 }}
-      transition={reducedMotion ? undefined : { duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      id={`practice-chapter-${index + 1}`}
+      className={`${styles.chapter} ${styles[`chapter${index + 1}`]}`}
+      data-story-chapter
+      aria-labelledby={`practice-chapter-title-${index + 1}`}
+      aria-hidden={enhanced && !active ? true : undefined}
+      inert={enhanced && !active}
+      style={{
+        opacity: enhanced ? opacity : 1,
+        y: enhanced ? travel : 0,
+        pointerEvents: enhanced && !active ? "none" : "auto",
+      }}
     >
-      <div className="about-practice-copy">
-        <p className="about-practice-kicker">
-          <span>{chapter.number}</span>{chapter.label}
+      <motion.div className={styles.chapterCopy} data-story-copy>
+        <p className={styles.chapterEyebrow}>
+          <span>0{index + 1}</span>
+          <span>{chapter.label}</span>
         </p>
-        <h3>{chapter.title}</h3>
-        <p className="about-practice-description">{chapter.body}</p>
-        <div className="about-practice-tags">
-          {chapter.tags.map((tag) => <span key={tag}>{tag}</span>)}
+        <h3
+          id={`practice-chapter-title-${index + 1}`}
+          className={styles.chapterTitle}
+        >
+          {chapter.title} <em>{chapter.accent}</em>
+        </h3>
+        <p className={styles.chapterDescription}>{chapter.body}</p>
+        <div className={styles.chapterDetails}>
+          {chapter.details.map((detail) => (
+            <span key={detail}>{detail}</span>
+          ))}
         </div>
         {index === 2 && (
           <Link
-            className="about-practice-link"
+            className={styles.communityLink}
             href="https://hackshastra.in"
             target="_blank"
             rel="noreferrer"
           >
-            Visit HackShastra <ArrowUpRight size={14} aria-hidden="true" />
+            Meet HackShastra <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
         )}
-      </div>
+      </motion.div>
 
-      <div
-        className={`about-practice-visual about-practice-visual-${index + 1}`}
-        aria-hidden={index === 0 || (index === 1 && !practiceImage)}
-      >
-        {index === 0 && (
-          <div className="about-system-card">
-            <div className="about-system-topline">
-              <span><i /><i /><i /></span>
-              <small>PRODUCT / SYSTEMS</small>
-              <span>20:09</span>
-            </div>
-            <div className="about-system-stack">
-              <span className="about-system-node about-system-node-top">A clear interface</span>
-              <i />
-              <div className="about-system-split">
-                <span className="about-system-node">Thoughtful logic</span>
-                <span className="about-system-node">Reliable data</span>
-              </div>
-              <i />
-              <span className="about-system-node about-system-node-bottom">A product people can trust</span>
-            </div>
-            <div className="about-system-foot"><span>STRUCTURE FIRST</span><span>READY TO GROW <b>↗</b></span></div>
-          </div>
-        )}
-        {index === 1 && practiceImage && (
-          <div className="about-practice-photo">
+      <figure className={styles.figure} data-story-figure>
+        <motion.div
+          className={`${styles.imageWindow} ${image.product ? styles.productWindow : ""}`}
+          data-story-visual
+          style={{ clipPath: enhanced ? imageClip : "none" }}
+        >
+          <motion.div
+            className={styles.imageMotion}
+            style={{
+              scale: enhanced ? imageScale : 1,
+            }}
+          >
             <Image
-              src={practiceImage.src}
-              alt={practiceImage.alt || "A moment from the craft and interaction practice"}
-              width={960}
-              height={720}
-              sizes="(max-width: 760px) 78vw, 430px"
+              src={image.src}
+              alt={image.alt}
+              fill
+              sizes="(min-width: 1440px) 650px, (min-width: 960px) 51vw, (min-width: 640px) 80vw, 100vw"
               unoptimized
+              className={styles.photograph}
             />
-            <span className="about-practice-photo-label">02 / CRAFT &amp; INTERACTION</span>
-          </div>
-        )}
-        {index === 1 && !practiceImage && (
-          <div className="about-craft-card">
-            <span className="about-craft-caption">DETAIL CHANGES THE FEELING</span>
-            <div className="about-craft-type">Aa<span>.</span></div>
-            <div className="about-craft-rule" />
-            <div className="about-craft-controls"><i /><i /><i /><span>RESPONSIVE / INTENTIONAL / ALIVE</span></div>
-            <div className="about-craft-orb" />
-          </div>
-        )}
-        {index === 2 && (
-          <div className="about-community-scene-image">
-            <Image
-              src={practiceImage2?.src || communityImage.src}
-              alt={practiceImage2?.alt || communityImage.alt}
-              width={communityImage.width}
-              height={communityImage.height}
-              sizes="(max-width: 760px) 75vw, 440px"
-              unoptimized
-            />
-            <div className="about-community-scene-count">
-              <strong>{builders.toLocaleString()}+</strong>
-              <span>builders, learning together</span>
+          </motion.div>
+          {index === 2 && (
+            <div className={styles.communityCount}>
+              <strong>
+                {builders.toLocaleString()}
+                <span>+</span>
+              </strong>
+              <span>BUILDERS MENTORED</span>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </motion.div>
+        <span className={styles.imageIndex} aria-hidden="true">
+          0{index + 1}
+        </span>
+        <figcaption className={styles.caption}>
+          <span>
+            {image.title && <strong>{image.title} · </strong>}
+            {chapter.caption}
+          </span>
+          <span>0{index + 1} — 03</span>
+        </figcaption>
+      </figure>
     </motion.article>
   );
 }
