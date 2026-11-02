@@ -11,10 +11,11 @@ export interface Repository<T extends { id: string; sortOrder?: number }> {
   update(id: string, patch: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<boolean>;
   reorder(ids: string[]): Promise<T[]>;
+  replaceAll(items: T[]): Promise<T[]>;
 }
 
 const queues = new Map<string, Promise<unknown>>();
-const dataRoot = () => path.join(/*turbopackIgnore: true*/ process.cwd(), "data");
+const dataRoot = () => path.resolve(process.env.DATA_DIR?.trim() || path.join(/*turbopackIgnore: true*/ process.cwd(), "data"));
 
 export class JsonFileRepository<T extends { id: string; sortOrder?: number }> implements Repository<T> {
   constructor(private file: string, private schema: z.ZodType<T>, private seed: T[]) {}
@@ -59,7 +60,7 @@ export class JsonFileRepository<T extends { id: string; sortOrder?: number }> im
 
   create(item: Omit<T, "id"> & { id?: string }): Promise<T> {
     const now = new Date().toISOString();
-    const value = { ...item, id: item.id || nanoid(), createdAt: now, updatedAt: now } as unknown as T;
+    const value = { ...item, id: item.id || nanoid(), createdAt: (item as Partial<T>).createdAt || now, updatedAt: (item as Partial<T>).updatedAt || now } as unknown as T;
     return this.mutate<T>((rows): [T[], T] => [[...rows, value], value]);
   }
 
@@ -98,15 +99,17 @@ export class JsonFileRepository<T extends { id: string; sortOrder?: number }> im
       return [ordered, ordered];
     });
   }
+  replaceAll(items: T[]): Promise<T[]> {
+    return this.mutate<T[]>((rows) => [z.array(this.schema).parse(items), z.array(this.schema).parse(items)]);
+  }
 }
 
 export class MongoRepository<T extends { id: string; sortOrder?: number }> implements Repository<T> {
-  private seeded = false;
+  private indexEnsured = false;
 
   constructor(
     private collectionName: string,
-    private schema: z.ZodType<T>,
-    private seed: T[]
+    private schema: z.ZodType<T>
   ) {}
 
   private async getCollection() {
@@ -114,17 +117,9 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
     if (!db) throw new Error("Could not connect to MongoDB");
     const col = db.collection(this.collectionName);
 
-    if (!this.seeded) {
-      try {
-        const count = await col.countDocuments();
-        if (count === 0 && this.seed.length > 0) {
-          const docs = this.seed.map((item) => ({ ...item }));
-          await col.insertMany(docs);
-        }
-      } catch (err) {
-        console.error(`[MongoDB] Seed check failed for ${this.collectionName}:`, err);
-      }
-      this.seeded = true;
+    if (!this.indexEnsured) {
+      await col.createIndex({ id: 1 }, { unique: true });
+      this.indexEnsured = true;
     }
 
     return col;
@@ -209,6 +204,18 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
     );
     return this.getAll();
   }
+  async replaceAll(items: T[]): Promise<T[]> {
+    const col = await this.getCollection();
+    const docs = z.array(this.schema).parse(items);
+    const session = await (await getMongoDb())!.client.startSession();
+    try {
+      await session.withTransaction(async () => {
+        await col.deleteMany({}, { session });
+        if (docs.length) await col.insertMany(docs.map((x) => ({ ...x })), { session });
+      });
+    } finally { await session.endSession(); }
+    return docs;
+  }
 }
 
 export class UnifiedRepository<T extends { id: string; sortOrder?: number }> implements Repository<T> {
@@ -221,7 +228,7 @@ export class UnifiedRepository<T extends { id: string; sortOrder?: number }> imp
     schema: z.ZodType<T>,
     seed: T[]
   ) {
-    this.mongoRepo = new MongoRepository(collectionName, schema, seed);
+    this.mongoRepo = new MongoRepository(collectionName, schema);
     this.jsonRepo = new JsonFileRepository(jsonFile, schema, seed);
   }
 
@@ -230,8 +237,9 @@ export class UnifiedRepository<T extends { id: string; sortOrder?: number }> imp
       try {
         const db = await getMongoDb();
         if (db) return this.mongoRepo;
+        throw new Error("MongoDB is configured but unavailable; refusing to write to a divergent JSON store.");
       } catch (err) {
-        console.warn("[UnifiedRepository] MongoDB unavailable, falling back to JSON:", err);
+        throw new Error("MongoDB is configured but unavailable; refusing to write to a divergent JSON store.", { cause: err });
       }
     }
     return this.jsonRepo;
@@ -249,38 +257,22 @@ export class UnifiedRepository<T extends { id: string; sortOrder?: number }> imp
 
   async create(item: Omit<T, "id"> & { id?: string }): Promise<T> {
     const repo = await this.getActiveRepo();
-    const created = await repo.create(item);
-    // Sync to JSON backup silently if Mongo was used
-    if (repo === this.mongoRepo) {
-      try { await this.jsonRepo.create(created); } catch { /* ignore backup sync failure */ }
-    }
-    return created;
+    return repo.create(item);
   }
 
   async update(id: string, patch: Partial<T>): Promise<T | null> {
     const repo = await this.getActiveRepo();
-    const updated = await repo.update(id, patch);
-    if (repo === this.mongoRepo && updated) {
-      try { await this.jsonRepo.update(id, patch); } catch { /* ignore backup sync failure */ }
-    }
-    return updated;
+    return repo.update(id, patch);
   }
 
   async delete(id: string): Promise<boolean> {
     const repo = await this.getActiveRepo();
-    const deleted = await repo.delete(id);
-    if (repo === this.mongoRepo && deleted) {
-      try { await this.jsonRepo.delete(id); } catch { /* ignore backup sync failure */ }
-    }
-    return deleted;
+    return repo.delete(id);
   }
 
   async reorder(ids: string[]): Promise<T[]> {
     const repo = await this.getActiveRepo();
-    const reordered = await repo.reorder(ids);
-    if (repo === this.mongoRepo) {
-      try { await this.jsonRepo.reorder(ids); } catch { /* ignore backup sync failure */ }
-    }
-    return reordered;
+    return repo.reorder(ids);
   }
+  async replaceAll(items: T[]): Promise<T[]> { return (await this.getActiveRepo()).replaceAll(items); }
 }

@@ -42,6 +42,8 @@ export default function SortableList<T extends SortableItem>({
         }),
       });
       if (!response.ok) throw new Error("The new order could not be saved.");
+      const saved = await response.json() as T[];
+      onChange(saved);
       onNotify("Content order saved.", "success");
     } catch {
       onChange(previous);

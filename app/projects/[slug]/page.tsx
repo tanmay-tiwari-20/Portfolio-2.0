@@ -74,6 +74,12 @@ export default async function ProjectDetail({
           />
         </div>
 
+        {p.gallery.length > 0 && <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20, marginTop: 24 }} aria-label={`${p.title} project gallery`}>
+          {p.gallery.map((image, index) => <div key={`${image.url}-${index}`} style={{ position: "relative", minHeight: 240, borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--line)" }}>
+            <Image src={getOptimizedUrl(image.url, 1000, 700)} alt={image.alt || `${p.title} gallery image ${index + 1}`} fill sizes="(max-width: 700px) 100vw, 50vw" style={{ objectFit: image.fit || "cover", objectPosition: image.position || "center" }} />
+          </div>)}
+        </div>}
+
         <div
           style={{
             display: "grid",

@@ -30,12 +30,14 @@ const inter = localFont({
   display: "swap",
 });
 
-const siteTitle = "Tanmay Tiwari — Creative Developer & Architect";
-const siteDescription =
-  "Creative developer and technical architect building high-performance web applications.";
-
-export const metadata: Metadata = {
-  title: { default: siteTitle, template: "%s — Tanmay Tiwari" },
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = (await repos.settings.getAll())[0];
+  const profile = (await repos.profile.getAll())[0];
+  const siteTitle = settings?.title || `${profile?.name || "Tanmay Tiwari"} — ${profile?.role || "Creative Developer & Architect"}`;
+  const siteDescription = settings?.description || profile?.tagline || "Creative developer and technical architect building high-performance web applications.";
+  const ogImage = settings?.ogImage?.url || "/og.svg";
+  return {
+  title: { default: siteTitle, template: `%s — ${profile?.name || "Tanmay Tiwari"}` },
   description: siteDescription,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
@@ -49,16 +51,17 @@ export const metadata: Metadata = {
     title: siteTitle,
     description: siteDescription,
     type: "website",
-    images: ["/og.svg"],
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/og.svg"],
+    images: [ogImage],
   },
   robots: { index: true, follow: true },
-};
+  };
+}
 
 export default async function RootLayout({
   children,

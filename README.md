@@ -5,7 +5,7 @@ A self-hosted Next.js portfolio with original comic-inspired art direction, serv
 ## Setup
 
 1. Install Node.js 22 or later and copy `.env.example` to `.env`.
-2. Add a unique `SESSION_SECRET` of at least 32 characters, your `ADMIN_EMAIL`, and the bcrypt hash produced by `npm run hash-password`.
+2. Add a fresh `SESSION_SECRET` of at least 32 characters, your `ADMIN_EMAIL`, and the bcrypt hash produced by `npm run hash-password`. `ADMIN_PASSWORD_HASH` is required for login; plaintext and built-in fallback passwords are not accepted. Changing the session secret or token version signs out existing sessions.
 3. Run `npm install`, `npm run seed`, then `npm run dev`.
 4. Visit `/secret-admin/login` to sign in. The admin path is excluded from navigation and robots; the session cookie and server checks provide the actual access control.
 
@@ -19,7 +19,7 @@ Images can use the signed fields stored with a content item: `url`, `publicId`, 
 
 ## Content and backup
 
-JSON files live in `DATA_DIR` (defaults to `./data`). The repository adapter validates each record, creates missing seed files, serializes writes through a per-file process queue, and replaces files atomically. The admin dashboard provides a validated JSON editor for create, read, update, delete, and reorder across every collection, plus a Cloudinary media library and JSON backups.
+JSON files live in `DATA_DIR` (defaults to `./data`). The repository adapter validates each record, creates missing seed files, serializes writes through a per-file process queue, and replaces files atomically. When `MONGODB_URI` is configured, MongoDB is authoritative and database errors fail the operation rather than silently writing to JSON. To move between stores, export a backup, switch configuration, and explicitly import it. MongoDB collections are not seeded automatically; import the supplied backup during setup. The admin dashboard provides validated content management, a Cloudinary media library, and JSON backups.
 
 Run `npm run seed` to populate absent files without overwriting existing content. `/api/admin/export` downloads all collections. `/api/admin/import` accepts a JSON backup in the same format and validates each collection before replacing it.
 
@@ -41,7 +41,7 @@ Change the palette and type in `app/globals.css`. All artwork is original CSS/SV
 
 ## Contact form
 
-Set `NEXT_PUBLIC_WEB3FORMS_KEY` from Web3Forms. The form validates fields in the browser, sends a honeypot value, and shows success/error feedback. No contact provider credentials are stored server-side.
+Set `NEXT_PUBLIC_WEB3FORMS_KEY` from Web3Forms. For Docker, pass it as a build argument (Compose reads it from the invoking environment or `.env`) because Next.js embeds public keys at build time. Without it, the form clearly reports delivery unavailable and directs visitors to email.
 
 
 

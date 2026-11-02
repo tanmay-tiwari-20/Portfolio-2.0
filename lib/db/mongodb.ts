@@ -10,18 +10,23 @@ const dbName = process.env.MONGODB_DB_NAME?.trim() || "portfolio";
 
 let client: MongoClient | null = null;
 let clientPromise: Promise<MongoClient> | null = null;
-
-if (uri) {
+function connection(): Promise<MongoClient> | null {
+  if (!uri) return null;
   if (process.env.NODE_ENV === "development") {
     if (!global._mongoClientPromise) {
-      client = new MongoClient(uri);
-      global._mongoClientPromise = client.connect();
+      const nextClient = new MongoClient(uri);
+      global._mongoClientPromise = nextClient.connect().catch((error) => {
+        global._mongoClientPromise = undefined;
+        throw error;
+      });
     }
-    clientPromise = global._mongoClientPromise;
-  } else {
-    client = new MongoClient(uri);
-    clientPromise = client.connect();
+    return global._mongoClientPromise;
   }
+  if (!clientPromise) {
+    client = new MongoClient(uri);
+    clientPromise = client.connect().catch((error) => { clientPromise = null; throw error; });
+  }
+  return clientPromise;
 }
 
 export function isMongoConfigured(): boolean {
@@ -29,9 +34,10 @@ export function isMongoConfigured(): boolean {
 }
 
 export async function getMongoDb(): Promise<Db | null> {
-  if (!clientPromise) return null;
+  const pending = connection();
+  if (!pending) return null;
   try {
-    const connectedClient = await clientPromise;
+    const connectedClient = await pending;
     return connectedClient.db(dbName);
   } catch (error) {
     console.error("[MongoDB] Connection error:", error);

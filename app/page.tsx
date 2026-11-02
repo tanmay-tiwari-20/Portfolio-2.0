@@ -26,7 +26,7 @@ export default async function Home() {
     ]);
 
   const person = profile[0];
-  const portfolioMetrics = getPortfolioMetrics(projects, experience);
+  const portfolioMetrics = person?.stats?.length ? person.stats : getPortfolioMetrics(projects, experience);
   const featured = projects.filter((p) => p.featured).slice(0, 4);
   const hackathonStoryEvents = hackathons
     .filter((event) => event.role === "Judge" || event.role === "Mentor")

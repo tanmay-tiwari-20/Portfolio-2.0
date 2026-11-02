@@ -518,6 +518,9 @@ textarea:focus-visible {
   .skiper31-char {
     will-change: auto;
   }
+  .skiper31-stage.skiper31-static { min-height: 0; display: grid; gap: 2rem; }
+  .skiper31-stage.skiper31-static .skiper31-sticky-stage { position: relative; height: auto; }
+  .skiper31-stage.skiper31-static .skiper31-beat { position: relative; inset: auto; min-height: auto; pointer-events: auto; }
 }
 
 .philosophy-statement em {

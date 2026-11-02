@@ -1,6 +1,9 @@
 services:
   portfolio:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_WEB3FORMS_KEY: ${NEXT_PUBLIC_WEB3FORMS_KEY:-}
     ports:
       - "3000:3000"
     env_file:

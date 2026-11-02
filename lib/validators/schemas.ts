@@ -1,12 +1,14 @@
 import { z } from "zod";
-export const imageSchema = z.object({ url: z.string().url(), publicId: z.string().optional(), width: z.number().optional(), height: z.number().optional(), alt: z.string().default(""), fit: z.enum(["contain", "cover"]).optional(), position: z.string().optional() });
+const safeUrl = z.string().refine((value) => { if (!value) return true; try { return ["https:", "http:"].includes(new URL(value).protocol); } catch { return false; } }, "Enter a valid HTTP or HTTPS URL.");
+const imageUrl = z.string().url().refine((value) => { try { const host = new URL(value).hostname; return host === "res.cloudinary.com" || host === "images.unsplash.com" || host.endsWith(".cloudinary.com"); } catch { return false; } }, "Use a supported image host.");
+export const imageSchema = z.object({ url: imageUrl, publicId: z.string().optional(), width: z.number().optional(), height: z.number().optional(), alt: z.string().default(""), fit: z.enum(["contain", "cover"]).optional(), position: z.string().optional() });
 export const baseRecord = z.object({ id: z.string(), createdAt: z.string(), updatedAt: z.string(), sortOrder: z.number().default(0), isPublished: z.boolean().default(true) });
 export const profileSchema = baseRecord.extend({ name: z.string(), role: z.string(), tagline: z.string(), bio: z.string(), location: z.string(), email: z.string().email(), resumeUrl: z.string().optional(), avatar: imageSchema.optional(), heroTitle: z.string(), stats: z.array(z.object({ label: z.string(), value: z.number() })) });
 export const experienceSchema = baseRecord.extend({ role: z.string(), company: z.string(), period: z.string(), location: z.string(), description: z.string(), achievements: z.array(z.string()), tech: z.array(z.string()) });
-export const projectSchema = baseRecord.extend({ title: z.string(), slug: z.string(), category: z.string(), description: z.string(), year: z.string(), cover: imageSchema, gallery: z.array(imageSchema), tags: z.array(z.string()), featured: z.boolean().default(false), liveUrl: z.string().optional(), githubUrl: z.string().optional() });
+export const projectSchema = baseRecord.extend({ title: z.string(), slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and single hyphens."), category: z.string(), description: z.string(), year: z.string().regex(/^(?:19|20)\d{2}$/), cover: imageSchema, gallery: z.array(imageSchema), tags: z.array(z.string()), featured: z.boolean().default(false), liveUrl: safeUrl.optional(), githubUrl: safeUrl.optional() });
 export const eventSchema = baseRecord.extend({ title: z.string(), date: z.string(), venue: z.string(), status: z.enum(["upcoming", "past"]), description: z.string(), attendees: z.number(), link: z.string().optional(), image: imageSchema.optional() });
 export const hackathonSchema = baseRecord.extend({ name: z.string(), role: z.enum(["Judge", "Mentor", "Organizer"]), date: z.string(), organizer: z.string(), description: z.string(), teams: z.number(), link: z.string().optional() });
-export const socialSchema = baseRecord.extend({ label: z.string(), href: z.string().url(), handle: z.string(), icon: z.string() });
+export const socialSchema = baseRecord.extend({ label: z.string(), href: z.string().url().refine((value) => value.startsWith("https://")), handle: z.string(), icon: z.string() });
 export const aboutPopOutImageSchema = z.object({
   id: z.string().min(1).max(160),
   url: z.string().url(),

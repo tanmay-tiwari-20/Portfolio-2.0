@@ -216,7 +216,7 @@ export default function Skiper31Text() {
   return (
     <section
       ref={targetRef}
-      className="skiper31-stage"
+      className={`skiper31-stage${reducedMotion ? " skiper31-static" : ""}`}
       aria-labelledby="skiper31-heading"
     >
       <div className="skiper31-sticky-stage">

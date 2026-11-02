@@ -38,15 +38,13 @@ export async function POST(req: Request) {
     }
 
     const password = body.password || "";
-    const rawHash =
-      process.env.ADMIN_PASSWORD_HASH ||
-      "$2b$12$7xkaLMGK6AWz1Sgl01fSzOayr.UrtI1fvDXghtXk/O.hRAg2vJGHi";
+    const rawHash = process.env.ADMIN_PASSWORD_HASH;
+    if (!rawHash || !/^\$2[aby]\$\d\d\$/.test(rawHash)) {
+      return NextResponse.json({ error: "Admin password hash is not configured." }, { status: 503 });
+    }
     const hash = rawHash.replace(/\\(\$)/g, "$1");
 
-    let passwordOk = await bcrypt.compare(password, hash).catch(() => false);
-    if (!passwordOk && (password === "admin123" || password === "spiderman" || (process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD))) {
-      passwordOk = true;
-    }
+    const passwordOk = await bcrypt.compare(password, hash).catch(() => false);
 
     if (!passwordOk) {
       const count = state?.until && state.until > now ? state.count + 1 : 1;

@@ -485,6 +485,9 @@ export default function DitherVeil({
     const gl = renderer.gl;
     const canvas = gl.canvas;
     canvas.style.display = "block";
+    canvas.style.position = "absolute";
+    canvas.style.inset = "0";
+    canvas.style.zIndex = "1";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     container.appendChild(canvas);
@@ -847,6 +850,7 @@ export default function DitherVeil({
       introStart = performance.now();
       wake();
     };
+    img.onerror = () => { canvas.style.display = "none"; };
     img.src = src;
 
     const locate = (e: PointerEvent) => {
@@ -905,6 +909,7 @@ export default function DitherVeil({
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       img.onload = null;
+      img.onerror = null;
       container.removeEventListener("pointermove", onMove);
       container.removeEventListener("pointerenter", onMove);
       container.removeEventListener("pointerdown", onDown);
@@ -920,6 +925,6 @@ export default function DitherVeil({
       ref={containerRef}
       className={`relative w-full h-full overflow-hidden touch-pan-y ${className}`.trim()}
       style={style}
-    />
+    ><img src={src} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: fit, zIndex: 0, pointerEvents: "none" }} /></div>
   );
 }

@@ -31,11 +31,7 @@ export default function ContactForm() {
     const key = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
 
     if (!key) {
-      setStatus({
-        type: "success",
-        message: "Thank you for reaching out! (Demo mode: configure Web3Forms key to receive submissions).",
-      });
-      reset();
+      setStatus({ type: "error", message: "Contact delivery is not configured yet. Please email me directly." });
       return;
     }
 
@@ -67,9 +63,10 @@ export default function ContactForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       <div>
-        <label className="form-label">Your Name</label>
+        <label className="form-label" htmlFor="contact-name">Your Name</label>
         <input
           {...register("name")}
+          id="contact-name"
           placeholder="Peter Parker"
           className="form-input"
         />
@@ -81,9 +78,10 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="form-label">Email Address</label>
+        <label className="form-label" htmlFor="contact-email">Email Address</label>
         <input
           {...register("email")}
+          id="contact-email"
           type="email"
           placeholder="peter@dailybugle.com"
           className="form-input"
@@ -96,9 +94,10 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="form-label">Subject</label>
+        <label className="form-label" htmlFor="contact-subject">Subject</label>
         <input
           {...register("subject")}
+          id="contact-subject"
           placeholder="New Mission / Creative Collaboration"
           className="form-input"
         />
@@ -110,9 +109,10 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label className="form-label">Message Details</label>
+        <label className="form-label" htmlFor="contact-message">Message Details</label>
         <textarea
           {...register("message")}
+          id="contact-message"
           placeholder="Tell me about your project, timeline, and goals..."
           className="form-textarea"
           rows={5}
@@ -132,11 +132,13 @@ export default function ContactForm() {
       <button
         type="submit"
         className="button button-primary"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !process.env.NEXT_PUBLIC_WEB3FORMS_KEY}
         style={{ width: "100%", marginTop: 8 }}
       >
         {isSubmitting ? "Transmitting..." : "Send Transmission"} <ArrowUpRight size={18} />
       </button>
+
+      {!process.env.NEXT_PUBLIC_WEB3FORMS_KEY && <p className="form-note" role="status">Contact delivery is unavailable right now. Please email me directly.</p>}
 
       {status && (
         <div

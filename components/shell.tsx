@@ -149,7 +149,7 @@ export function MotionLayer() {
         lenis.on("scroll", ScrollTrigger.update);
 
         const tick = (time: number) => {
-          lenis?.raf(time * 1000);
+          lenis?.raf(time);
           frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);

@@ -930,7 +930,7 @@ export default function AdminDashboard() {
                   value={editingProject.title || ""}
                   onChange={(e) => {
                     const title = e.target.value;
-                    const slug = editingProject.slug || title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+                    const slug = title.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
                     setEditingProject({ ...editingProject, title, slug });
                   }}
                   className="form-input"
