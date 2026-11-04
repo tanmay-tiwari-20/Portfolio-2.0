@@ -1,0 +1,147 @@
+.lineup {
+  width: 100%;
+  min-width: 0;
+}
+
+.heading {
+  max-width: 25ch;
+  font-size: clamp(27px, min(3.4vw, 5.5svh), 52px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+}
+
+.stage {
+  width: min(100%, 1240px);
+  margin: clamp(24px, 4svh, 44px) auto 0;
+}
+
+.annotation {
+  position: relative;
+  height: clamp(66px, 7.5svh, 88px);
+}
+
+.note {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: clamp(88px, 11vw, 150px);
+  transform: translateX(12px) rotate(-7deg);
+  color: var(--hs-red);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(17px, 1.8vw, 25px);
+  font-style: italic;
+  line-height: 1;
+}
+
+.arrow {
+  display: block;
+  width: clamp(62px, 6.3vw, 88px);
+  height: auto;
+  margin-top: 3px;
+  margin-left: -24px;
+}
+
+.portraits {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(4px, 1.4vw, 20px);
+}
+
+.founder {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+}
+
+.portrait {
+  position: relative;
+  height: clamp(76px, min(24vw, 36svh), 360px);
+  isolation: isolate;
+}
+
+.initial {
+  position: absolute;
+  right: 0;
+  bottom: -0.03em;
+  left: 0;
+  z-index: -1;
+  color: rgb(255 250 247 / 5%);
+  font-family: var(--font-display);
+  font-size: clamp(68px, min(17vw, 28svh), 260px);
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+}
+
+.imagePlane {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: -5%;
+}
+
+.caption {
+  position: relative;
+  margin-top: clamp(14px, 2svh, 22px);
+  color: var(--hs-dim);
+  font-size: clamp(11px, 1.3vw, 18px);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+
+.founder[data-centre="true"] .caption {
+  color: var(--hs-paper);
+}
+
+.founder[data-centre="true"] .caption::before {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: clamp(18px, 3vw, 38px);
+  height: 2px;
+  transform: translateX(-50%);
+  background: var(--hs-red);
+  content: "";
+}
+
+.portrait :global(.hs-image-fallback) {
+  padding: 3px;
+}
+
+.portrait :global(.hs-image-fallback) span {
+  font-size: clamp(9px, 1.1vw, 14px);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  .stage {
+    margin-top: 22px;
+  }
+
+  .annotation {
+    height: 66px;
+  }
+
+  .note {
+    transform: translateX(5px) rotate(-7deg);
+  }
+}
+
+@media (forced-colors: active) {
+  .note,
+  .caption,
+  .founder[data-centre="true"] .caption {
+    color: CanvasText;
+  }
+
+  .initial {
+    display: none;
+  }
+
+  .founder[data-centre="true"] .caption::before {
+    background: CanvasText;
+  }
+}
