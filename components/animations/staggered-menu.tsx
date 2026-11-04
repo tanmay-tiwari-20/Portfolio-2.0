@@ -51,7 +51,7 @@ export interface StaggeredMenuProps {
 const DEFAULT_ITEMS: StaggeredMenuItem[] = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
   { label: "About", href: "/about", sublabel: "Journey & Vision" },
-  { label: "Work", href: "/projects", sublabel: "Featured Works" },
+  { label: "Projects", href: "/projects", sublabel: "Featured Projects" },
   { label: "HackShastra", href: "/hackshastra", sublabel: "Tech Community" },
   { label: "Hackathons", href: "/hackathons", sublabel: "Awards & Builds" },
   { label: "Contact", href: "/contact", sublabel: "Direct Communication" },

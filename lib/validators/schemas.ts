@@ -7,7 +7,27 @@ export const baseRecord = z.object({ id: z.string(), createdAt: z.string(), upda
 export const profileSchema = baseRecord.extend({ name: z.string(), role: z.string(), tagline: z.string(), bio: z.string(), location: z.string(), email: z.string().email(), resumeUrl: z.string().optional(), avatar: imageSchema.optional(), heroTitle: z.string(), stats: z.array(z.object({ label: z.string(), value: z.number() })) });
 export const experienceSchema = baseRecord.extend({ role: z.string(), company: z.string(), period: z.string(), location: z.string(), description: z.string(), achievements: z.array(z.string()), tech: z.array(z.string()) });
 export const projectSchema = baseRecord.extend({ title: z.string(), slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and single hyphens."), category: z.string(), description: z.string(), year: z.string().regex(/^(?:19|20)\d{2}$/), cover: imageSchema, gallery: z.array(imageSchema), tags: z.array(z.string()), featured: z.boolean().default(false), liveUrl: safeUrl.optional(), githubUrl: safeUrl.optional() });
-export const eventSchema = baseRecord.extend({ title: z.string(), date: z.string(), venue: z.string(), status: z.enum(["upcoming", "past"]), description: z.string(), attendees: z.number(), link: z.string().optional(), image: imageSchema.optional() });
+export const eventSchema = baseRecord.extend({
+  title: z.string().trim().min(1).max(180),
+  date: z.string().trim().min(1).max(120),
+  displayDate: z.string().trim().max(120).optional(),
+  category: z.string().trim().max(80).optional(),
+  role: z.string().trim().max(180).optional(),
+  // Set only by an explicit event reorder. Legacy records keep chronology.
+  archiveOrder: z.number().int().nonnegative().optional(),
+  venue: z.string().trim().max(240),
+  status: z.enum(["upcoming", "past"]),
+  description: z.string().max(2000),
+  attendees: z.number().int().nonnegative().default(0),
+  link: z.string().trim().refine((value) => {
+    if (!value) return true;
+    try {
+      const url = new URL(value);
+      return url.protocol === "https:" && !url.username && !url.password;
+    } catch { return false; }
+  }, "Enter a valid HTTPS event URL.").optional(),
+  image: imageSchema.optional(),
+});
 export const hackathonSchema = baseRecord.extend({ name: z.string(), role: z.enum(["Judge", "Mentor", "Organizer"]), date: z.string(), organizer: z.string(), description: z.string(), teams: z.number(), link: z.string().optional() });
 export const socialSchema = baseRecord.extend({ label: z.string(), href: z.string().url().refine((value) => value.startsWith("https://")), handle: z.string(), icon: z.string() });
 export const aboutPopOutImageSchema = z.object({

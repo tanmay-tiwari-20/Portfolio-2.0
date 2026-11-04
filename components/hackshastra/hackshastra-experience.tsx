@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Asterisk, MoveUpRight } from "lucide-react";
 import { hackshastra } from "@/data/hackshastra";
 import HackShastraMotion from "./hackshastra-motion";
@@ -7,6 +6,7 @@ import BrandImage from "./brand-image";
 import BrandLink from "./brand-link";
 import EventArchive, { type HackShastraEvent } from "./event-archive";
 import FoundersLineup from "./founders-lineup";
+import HackShastraFooter from "./hackshastra-footer";
 
 function SectionLabel({
   number,
@@ -418,106 +418,7 @@ export default function HackShastraExperience({
         </div>
       </section>
 
-      <section
-        id="hs-connect"
-        className="hs-connect hs-section relative overflow-hidden"
-        aria-labelledby="hs-connect-title"
-      >
-        <div className="hs-shell relative z-10">
-          <SectionLabel number="05">There’s room for your idea</SectionLabel>
-          <div className="hs-connect-heading flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
-            <h2 id="hs-connect-title" className="hs-closing-title">
-              <span className="block" data-hackshastra-line>
-                Your people.
-              </span>
-              <span className="block" data-hackshastra-line>
-                Your next <span className="hs-closing-outline">build.</span>
-              </span>
-            </h2>
-            <a
-              href={hackshastra.community}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hs-join group flex h-32 w-32 shrink-0 flex-col items-center justify-center gap-3 rounded-full border border-current sm:h-40 sm:w-40"
-              data-hackshastra-link
-            >
-              <ArrowUpRight
-                size={32}
-                strokeWidth={1.25}
-                aria-hidden="true"
-                data-hackshastra-arrow
-              />
-              <span className="hs-mono">
-                Join the community
-                <span className="sr-only">
-                  {" "}
-                  on WhatsApp (opens in a new tab)
-                </span>
-              </span>
-            </a>
-          </div>
-          <div className="hs-connect-details grid gap-8 border-t border-black/25 pt-8 md:grid-cols-[1fr_1fr_0.85fr]">
-            <div className="hs-footer-contact min-w-0">
-              <p className="hs-mono mb-3">Build with us</p>
-              <BrandLink
-                href={`mailto:${hackshastra.email}`}
-                className="break-all text-sm sm:text-base"
-              >
-                {hackshastra.email}
-              </BrandLink>
-              <BrandLink
-                href={hackshastra.chapters}
-                className="flex w-fit text-sm"
-              >
-                Start a campus chapter
-              </BrandLink>
-            </div>
-            <div className="hs-footer-social min-w-0">
-              <p className="hs-mono mb-3">Find the community</p>
-              <div className="flex flex-col items-start">
-                <BrandLink href={hackshastra.instagram} className="text-sm">
-                  Instagram
-                </BrandLink>
-                <BrandLink href={hackshastra.linkedin} className="text-sm">
-                  LinkedIn
-                </BrandLink>
-                <BrandLink href={hackshastra.website} className="text-sm">
-                  hackshastra.in
-                </BrandLink>
-              </div>
-            </div>
-            <div className="hs-footer-profile min-w-0">
-              <p className="hs-mono mb-4">From the portfolio of</p>
-              <p className="text-xl font-semibold tracking-[-0.04em]">
-                Tanmay Tiwari
-              </p>
-              <p className="mt-1 text-sm">Co-founder, HackShastra</p>
-              <Link
-                href="/projects/hackshastra-website"
-                className="hs-case-study-link mt-4 inline-flex min-h-12 items-center gap-3 text-sm underline underline-offset-4"
-                data-hackshastra-link
-              >
-                <span>Website case study</span>{" "}
-                <ArrowUpRight
-                  size={16}
-                  aria-hidden="true"
-                  data-hackshastra-arrow
-                />
-              </Link>
-            </div>
-          </div>
-          <div className="hs-connect-footer hs-mono flex flex-wrap justify-between gap-4 border-t border-black/25 pt-5">
-            <span>Built on curiosity. Built together.</span>
-            <Link
-              href="/projects"
-              className="inline-flex min-h-8 items-center gap-2"
-            >
-              Back to selected work{" "}
-              <ArrowUpRight size={14} aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HackShastraFooter />
     </HackShastraMotion>
   );
 }

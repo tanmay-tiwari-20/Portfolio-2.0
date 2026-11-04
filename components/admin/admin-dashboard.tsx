@@ -27,14 +27,14 @@ import {
 } from "lucide-react";
 import SortableList from "@/components/admin/sortable-list";
 import AboutGalleryEditor from "@/components/admin/about-gallery-editor";
-import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
+import EventEditor from "@/components/admin/event-editor";
+import { prepareEventPatch } from "@/lib/event-admin";
 import type {
   Project,
   Experience,
   Profile,
   Hackathon,
   CommunityEvent,
-  ImageAsset,
   SocialLink,
   SiteSettings,
 } from "@/lib/validators/schemas";
@@ -78,7 +78,6 @@ export default function AdminDashboard() {
   const [editingExperience, setEditingExperience] = useState<Partial<Experience> | null>(null);
   const [editingHackathon, setEditingHackathon] = useState<Partial<Hackathon> | null>(null);
   const [editingEvent, setEditingEvent] = useState<Partial<CommunityEvent> | null>(null);
-  const [posterLoadError, setPosterLoadError] = useState<string | null>(null);
   const [editingSocial, setEditingSocial] = useState<Partial<SocialLink> | null>(null);
 
   // Lock body scroll and handle escape key when any modal is open
@@ -89,6 +88,7 @@ export default function AdminDashboard() {
     editingEvent ||
     editingSocial
   );
+  const isEventSaving = Boolean(editingEvent) && loading;
 
   useEffect(() => {
     if (isModalOpen) {
@@ -96,6 +96,7 @@ export default function AdminDashboard() {
       document.body.style.overflow = "hidden";
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === "Escape") {
+          if (isEventSaving) return;
           setEditingProject(null);
           setEditingExperience(null);
           setEditingHackathon(null);
@@ -109,7 +110,7 @@ export default function AdminDashboard() {
         window.removeEventListener("keydown", handleKeyDown);
       };
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, isEventSaving]);
 
   // Temporary tag inputs
   const [tempTag, setTempTag] = useState("");
@@ -193,7 +194,7 @@ export default function AdminDashboard() {
             collection,
             id: item.id,
             patch: collection === "events"
-              ? { ...item, image: (item as T & { image?: ImageAsset }).image ?? null }
+              ? prepareEventPatch(item as Partial<CommunityEvent>)
               : item,
           };
 
@@ -216,7 +217,7 @@ export default function AdminDashboard() {
         );
       }
 
-      showToast("Saved to MongoDB! Live website updated.");
+      showToast("Saved. Live website updated.");
       await loadAllData();
       return true;
     } catch (err: unknown) {
@@ -700,19 +701,18 @@ export default function AdminDashboard() {
                 Community Events & HackShastra
               </h2>
               <p style={{ color: "var(--spidey-muted)", fontSize: 13, margin: "4px 0 0" }}>
-                Manage community gatherings, summits, and attendee statistics.
+                Add, edit and publish the events shown on your HackShastra page. Drag rows or use the arrows to change their order.
               </p>
             </div>
             <button
               onClick={() => {
-                setPosterLoadError(null);
                 setEditingEvent({
                   title: "",
-                  date: "2025",
-                  venue: "Mumbai",
+                  date: "",
+                  venue: "",
                   status: "upcoming",
                   description: "",
-                  attendees: 50,
+                  attendees: 0,
                   link: "",
                   isPublished: true,
                 });
@@ -753,14 +753,24 @@ export default function AdminDashboard() {
                     {e.title}
                   </h3>
                   <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
-                    {e.attendees} Attendees
+                    {e.isPublished !== false ? "Visible on the HackShastra page" : "Draft — hidden from the website"}
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 8 }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  <button
+                    type="button"
+                    disabled={loading}
+                    onClick={() => toggleField("events", e.id, "isPublished", e.isPublished !== false)}
+                    className="button button-secondary"
+                    style={{ minHeight: 36, padding: "0 14px", fontSize: 12 }}
+                    aria-label={`${e.isPublished !== false ? "Hide" : "Publish"} ${e.title}`}
+                  >
+                    {e.isPublished !== false ? <Eye size={13} /> : <EyeOff size={13} />}
+                    {e.isPublished !== false ? "Published" : "Draft"}
+                  </button>
                   <button
                     onClick={() => {
-                      setPosterLoadError(null);
                       setEditingEvent({ ...e });
                     }}
                     className="button button-secondary"
@@ -1502,169 +1512,16 @@ export default function AdminDashboard() {
 
       {/* ==================== EVENT EDIT/CREATE MODAL ==================== */}
       {editingEvent && (
-        <div
-          className="admin-modal-overlay"
-          data-lenis-prevent="true"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditingEvent(null);
+        <EventEditor
+          value={editingEvent}
+          onChange={setEditingEvent}
+          onClose={() => setEditingEvent(null)}
+          saving={loading}
+          onSave={async () => {
+            const success = await saveItem("events", editingEvent, !editingEvent.id);
+            if (success) setEditingEvent(null);
           }}
-        >
-          <div className="admin-modal-box" data-lenis-prevent="true">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <h2 className="display" style={{ fontSize: 22, margin: 0 }}>
-                {editingEvent.id ? "Edit Community Event" : "Add Community Event"}
-              </h2>
-              <button
-                onClick={() => setEditingEvent(null)}
-                style={{ background: "none", border: "none", color: "var(--spidey-muted)", cursor: "pointer" }}
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                const isNew = !editingEvent.id;
-                const success = await saveItem("events", editingEvent, isNew);
-                if (success) setEditingEvent(null);
-              }}
-              style={{ display: "grid", gap: 16 }}
-            >
-              <div>
-                <label className="form-label">Event Title</label>
-                <input
-                  value={editingEvent.title || ""}
-                  onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <div>
-                  <label className="form-label">Date</label>
-                  <input
-                    value={editingEvent.date || ""}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, date: e.target.value })}
-                    className="form-input"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="form-label">Status</label>
-                  <select
-                    value={editingEvent.status || "upcoming"}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, status: e.target.value as CommunityEvent["status"] })}
-                    className="form-select"
-                  >
-                    <option value="upcoming">Upcoming</option>
-                    <option value="past">Past</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <div>
-                  <label className="form-label">Venue / Location</label>
-                  <input
-                    value={editingEvent.venue || ""}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, venue: e.target.value })}
-                    className="form-input"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="form-label">Attendees Count</label>
-                  <input
-                    type="number"
-                    value={editingEvent.attendees ?? 60}
-                    onChange={(e) => setEditingEvent({ ...editingEvent, attendees: Number(e.target.value) })}
-                    className="form-input"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="form-label">Description</label>
-                <textarea
-                  value={editingEvent.description || ""}
-                  onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
-                  className="form-textarea"
-                  rows={3}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="form-label">Registration / Details Link</label>
-                <input
-                  value={editingEvent.link || ""}
-                  onChange={(e) => setEditingEvent({ ...editingEvent, link: e.target.value })}
-                  placeholder="https://..."
-                  className="form-input"
-                />
-              </div>
-
-              <div>
-                <label className="form-label" htmlFor="event-poster-url">
-                  Event Poster Image URL <span className="form-label-optional">Optional</span>
-                </label>
-                <input
-                  id="event-poster-url"
-                  type="url"
-                  value={editingEvent.image?.url || ""}
-                  onChange={(e) => {
-                    const url = e.target.value.trim();
-                    setPosterLoadError(null);
-                    setEditingEvent({
-                      ...editingEvent,
-                      image: url ? { ...editingEvent.image, url, alt: editingEvent.image?.alt || `${editingEvent.title || "Event"} poster` } : undefined,
-                    });
-                  }}
-                  placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
-                  className="form-input"
-                  aria-describedby="event-poster-help"
-                />
-                <p id="event-poster-help" className="form-help-text">
-                  Paste an HTTPS image URL from res.cloudinary.com. Leave blank for no poster.
-                </p>
-                {editingEvent.image?.url && !isCloudinaryImageUrl(editingEvent.image.url) && (
-                  <p className="form-error-text" role="alert">Enter a valid HTTPS Cloudinary image URL.</p>
-                )}
-                {editingEvent.image?.url && isCloudinaryImageUrl(editingEvent.image.url) && (
-                  <div className="event-poster-preview">
-                    {posterLoadError === editingEvent.image.url ? (
-                      <p className="form-error-text" role="alert">This poster could not be loaded. Check that the Cloudinary URL is public and points to an image.</p>
-                    ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={editingEvent.image.url}
-                        alt={`${editingEvent.title || "Event"} poster preview`}
-                        onLoad={() => setPosterLoadError(null)}
-                        onError={() => setPosterLoadError(editingEvent.image?.url || null)}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginTop: 14 }}>
-                <button
-                  type="button"
-                  onClick={() => setEditingEvent(null)}
-                  className="button button-secondary"
-                >
-                  Cancel
-                </button>
-                <button type="submit" disabled={loading || Boolean(editingEvent.image?.url && (!isCloudinaryImageUrl(editingEvent.image.url) || posterLoadError === editingEvent.image.url))} className="button button-primary">
-                  {loading ? "Saving..." : "Save Event"} <Check size={16} />
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        />
       )}
 
       {/* ==================== SOCIAL EDIT/CREATE MODAL ==================== */}

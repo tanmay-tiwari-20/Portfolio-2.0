@@ -3,6 +3,7 @@ import path from "node:path";
 import { z } from "zod";
 import { nanoid } from "nanoid";
 import { getMongoDb, isMongoConfigured } from "@/lib/db/mongodb";
+import { prepareMongoPatch } from "@/lib/db/mongo-patch";
 
 export interface Repository<T extends { id: string; sortOrder?: number }> {
   getAll(): Promise<T[]>;
@@ -10,7 +11,7 @@ export interface Repository<T extends { id: string; sortOrder?: number }> {
   create(item: Omit<T, "id"> & { id?: string }): Promise<T>;
   update(id: string, patch: Partial<T>): Promise<T | null>;
   delete(id: string): Promise<boolean>;
-  reorder(ids: string[]): Promise<T[]>;
+  reorder(ids: string[], additionalOrderField?: keyof T & string): Promise<T[]>;
   replaceAll(items: T[]): Promise<T[]>;
 }
 
@@ -85,22 +86,22 @@ export class JsonFileRepository<T extends { id: string; sortOrder?: number; crea
     });
   }
 
-  reorder(ids: string[]): Promise<T[]> {
+  reorder(ids: string[], additionalOrderField?: keyof T & string): Promise<T[]> {
     return this.mutate<T[]>((rows): [T[], T[]] => {
       const byId = new Map(rows.map((row) => [row.id, row]));
       const selected: T[] = [];
       ids.forEach((id, sortOrder) => {
         const row = byId.get(id);
-        if (row) selected.push({ ...row, sortOrder });
+        if (row) selected.push({ ...row, sortOrder, ...(additionalOrderField ? { [additionalOrderField]: sortOrder } : {}) });
       });
       const used = new Set(selected.map((row) => row.id));
-      const rest = rows.filter((row) => !used.has(row.id)).map((row, index) => ({ ...row, sortOrder: selected.length + index }));
+      const rest = rows.filter((row) => !used.has(row.id)).map((row, index) => ({ ...row, sortOrder: selected.length + index, ...(additionalOrderField ? { [additionalOrderField]: selected.length + index } : {}) }));
       const ordered: T[] = [...selected, ...rest];
       return [ordered, ordered];
     });
   }
   replaceAll(items: T[]): Promise<T[]> {
-    return this.mutate<T[]>((rows) => [z.array(this.schema).parse(items), z.array(this.schema).parse(items)]);
+    return this.mutate<T[]>(() => [z.array(this.schema).parse(items), z.array(this.schema).parse(items)]);
   }
 }
 
@@ -163,27 +164,12 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
     const current = await this.getById(id);
     if (!current) return null;
 
-    const valueToParse: Record<string, unknown> = {
-      ...current,
-      ...patch,
-      id,
-      updatedAt: new Date().toISOString(),
-    };
-    const unsetFields: Record<string, ""> = {};
-    for (const [key, patchValue] of Object.entries(patch)) {
-      if (patchValue === null) {
-        delete valueToParse[key];
-        unsetFields[key] = "";
-      }
-    }
-    const updated = this.schema.parse(valueToParse);
-
-    await col.updateOne({
-      id,
-    }, {
-      $set: updated as Record<string, unknown>,
-      ...(Object.keys(unsetFields).length > 0 ? { $unset: unsetFields } : {}),
-    });
+    const { updated, operation } = prepareMongoPatch(
+      this.schema, current, patch, new Date().toISOString(),
+    );
+    // Another request may reorder or change an unrelated field after our read.
+    // Do not write those values back from the stale validation snapshot.
+    await col.updateOne({ id }, operation);
     return updated;
   }
 
@@ -193,12 +179,12 @@ export class MongoRepository<T extends { id: string; sortOrder?: number }> imple
     return res.deletedCount > 0;
   }
 
-  async reorder(ids: string[]): Promise<T[]> {
+  async reorder(ids: string[], additionalOrderField?: keyof T & string): Promise<T[]> {
     if (ids.length === 0) return this.getAll();
     const col = await this.getCollection();
     await col.bulkWrite(
       ids.map((id, sortOrder) => ({
-        updateOne: { filter: { id }, update: { $set: { sortOrder } } },
+        updateOne: { filter: { id }, update: { $set: { sortOrder, ...(additionalOrderField ? { [additionalOrderField]: sortOrder } : {}) } } },
       })),
       { ordered: true },
     );
@@ -270,9 +256,9 @@ export class UnifiedRepository<T extends { id: string; sortOrder?: number }> imp
     return repo.delete(id);
   }
 
-  async reorder(ids: string[]): Promise<T[]> {
+  async reorder(ids: string[], additionalOrderField?: keyof T & string): Promise<T[]> {
     const repo = await this.getActiveRepo();
-    return repo.reorder(ids);
+    return repo.reorder(ids, additionalOrderField);
   }
   async replaceAll(items: T[]): Promise<T[]> { return (await this.getActiveRepo()).replaceAll(items); }
 }

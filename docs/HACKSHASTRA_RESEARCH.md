@@ -84,6 +84,25 @@ official post permalink. The original
 returned no readable content and its AMP page was inaccessible. For a strict
 direct-primary-source presentation, use September 2025 rather than the day.
 
+### Event reveal metadata review
+
+The official Home/About pages and the organizer pages for Pre-Meetup, HI-O,
+SnowHackIPEC, TEXPO, ShubhShastra and Grand Hack IPEC were checked again on
+5 November 2026 for the event reveal. The concise category labels are Meetup,
+Hackathon, Campus orientation, Winter hackathon, Technology expo, AI hackathon
+and National hackathon, respectively. They describe the formats supported by
+the source table above, not additional participation or outcome claims.
+
+HI-O now has a research enrichment matched to its existing record ID and Luma
+URL. All seven published records still come from the event editor. Categories
+and roles only enrich a matching original ID and source URL; edited dates and
+descriptions retain precedence. Image URLs and alt text come from each saved
+record, so replacing artwork does not retain a caption from an older poster.
+The existing matching posters are used because homepage gallery photographs
+have no verified per-event association. Image pixels and dimensions were not
+verified in this source review: the search connector could not open the assets,
+and shell networking was restricted.
+
 ## Mentorship and judging
 
 [HackShastra's Luma call for mentors](https://luma.com/e96zd4e1) specifies Grand

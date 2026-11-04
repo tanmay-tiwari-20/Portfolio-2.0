@@ -23,6 +23,13 @@ const originalEvents: ReadonlyArray<
       "HackShastra Pre-Meetup was the first tech event of the HackShastra community, bringing developers together to connect and kickstart the community.",
   },
   {
+    id: "cg-7NM8XceWWle9Svd-7j",
+    link: "https://luma.com/6vc2jiem",
+    date: "30-10-2025",
+    description:
+      "HackShastra IPEC Orientation is designed to introduce students to the HackShastra community, where technology meets creativity.",
+  },
+  {
     id: "-diqvGFp-0K1HPL4OkIyS",
     link: "https://unstop.com/hackathons/snowhackipec-hackshastra-1613746",
     date: "31-01-2026",
@@ -94,22 +101,39 @@ function safeEventLink(value: string | undefined): string {
   }
 }
 
-/** Reconcile the live admin collection with narrowly matched research notes. */
-export function resolveHackShastraEvents(
+/** One order for the editor and public archive; explicit moves override chronology. */
+export function orderHackShastraEvents(
   records: readonly CommunityEvent[],
-): HackShastraEvent[] {
-  const sorted = records
-    .filter((record) => record.isPublished !== false)
+): CommunityEvent[] {
+  return records
     .map((record, index) => ({
       record,
       index,
       date: parseEventDate(record.date),
     }))
-    .sort(
-      (a, b) =>
+    .sort((a, b) => {
+      const aOrder = a.record.archiveOrder;
+      const bOrder = b.record.archiveOrder;
+      if (aOrder !== undefined || bOrder !== undefined) {
+        if (aOrder === undefined) return 1;
+        if (bOrder === undefined) return -1;
+        if (aOrder !== bOrder) return aOrder - bOrder;
+      }
+      return (
         (a.date?.getTime() ?? Infinity) - (b.date?.getTime() ?? Infinity) ||
-        a.index - b.index,
-    );
+        a.index - b.index
+      );
+    })
+    .map(({ record }) => record);
+}
+
+/** Reconcile the live admin collection with narrowly matched research notes. */
+export function resolveHackShastraEvents(
+  records: readonly CommunityEvent[],
+): HackShastraEvent[] {
+  const sorted = orderHackShastraEvents(
+    records.filter((record) => record.isPublished !== false),
+  ).map((record) => ({ record, date: parseEventDate(record.date) }));
   const reservedIds = new Set(sorted.map(({ record }) => record.id));
   const usedIds = new Set<string>();
 
@@ -135,18 +159,22 @@ export function resolveHackShastraEvents(
       id,
       title: record.title,
       date:
-        research && record.date === original?.date
-          ? research.date
-          : date
-            ? dateFormatter.format(date)
-            : record.date,
+        record.displayDate !== undefined
+          ? record.displayDate
+          : research && record.date === original?.date
+            ? research.date
+            : date
+              ? dateFormatter.format(date)
+              : record.date,
       location: record.venue,
-      role: research?.role ?? "Community event",
+      category: record.category ?? research?.category,
+      role: record.role ?? research?.role ?? "Community event",
       description:
         research && record.description === original?.description
           ? research.description
           : record.description,
       image: isCloudinaryImageUrl(image) ? image : "",
+      imageAlt: record.image?.alt,
       href: safeEventLink(record.link),
     };
   });

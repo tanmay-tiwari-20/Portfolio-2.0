@@ -6,6 +6,8 @@ import { currentAdmin } from "@/lib/auth/session";
 import { repos } from "@/lib/db";
 import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 import { hasSafeAboutPageImageUrls } from "@/lib/about-page-content";
+import { orderHackShastraEvents } from "@/lib/hackshastra-content";
+import { nextEventArchiveOrder, prepareEventPatch } from "@/lib/event-admin";
 import {
   experienceSchema,
   eventSchema,
@@ -15,6 +17,7 @@ import {
   socialSchema,
   settingsSchema,
   pickSubmittedPatchFields,
+  type CommunityEvent,
 } from "@/lib/validators/schemas";
 
 const entries = {
@@ -93,6 +96,7 @@ export async function GET(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const key = new URL(req.url).searchParams.get("collection");
   if (!isKey(key)) return NextResponse.json({ error: "Unknown collection" }, { status: 400 });
+  if (key === "events") return NextResponse.json(orderHackShastraEvents(await repos.events.getAll()));
   return NextResponse.json(await entries[key].repo.getAll());
 }
 export async function POST(req: Request) {
@@ -136,6 +140,7 @@ export async function POST(req: Request) {
     createdAt: now,
     updatedAt: now,
     sortOrder: nextOrder,
+    ...(body.collection === "events" ? { archiveOrder: nextEventArchiveOrder(existingItems as CommunityEvent[]) } : {}),
   });
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid content", details: parsed.error.flatten() }, { status: 400 });
@@ -159,9 +164,10 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
   const collection = body.collection as Key;
-  const patch = body.patch && typeof body.patch === "object" && !Array.isArray(body.patch)
+  let patch = body.patch && typeof body.patch === "object" && !Array.isArray(body.patch)
     ? body.patch as Record<string, unknown>
     : {};
+  if (collection === "events") patch = prepareEventPatch(patch);
   if (collection === "hackathons" && patch.role !== undefined && patch.role !== "Judge" && patch.role !== "Mentor") {
     return NextResponse.json({ error: "Role must be Judge or Mentor" }, { status: 400 });
   }
@@ -180,11 +186,12 @@ export async function PATCH(req: Request) {
 
   const entry = entries[collection];
   const before = await entry.repo.getById(body.id);
+  if (!before) return NextResponse.json({ error: "Not found" }, { status: 404 });
   const parsed = entry.schema.partial().safeParse(parsedPatch);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid content", details: parsed.error.flatten() }, { status: 400 });
   }
-  const validatedPatch = collection === "settings"
+  const validatedPatch = collection === "settings" || collection === "events"
     ? pickSubmittedPatchFields(parsed.data, parsedPatch)
     : parsed.data;
   const merged = entry.schema.safeParse({ ...before, ...validatedPatch, ...Object.fromEntries(removalFields.map((field) => [field, undefined])) });
@@ -248,7 +255,9 @@ export async function PUT(req: Request) {
   }
   return withReorderLock(collection, async () => {
     const entry = entries[collection];
-    const current = await entry.repo.getAll();
+    const current = collection === "events"
+      ? orderHackShastraEvents(await repos.events.getAll())
+      : await entry.repo.getAll();
     const currentIds = current.map((row) => row.id);
     if (expectedIds.length !== currentIds.length || expectedIds.some((id, index) => id !== currentIds[index])) {
       return NextResponse.json({ error: "This list changed elsewhere. Refresh and try again." }, { status: 409 });
@@ -256,7 +265,9 @@ export async function PUT(req: Request) {
     if (ids.length !== current.length || current.some((row) => !ids.includes(row.id))) {
       return NextResponse.json({ error: "Order must include every item in this collection exactly once" }, { status: 400 });
     }
-    const rows = await entry.repo.reorder(ids);
+    const rows = collection === "events"
+      ? await repos.events.reorder(ids, "archiveOrder")
+      : await entry.repo.reorder(ids);
     refresh();
     return NextResponse.json(rows);
   });

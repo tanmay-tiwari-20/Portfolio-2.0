@@ -8,6 +8,7 @@ import { eventSchema, type CommunityEvent } from "../lib/validators/schemas";
 const seed = sourceEvents.map((event) => eventSchema.parse(event));
 const firstHackathon = seed.find((event) => event.id === "event-01")!;
 const grandHack = seed.find((event) => event.title === "Grand Hack IPEC")!;
+const orientation = seed.find((event) => event.title === "HI-O")!;
 
 function newEvent(overrides: Partial<CommunityEvent> = {}): CommunityEvent {
   return {
@@ -65,10 +66,47 @@ test("original records receive researched copy and month-only evidence without l
   assert.equal(event.title, firstHackathon.title);
   assert.equal(event.location, firstHackathon.venue);
   assert.equal(event.image, firstHackathon.image?.url);
+  assert.equal(event.imageAlt, firstHackathon.image?.alt);
   assert.equal(event.href, firstHackathon.link);
   assert.equal(event.description, research.description);
   assert.equal(event.date, "September 2025");
   assert.equal(event.role, research.role);
+  assert.equal(event.category, "Hackathon");
+});
+
+test("HI-O receives source-backed orientation metadata without replacing saved edits", () => {
+  const [event] = resolveHackShastraEvents([orientation]);
+  assert.equal(event.id, orientation.id);
+  assert.equal(event.category, "Campus orientation");
+  assert.equal(event.role, "HackShastra IPEC chapter");
+  assert.equal(event.date, "30 October 2025");
+  assert.equal(event.href, "https://luma.com/6vc2jiem");
+  assert.equal(event.image, orientation.image?.url);
+  assert.equal(event.imageAlt, orientation.image?.alt);
+
+  const [edited] = resolveHackShastraEvents([
+    {
+      ...orientation,
+      title: "An updated orientation title",
+      date: "31-10-2025",
+      venue: "An updated campus venue",
+      description: "A description revised in the event editor.",
+    },
+  ]);
+  assert.equal(edited.title, "An updated orientation title");
+  assert.equal(edited.date, "31 October 2025");
+  assert.equal(edited.location, "An updated campus venue");
+  assert.equal(
+    edited.description,
+    "A description revised in the event editor.",
+  );
+
+  const [repurposed] = resolveHackShastraEvents([
+    { ...orientation, link: "https://example.com/another-event" },
+  ]);
+  assert.equal(repurposed.category, undefined);
+  assert.equal(repurposed.role, "Community event");
+  assert.equal(repurposed.description, orientation.description);
 });
 
 test("saved title, venue, date, description and artwork edits override original defaults", () => {
@@ -88,6 +126,7 @@ test("saved title, venue, date, description and artwork edits override original 
   assert.equal(event.date, "31 December 2026");
   assert.equal(event.description, edited.description);
   assert.equal(event.image, image);
+  assert.equal(event.imageAlt, "Updated poster");
   assert.equal(event.href, edited.link);
   assert.equal(event.role, "Organised with IPEC");
 });
@@ -110,6 +149,7 @@ test("a changed or removed event URL cannot retain research claims from the old 
   for (const link of ["https://example.com/replacement", undefined, ""]) {
     const [event] = resolveHackShastraEvents([{ ...grandHack, link }]);
     assert.equal(event.role, "Community event");
+    assert.equal(event.category, undefined);
     assert.equal(event.description, grandHack.description);
     assert.equal(event.date, "26 September 2026");
     assert.equal(event.href, link ?? "");
@@ -124,11 +164,39 @@ test("new records cannot inherit a partnership from a venue or a reused research
   const archive = resolveHackShastraEvents(records);
   archive.forEach((event, index) => {
     assert.equal(event.role, "Community event");
+    assert.equal(event.category, undefined);
     assert.equal(event.description, records[index].description);
     assert.equal(event.date, "1 January 2027");
   });
   assert.equal(archive[0].image, "");
   assert.equal(archive[0].href, "");
+});
+
+test("image alt text follows the saved artwork and never inherits a previous poster caption", () => {
+  const replacementUrl =
+    "https://res.cloudinary.com/example/image/upload/v2/replacement.jpg";
+  const [replacement] = resolveHackShastraEvents([
+    {
+      ...firstHackathon,
+      image: {
+        url: replacementUrl,
+        alt: "Participants presenting their project",
+      },
+    },
+  ]);
+  assert.equal(replacement.image, replacementUrl);
+  assert.equal(replacement.imageAlt, "Participants presenting their project");
+
+  const [blankAlt] = resolveHackShastraEvents([
+    { ...firstHackathon, image: { url: replacementUrl, alt: "" } },
+  ]);
+  assert.equal(blankAlt.imageAlt, "");
+
+  const [removed] = resolveHackShastraEvents([
+    { ...firstHackathon, image: undefined },
+  ]);
+  assert.equal(removed.image, "");
+  assert.equal(removed.imageAlt, undefined);
 });
 
 test("unsafe image and navigation URLs are omitted rather than rendered", () => {
