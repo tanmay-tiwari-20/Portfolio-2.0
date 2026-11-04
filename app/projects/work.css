@@ -1,0 +1,197 @@
+.work-experience,
+.work-wine {
+  --work-ink: #fffaf7;
+  --work-muted: #d7beb6;
+  --work-line: #fffaf726;
+  --work-accent: #edbd83;
+}
+
+.work-wine {
+  background: #321b20;
+  color: var(--work-ink);
+}
+
+.work-paper {
+  --work-ink: #321b20;
+  --work-muted: #72554e;
+  --work-line: #321b2033;
+  --work-accent: #ac332e;
+  background: #eaded3;
+  color: var(--work-ink);
+}
+
+.work-scarlet {
+  --work-ink: #fffaf7;
+  --work-muted: #f0d0c4;
+  --work-line: #fffaf740;
+  --work-accent: #f5cf95;
+  background: #9e302f;
+  color: var(--work-ink);
+}
+
+/* A shared stationery system for the desk, project index and case studies. */
+@layer components {
+  .work-desk-surface {
+    --work-ink: #361e22;
+    --work-muted: #72554e;
+    --work-line: #72554e33;
+    --work-accent: #a52e2b;
+    color: var(--work-ink);
+    background-color: #eaded3;
+    background-image:
+      radial-gradient(#76554b20 0.55px, transparent 0.7px),
+      linear-gradient(115deg, #eaded3, #f2e8dc 50%, #e3d1c3);
+    background-size:
+      4px 4px,
+      100% 100%;
+  }
+
+  .work-sheet,
+  .work-note {
+    --work-ink: #361e22;
+    --work-muted: #72554e;
+    --work-line: #72554e33;
+    --work-accent: #a52e2b;
+    position: relative;
+    color: var(--work-ink);
+    border: 1px solid #fffdf8;
+    border-radius: 2px;
+    background-color: #fffaf1;
+    box-shadow:
+      0 2px 3px #553b3212,
+      0 12px 28px -16px #553b3240;
+  }
+
+  .work-note {
+    border-color: #ecd1a3;
+    background-color: #f1dfbd;
+    background-image: repeating-linear-gradient(
+      transparent 0,
+      transparent 31px,
+      #88696019 31px,
+      #88696019 32px
+    );
+  }
+
+  .work-folio-tab {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 6px 15px;
+    border-radius: 5px 5px 0 0;
+    background: #9e302f;
+    color: #fffaf7;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .work-print {
+    padding: 11px 11px 3px;
+    border: 1px solid #fffdf8;
+    border-radius: 2px;
+    background: #fffaf1;
+    box-shadow:
+      0 2px 2px #553b321c,
+      0 8px 16px #553b321c,
+      0 28px 45px -24px #553b3266;
+  }
+  .work-print-small {
+    padding: 5px;
+  }
+  .work-tape {
+    position: absolute;
+    z-index: 2;
+    top: -11px;
+    left: calc(50% - 37px);
+    width: 74px;
+    height: 25px;
+    background: #edbd83b8;
+    clip-path: polygon(2% 0, 100% 4%, 98% 95%, 0 100%, 3% 65%, 0 31%);
+    transform: rotate(-4deg);
+    pointer-events: none;
+  }
+  .work-clip {
+    position: absolute;
+    z-index: 2;
+    top: -13px;
+    left: 30px;
+    width: 14px;
+    height: 43px;
+    border: 3px solid #c8c6bc;
+    border-radius: 9px;
+    box-shadow:
+      1px 2px 2px #321b2040,
+      inset 0 1px 2px #321b2044;
+    transform: rotate(5deg);
+    pointer-events: none;
+  }
+  .work-rule {
+    border-color: var(--work-line);
+  }
+
+  @media (max-width: 639px) {
+    .work-print {
+      padding: 7px 7px 2px;
+    }
+    .work-print-small {
+      padding: 4px;
+    }
+  }
+}
+
+/* Keep the existing navigation legible over the paper desk, without changing
+   its open-menu appearance or other routes. */
+body:has([data-work-desk-hero], [data-work-paper-hero])
+  .site-header-clean:not(.menu-is-open)
+  :is(.brand-name-title, .header-contact-link, .staggered-menu-trigger) {
+  color: #361e22;
+}
+body:has([data-work-desk-hero], [data-work-paper-hero])
+  .site-header-clean:not(.menu-is-open)
+  .brand-name-accent {
+  color: #a52e2b;
+}
+body:has([data-work-desk-hero], [data-work-paper-hero])
+  .site-header-clean:not(.menu-is-open)
+  .staggered-menu-trigger {
+  border-color: #72554e44;
+  background: #fffaf755;
+}
+body:has([data-work-desk-hero], [data-work-paper-hero])
+  .site-header-clean:not(.menu-is-open)
+  .staggered-menu-trigger:hover {
+  color: #fffaf7;
+  background: #613d38;
+}
+
+/* The legacy global element rules are unlayered. Let the Work section's
+   Tailwind utilities control link colors, transitions and form typography. */
+.work-experience a {
+  color: revert-layer;
+  transition: revert-layer;
+}
+
+.work-experience :is(button, input, select) {
+  font-size: revert-layer;
+}
+
+.work-experience :is(a, button, input, select):focus-visible {
+  outline: 2px solid var(--work-focus, var(--work-accent));
+  outline-offset: 5px;
+}
+
+.work-experience input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-experience *,
+  .work-experience *::before,
+  .work-experience *::after {
+    transition-duration: 0s !important;
+    animation-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
