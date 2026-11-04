@@ -5,6 +5,7 @@ const assets = new Map<string, Promise<string>>();
 let embeddedFonts: Promise<string> | undefined;
 const SVG_NS = "http://www.w3.org/2000/svg";
 let captureCount = 0;
+let lastAssetWarm = -Infinity;
 
 async function inlineAsset(source: string): Promise<string> {
   if (source.startsWith("data:")) return source;
@@ -72,8 +73,27 @@ function fonts() {
   return embeddedFonts;
 }
 
-export function warmCaptureAssets() {
+export function warmCaptureAssets(root?: HTMLElement) {
   void fonts().catch(() => {});
+  if (!root || performance.now() - lastAssetWarm < 1500) return;
+  lastAssetWarm = performance.now();
+  let warmed = 0;
+  for (const image of Array.from(root.querySelectorAll("img"))) {
+    if (!image.complete || !image.naturalWidth) continue;
+    const rect = image.getBoundingClientRect();
+    if (
+      rect.width <= 0 ||
+      rect.height <= 0 ||
+      rect.bottom < 0 ||
+      rect.top > innerHeight ||
+      rect.right < 0 ||
+      rect.left > innerWidth
+    )
+      continue;
+    const source = image.currentSrc || image.src;
+    if (source) void inlineAsset(source).catch(() => {});
+    if (++warmed === 8) break;
+  }
 }
 
 export interface FrozenViewport {
@@ -98,20 +118,19 @@ export function freezeViewport(
   viewport.style.cssText = `position:relative;width:${width}px;height:${height}px;overflow:hidden;background:${getComputedStyle(document.body).backgroundColor};`;
 
   const styleNode = (
-    source: Element,
     target: HTMLElement | SVGElement,
-    pseudo?: string,
+    style: CSSStyleDeclaration,
     embedBackground = true,
   ) => {
-    const style = getComputedStyle(source, pseudo);
+    // Read each declaration once and parse one style string, rather than
+    // mutating the detached element's CSSOM hundreds of times per node.
+    let css = "";
     for (let i = 0; i < style.length; i++) {
       const key = style[i];
-      target.style.setProperty(
-        key,
-        style.getPropertyValue(key),
-        style.getPropertyPriority(key),
-      );
+      const priority = style.getPropertyPriority(key);
+      css += `${key}:${style.getPropertyValue(key)}${priority ? " !important" : ""};`;
     }
+    target.style.cssText = css;
     target.style.setProperty("animation", "none", "important");
     target.style.setProperty("transition", "none", "important");
     target.style.setProperty("caret-color", "transparent", "important");
@@ -133,7 +152,9 @@ export function freezeViewport(
       return null;
     const rect = source.getBoundingClientRect();
     const style = getComputedStyle(source);
-    if (style.display === "none" || style.visibility === "hidden") return null;
+    // visibility:hidden still occupies space (and can have visible children).
+    // Removing it makes nearby text, flex items and grid columns move.
+    if (style.display === "none") return null;
     const target =
       source instanceof HTMLCanvasElement || source instanceof HTMLVideoElement
         ? document.createElement("img")
@@ -146,32 +167,34 @@ export function freezeViewport(
     target.removeAttribute("sizes");
     target.removeAttribute("loading");
     target.removeAttribute("autofocus");
-    // Keep the off-screen element's dimensions for layout, but don't rasterize
-    // or fetch its descendants. Ancestors spanning the viewport are retained.
+    // Offscreen ancestors still participate in layout and can contain visible
+    // overflow, fixed or sticky descendants. Keep their full structure: pruning
+    // an earlier section can move the requested viewport into empty space.
     const offscreen =
       rect.bottom < -8 ||
       rect.top > height + 8 ||
       rect.right < -8 ||
       rect.left > width + 8;
-    styleNode(source, target, undefined, !offscreen);
-    if (offscreen && rect.height > 0 && style.position !== "fixed") {
-      target.style.visibility = "hidden";
+    styleNode(target, style, !offscreen);
+    if (offscreen) {
       target.style.backgroundImage = "none";
       target.removeAttribute("src");
       target.removeAttribute("poster");
-      return target;
     }
     if (source instanceof HTMLCanvasElement && source.width && source.height) {
-      (target as HTMLImageElement).src = source.toDataURL("image/png");
+      if (!offscreen)
+        (target as HTMLImageElement).src = source.toDataURL("image/png");
     } else if (source instanceof HTMLVideoElement) {
-      const frame = document.createElement("canvas");
-      frame.width = source.videoWidth;
-      frame.height = source.videoHeight;
-      frame.getContext("2d")?.drawImage(source, 0, 0);
-      (target as HTMLImageElement).src = frame.toDataURL();
+      if (!offscreen) {
+        const frame = document.createElement("canvas");
+        frame.width = source.videoWidth;
+        frame.height = source.videoHeight;
+        frame.getContext("2d")?.drawImage(source, 0, 0);
+        (target as HTMLImageElement).src = frame.toDataURL();
+      }
     } else if (source instanceof HTMLImageElement) {
       const src = source.currentSrc || source.src;
-      if (src && source.complete && source.naturalWidth) {
+      if (!offscreen && src && source.complete && source.naturalWidth) {
         pending.push(
           inlineAsset(src).then((value) => {
             (target as HTMLImageElement).src = value;
@@ -211,7 +234,7 @@ export function freezeViewport(
         )
           continue;
         const decoration = document.createElement("span");
-        styleNode(source, decoration, pseudo);
+        styleNode(decoration, appearance);
         decoration.textContent = appearance.content.replace(/^["']|["']$/g, "");
         if (pseudo === "::before") target.prepend(decoration);
         else target.append(decoration);
@@ -220,6 +243,22 @@ export function freezeViewport(
     // Extract fixed/stuck elements to viewport coordinates. Otherwise a scrolled
     // clone would move a fixed header or a GSAP pinned section a second time.
     if (style.position === "fixed" || style.position === "sticky") {
+      // A sticky box remains in flow. Its placeholder must retain the original
+      // margins, padding, border sizing, flex/grid placement and used size.
+      // A fixed box is already out of flow and must not add a flex/grid item.
+      const spacer =
+        style.position === "sticky" ? document.createElement("div") : null;
+      if (spacer) {
+        spacer.style.cssText = target.style.cssText;
+        spacer.style.position = "relative";
+        spacer.style.inset = "auto";
+        spacer.style.setProperty("inset-block", "auto");
+        spacer.style.setProperty("inset-inline", "auto");
+        spacer.style.visibility = "hidden";
+        spacer.style.pointerEvents = "none";
+        spacer.style.transform = "none";
+        spacer.removeAttribute("id");
+      }
       target.style.position = "absolute";
       target.style.left = `${rect.left}px`;
       target.style.top = `${rect.top}px`;
@@ -230,24 +269,27 @@ export function freezeViewport(
       target.style.margin = "0";
       target.style.transform = "none";
       viewport.append(target);
-      const spacer = document.createElement("div");
-      spacer.style.cssText = `width:${rect.width}px;height:${style.position === "sticky" ? rect.height : 0}px;`;
       return spacer;
     }
     return target;
   };
 
   const content = clone(root) as HTMLElement;
-  content.style.position = "absolute";
-  content.style.left = `${offset.left}px`;
-  content.style.top = `${offset.top}px`;
-  content.style.width = `${width}px`;
+  // Move an independent crop layer, not the copied document. Its recorded
+  // viewport offset already includes native/Lenis scroll and remains unchanged
+  // when Next resets the live page's scroll. The same layer is serialized into
+  // the cloth texture, so preview and raster use exactly the same crop.
+  const documentLayer = document.createElement("div");
+  // Keep z-index:auto and avoid a transform, which would flatten the document
+  // into a new stacking context beneath its extracted fixed/sticky elements.
+  documentLayer.style.cssText = `position:absolute;left:${offset.left}px;top:${offset.top}px;width:${offset.width}px;`;
   content.style.margin = "0";
-  viewport.prepend(content);
+  documentLayer.append(content);
+  viewport.prepend(documentLayer);
   const bodyGrid = getComputedStyle(document.body, "::before");
   if (bodyGrid.content !== "none" && bodyGrid.content !== "normal") {
     const decoration = document.createElement("span");
-    styleNode(document.body, decoration, "::before");
+    styleNode(decoration, bodyGrid);
     decoration.style.position = "absolute";
     decoration.textContent = bodyGrid.content.replace(/^["']|["']$/g, "");
     viewport.append(decoration);

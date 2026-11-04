@@ -19,6 +19,13 @@ Created:
 | `components/animations/spider-transition/scene.ts`             | Persistent Three.js renderer, camera, lights, character/web/cloth coordination                       |
 | `components/animations/spider-transition/transition.css`       | Global canvas layer, viewport coverage, scroll lock, reduced-motion rules                            |
 | `components/animations/spider-transition/web.ts`               | Braided 3D web filaments, anchor attachment, vibration and release                                   |
+| `components/animations/spider-transition/audio.ts`             | Gesture activation, animation-synchronized cues, stereo swing wind and audio cleanup                |
+| `components/animations/spider-transition/audio-synthesis.ts`   | Original generated web-shot, adhesive tack, release and seamless wind PCM                           |
+| `components/animations/spider-transition/performance.ts`      | Capture/render pixel budgets and sustained-frame-pressure quality adjustment                        |
+| `scripts/spider-audio.test.ts`                                | Audio activation, timing, holds, suspension, interruptions and reuse tests                           |
+| `scripts/spider-audio-synthesis.test.ts`                      | Waveform duration, level, envelope, determinism and loop-continuity checks                           |
+| `scripts/spider-performance.test.ts`                          | Pixel budgets, timing windows, late slowdowns, cooldowns and resolution bounds                       |
+| `scripts/spider-scene.test.ts`                                | Hidden pre-render, cloth reuse/reset, texture disposal and resize-before-draw checks                  |
 | `scripts/spider-cloth.test.ts`                                 | Initial coverage, hand constraint, lag, folds, exit, reset, disposal tests                           |
 | `scripts/spider-motion.test.ts`                                | Real rig/cloth attachment, responsive trajectory, face/chest visibility raycasts                     |
 | `scripts/spider-navigation.test.ts`                            | Link eligibility, hash, query, modifier, download, target and API tests                              |
@@ -70,11 +77,21 @@ The refined web consists of 13 braided, lit tubular filaments with a shared proc
 
 This is a procedural elastic web animation, not a general-purpose rope dynamics solver.
 
+### Sound
+
+Original sounds are synthesized locally with Web Audio; there are no downloaded recordings or audio dependencies. A layered web-shot “thwip” plays as the web appears, an adhesive tack plays at `WEB_ATTACH_TIME`, and a light silk flick plays at `WEB_RELEASE_TIME`. A filtered stereo wind loop follows the character's horizontal position, builds through the low part of the swing, and recedes during the exit. Cue playback uses the same 0.8 rate as the visual sequence.
+
+The eligible navigation click creates/resumes the audio context, but playback starts only after the captured page and 3D scene are ready. Idle/navigation-intent warmup generates four cached 48 kHz PCM buffers without opening an audio device; capture preparation copies them to AudioBuffers before animation starts. Cue crossings do not synthesize or allocate PCM. Cues cross thresholds on the actual animation clock, so a route-readiness hold cannot advance the soundtrack. Holding the timeline fades the wind; resuming restores it without repeating one-shots. Audio refusal leaves navigation functional, and missed cues are not replayed later. Completion and interruption fade/stop sources, hiding the document disconnects them immediately, and unmount closes the context. Buffers are reused between flights. Reduced-motion/native fallback navigation does not start sound.
+
+All 16 audio tests pass: twelve cover preparation, activation, timing, stereo movement, holds, suspension, interruption, disposal and reuse; four cover PCM properties across five sample rates. These are waveform and simulated Web Audio lifecycle checks, not a listening test. In-browser playback and subjective sound quality remain unverified because browser preview access is blocked by automatic approval.
+
 ### Outgoing page and cloth
 
 The outgoing visible viewport is cloned synchronously before requesting the destination, including browser Back/Forward handling. Computed styles, current form values, visible image resources, pseudo-element appearance and canvas output are preserved where supported. Password values are excluded. The freeze preserves scroll alignment and handles fixed/sticky elements in viewport coordinates.
 
 The temporary DOM copy lives in an inert, hidden-from-accessibility shadow-root preview, so destination animations cannot discover it through document-wide selectors. SVG IDs and local paint references are remapped for signature masks and gradients. Local fonts and eligible image resources are embedded before the browser renders the copy through SVG `foreignObject` into a canvas.
+
+For navigation from a scrolled position, an independent document layer stores the source root's viewport offset before route changes. The copied document retains its layout inside that layer; the preview and serialized texture share the same crop. Offscreen ancestors are traversed and retained because their descendants can still be visible, and removing their content can change later layout. Offscreen image/video/canvas resources are omitted. Hidden spacing elements and sticky placeholders retain their layout styles; scroll locking begins only after the preview covers the original page.
 
 That canvas becomes the texture of a subdivided, two-sided Three.js mesh. The sheet initially matches the viewport exactly, with correct UV alignment. A fixed left-edge vertex is constrained to the actual palm. A moving rest surface supplies broad folds, curl and gathering; damped integration and distance/bending constraints supply lag, limited stretch and local puckering. The disturbance propagates outward from contact, so the far edge starts moving later. Fold shading adds depth while the initial flat sheet retains page colors.
 
@@ -94,15 +111,34 @@ The visual overlay is inert and `aria-hidden`. The live page is temporarily iner
 
 Implemented measures:
 
-- Lazy-load and idle-prewarm the scene; reuse the renderer, rig, web geometry and materials across navigations.
+- Lazy-load and idle/intent-prewarm the scene, compile materials and perform one hidden draw before the first flight. Reuse renderer, rig, web and same-viewport cloth geometry/materials across navigations; release each captured page texture on completion.
 - Keep per-frame updates outside React state and reconciliation.
-- Capture only the viewport and avoid walking/fetching offscreen descendant content.
+- Rasterize only the viewport; preserve the document hierarchy while skipping offscreen media resources.
+- Reuse each computed-style declaration and assign cloned styles in one CSS-text operation. Warm up to eight visible loaded images on throttled navigation intent, without caching stale layout geometry.
 - Cache embedded assets with a bounded 48-entry map and reuse embedded fonts.
-- Cap capture density at 2 on desktop and 1.5 on narrow screens; cap scene rendering at 1.75 for desktop and 1.25 for the smaller quality setting.
+- Cap capture density at 2 for standard quality and 1.5 for lower quality, with additional 5/2-million-pixel budgets. Renderer caps are 1.75/1.25 with 4/1.5-million-pixel budgets. CSS dimensions, scrolling offsets and UVs remain unchanged.
 - Use 32 cloth rows and 20–52 columns for high quality; 18 rows and 12–30 columns for low quality. The largest meshes have 1,749 and 589 vertices respectively.
 - Use four or three constraint iterations, bounded substeps, and typed-array simulation buffers.
-- Reduce renderer pixel ratio once sustained frame pressure is detected.
+- Cache invariant cloth/web math, skip unchanged flat-cloth uploads and invisible web updates, and avoid redundant character matrix composition. Model, web detail and animation trajectory remain unchanged.
+- Observe raw frame intervals throughout the flight. When 18 of 24 frames exceed 25 ms, reduce backing resolution in 0.8 steps with a 700 ms cooldown and a bounded floor. Resize before the next draw to avoid exposing a cleared canvas, and retain the reduced ratio for subsequent flights at the same viewport size.
+- Keep physics delta clamping separate from raw frame measurements; only change the transition phase DOM attribute when its value changes.
 - Avoid post-processing. Redraw the existing portrait only when capture needs it rather than enabling continuous framebuffer preservation.
+
+### Performance revision measurements
+
+At 1440 × 900, 14 alternating warmed Node/Three.js flights produced these mean CPU update times. The comparison sampled 13,299,104 geometry/matrix values and found a maximum difference of zero.
+
+| Work | Before | After |
+| --- | ---: | ---: |
+| Character matrix path | 0.089 ms | 0.052 ms |
+| Web update | 0.405 ms | 0.191 ms |
+| Cloth update | 2.042 ms | 1.744 ms |
+
+A separate local mock-audio check measured 62.4 ms for cold sound synthesis, now moved before animation. Prepared begin/attachment/release work measured 0.049 ms median and 0.208 ms p95, with no new PCM allocations during those frames. These CPU/mocked measurements exclude DOM capture, browser rendering, GPU work, network delays and device-specific audio behavior. They do not establish deployed frame rate.
+
+At 3440 × 1440 with device pixel ratio 2, the capture budget reduces allocation from 19.8 million pixels (about 79 MB RGBA) to at most 5 million pixels (about 20 MB). Very large displays trade some temporary texture sharpness for bounded allocation and upload costs; page layout and geometry do not change.
+
+The performance revision passed 52 targeted tests, TypeScript and targeted ESLint. A fresh webpack production build compiled successfully in 20.1 seconds and passed its TypeScript stage in 11.7 seconds, then failed prerendering `/sitemap.xml` because the configured MongoDB SRV lookup timed out. This is not a complete production-build pass; database/fallback configuration was not changed. Browser and deployed-device frame-rate verification remain blocked by the previously reported automatic approval failure.
 - Dispose the temporary cloth geometry/material and page texture after each flight. Release the persistent rig, web and renderer on unmount. Remove listeners, pending RAF work and locks during cleanup.
 
 Measured cloth CPU timings on this workstation:
@@ -137,6 +173,8 @@ The default Turbopack compilation stalled and was stopped. A subsequent `next bu
 The added `scripts/spider-character-motion.test.ts` checks projected leg motion, actual skinned-vertex/bone-palette deformation, smooth joint changes, hand release and route-hold safety. `scripts/spider-web.test.ts` checks attachment spread, cable thickness, microtexture, exact tether endpoints, resource reuse and disposal. The swing suite now checks matching velocities at contact/release and continuous airborne motion. The final refinement passed all 66 tests, TypeScript and targeted ESLint. Browser opening at `http://localhost:3000` was attempted again for this revision and automatic approval review failed before navigation; visual confirmation remains pending. No new full production build was run for this refinement; the packaging results below belong to the initial implementation.
 
 The prepared `scripts/spider-browser.mjs` harness includes desktop 1440 × 900, tablet 820 × 1180 and mobile 390 × 844 runs. It requires an actual pulling phase so a silent native fallback cannot falsely pass, captures cloth/destination screenshots, and checks menu navigation, final focus, Back/Forward, reduced motion, WebGL unavailability and cleanup. The script passed syntax checking but was not run against a browser. Its presence is preparation, not evidence of a completed browser acceptance run.
+
+The focused `scripts/spider-capture-browser.mjs` harness loads the real capture module into a synthetic long document, checks preview bounds and rasterized colors/text at the top, middle and bottom, and changes live scroll after freezing to check snapshot independence. It includes visible fixed/sticky descendants of an offscreen ancestor and preceding flex/hidden/empty spacing. Syntax checking passed; browser execution remains pending after the automatic approval service returned `content-blocked`. The scroll-capture revision passed TypeScript and targeted ESLint, but its appearance on Home and About has not been visually verified here.
 
 ### Why browser verification remains pending
 

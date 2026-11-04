@@ -13,7 +13,7 @@ export interface SpiderCharacter {
   group: THREE.Group;
   webHand: THREE.Object3D;
   gripHand: THREE.Object3D;
-  pose(time: number, pull: number): void;
+  pose(time: number, pull: number, updateWorldMatrices?: boolean): void;
   dispose(): void;
 }
 
@@ -612,10 +612,15 @@ export function createCharacter(): SpiderCharacter {
     if (obj instanceof THREE.Mesh) {
       obj.castShadow = true;
       obj.receiveShadow = true;
+      // Only the bones/finger joints animate. Their attached meshes keep the
+      // same local transforms, so compose these once and still inherit every
+      // parent world-matrix update normally.
+      obj.updateMatrix();
+      obj.matrixAutoUpdate = false;
     }
   });
 
-  function pose(time: number, pull: number) {
+  function pose(time: number, pull: number, updateWorldMatrices = true) {
     const p = clamp(pull, 0, 1);
     const entry = smooth(
       (time - WEB_ATTACH_TIME) / (CONTACT_TIME - WEB_ATTACH_TIME),
@@ -747,7 +752,7 @@ export function createCharacter(): SpiderCharacter {
       if (finger.digit === 4)
         finger.joint.rotation.z = finger.link === 0 ? -0.8 : -0.28;
     }
-    group.updateMatrixWorld(true);
+    if (updateWorldMatrices) group.updateMatrixWorld(true);
   }
   pose(0, 0);
   return {

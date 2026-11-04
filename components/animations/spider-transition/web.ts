@@ -232,6 +232,16 @@ export function createWeb() {
   const phases = new Float32Array(strands),
     cos = new Float32Array(sides),
     sin = new Float32Array(sides);
+  const alongRing = new Float64Array(segments + 1),
+    envelopeRing = new Float64Array(segments + 1),
+    joinRing = new Float64Array(segments + 1),
+    normalRing = new Float32Array(sides * 3);
+  for (let ring = 0; ring <= segments; ring++) {
+    const along = ring / segments;
+    alongRing[ring] = along;
+    envelopeRing[ring] = Math.sin(along * Math.PI);
+    joinRing[ring] = smooth(along, 0, 0.045) * (1 - smooth(along, 0.94, 1));
+  }
   for (let side = 0; side < sides; side++) {
     cos[side] = Math.cos((side / sides) * TAU);
     sin[side] = Math.sin((side / sides) * TAU);
@@ -249,6 +259,7 @@ export function createWeb() {
         colors[i * 3] = tint;
         colors[i * 3 + 1] = tint;
         colors[i * 3 + 2] = tint * 0.985;
+        uvs.setX(i, side / sides);
         if (ring < segments) {
           const next =
             strand * (segments + 1) * sides +
@@ -304,6 +315,9 @@ export function createWeb() {
       anchorMaterial.opacity = 0.91 * fade;
       wispMaterial.opacity = 0.67 * fade;
       membraneMaterial.opacity = 0.14 * fade;
+      // No vertex work or uploads after the web has disappeared. A later
+      // flight rewrites the same buffers when it becomes visible again.
+      if (!group.visible) return;
       delta.subVectors(end, start);
       const length = delta.length();
       normal.set(-delta.y, delta.x, 0);
@@ -314,17 +328,27 @@ export function createWeb() {
       else binormal.normalize();
       const ringDown = Math.exp(-Math.max(0, time - 0.27) * 5.8);
       const stretch = clamp(1 - Math.max(0, length - 720) / 6000, 0.78, 1);
-      for (let strand = 0; strand < strands; strand++) {
-        for (let ring = 0; ring <= segments; ring++) {
-          const along = ring / segments,
-            t = along * shoot;
-          const envelope = Math.sin(along * Math.PI);
-          const join = smooth(along, 0, 0.045) * (1 - smooth(along, 0.94, 1));
-          const sag =
-            envelope *
-            (Math.sin(time * 26 - t * 10) * ringDown * 7.5 +
-              Math.sin(time * 9 - t * 5) * 0.5) *
-            density;
+      // All strands share the cross-section basis and the same moving path.
+      // Compute these once per side/ring, retaining all 13 detailed filaments.
+      for (let side = 0; side < sides; side++) {
+        normalRing[side * 3] = normal.x * cos[side] + binormal.x * sin[side];
+        normalRing[side * 3 + 1] =
+          normal.y * cos[side] + binormal.y * sin[side];
+        normalRing[side * 3 + 2] =
+          normal.z * cos[side] + binormal.z * sin[side];
+      }
+      for (let ring = 0; ring <= segments; ring++) {
+        const t = alongRing[ring] * shoot;
+        const envelope = envelopeRing[ring];
+        const join = joinRing[ring];
+        const sag =
+          envelope *
+          (Math.sin(time * 26 - t * 10) * ringDown * 7.5 +
+            Math.sin(time * 9 - t * 5) * 0.5) *
+          density;
+        const droop = clamp(release, 0, 1) * envelope * density * 74;
+        const textureV = (t * length) / 42;
+        for (let strand = 0; strand < strands; strand++) {
           const braid =
             phases[strand] +
             t * (strand <= 8 ? 87 : -64) +
@@ -335,9 +359,10 @@ export function createWeb() {
             thickness[strand] * density * stretch * (0.72 + 0.28 * envelope);
           const centerN = sag + Math.cos(braid) * bundle;
           const centerB = Math.sin(braid) * bundle;
-          const droop = clamp(release, 0, 1) * envelope * density * 74;
+          const ringStart = strand * (segments + 1) * sides + ring * sides;
+          normals.array.set(normalRing, ringStart * 3);
           for (let side = 0; side < sides; side++) {
-            const i = strand * (segments + 1) * sides + ring * sides + side;
+            const i = ringStart + side;
             const n = centerN + cos[side] * radius,
               b = centerB + sin[side] * radius;
             positions.setXYZ(
@@ -346,13 +371,7 @@ export function createWeb() {
               start.y + delta.y * t + normal.y * n + binormal.y * b - droop,
               start.z + delta.z * t + normal.z * n + binormal.z * b,
             );
-            normals.setXYZ(
-              i,
-              normal.x * cos[side] + binormal.x * sin[side],
-              normal.y * cos[side] + binormal.y * sin[side],
-              normal.z * cos[side] + binormal.z * sin[side],
-            );
-            uvs.setXY(i, side / sides, (t * length) / 42);
+            uvs.setY(i, textureV);
           }
         }
       }

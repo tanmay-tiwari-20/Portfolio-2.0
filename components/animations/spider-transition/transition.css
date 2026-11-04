@@ -21,8 +21,9 @@
   display: block;
   visibility: hidden;
 }
-html.portfolio-transitioning,
-html.portfolio-transitioning body {
+/* Keep the body out of the scrolling-container chain: changing its overflow
+   would reposition sticky page sections, including the destination underneath. */
+html.portfolio-transitioning {
   overflow: hidden !important;
   overscroll-behavior: none;
 }

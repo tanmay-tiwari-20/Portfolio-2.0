@@ -11,7 +11,13 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { freezeViewport, warmCaptureAssets } from "./spider-transition/capture";
 import { getNavigationTarget, routeKey } from "./spider-transition/navigation";
 import type { TransitionScene } from "./spider-transition/scene";
-import { CONTACT_TIME, DURATION, PLAYBACK_RATE } from "./spider-transition/motion";
+import { createTransitionAudio } from "./spider-transition/audio";
+import { getTransitionResolution } from "./spider-transition/performance";
+import {
+  CONTACT_TIME,
+  DURATION,
+  PLAYBACK_RATE,
+} from "./spider-transition/motion";
 import "./spider-transition/transition.css";
 
 type Flight = {
@@ -58,6 +64,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       preview.current!.shadowRoot ||
       preview.current!.attachShadow({ mode: "open" });
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    const sound = createTransitionAudio();
     let scene: TransitionScene | undefined;
     let preparation: Promise<TransitionScene> | undefined;
     let disposed = false,
@@ -75,6 +82,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
           .then(({ createTransitionScene }) => {
             if (disposed) throw new Error("Transition disposed");
             scene = createTransitionScene(screen);
+            scene.warmup(innerWidth, innerHeight);
             return scene;
           })
           .catch((error: unknown) => {
@@ -114,6 +122,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       flight.controller.abort();
       cancelAnimationFrame(flight.frame);
       clearTimeout(flight.timeout);
+      sound.stop(document.hidden);
       layer.hidden = true;
       screen.style.visibility = "hidden";
       frozen.replaceChildren();
@@ -217,8 +226,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             : null,
       };
       active = flight;
-      window.dispatchEvent(new Event("portfolio:transition-start"));
-      root.classList.add("portfolio-transitioning");
       root.dataset.spiderTransition = "capturing";
       let navigationSent = pop;
       try {
@@ -226,10 +233,19 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         window.dispatchEvent(new Event("portfolio:capture-frame"));
         const snapshot = freezeViewport(
           surface,
-          Math.min(devicePixelRatio || 1, innerWidth < 700 ? 1.5 : 2),
+          getTransitionResolution(
+            innerWidth,
+            innerHeight,
+            devicePixelRatio || 1,
+            navigator.hardwareConcurrency || 8,
+          ).captureRatio,
         );
         frozen.replaceChildren(snapshot.preview);
         layer.hidden = false;
+        // Measure and cover the original layout before menu/scroll callbacks
+        // can change sticky positioning or the header's containing block.
+        window.dispatchEvent(new Event("portfolio:transition-start"));
+        root.classList.add("portfolio-transitioning");
         surface.inert = true;
         surface.setAttribute("aria-busy", "true");
         // Fail open on a stalled server; the router keeps preparing the request.
@@ -240,6 +256,9 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             router.push(to.pathname + to.search + to.hash),
           );
         }
+        // Prepare all sound buffers behind the frozen cover, before any
+        // visual frame or attachment/release cue needs them.
+        sound.prepare();
         const [engine, texture] = await Promise.all([
           prepare(),
           snapshot.render(flight.controller.signal),
@@ -249,22 +268,26 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         screen.style.visibility = "visible";
         frozen.replaceChildren();
         root.dataset.spiderTransition = "swinging";
+        sound.begin(snapshot.width, snapshot.height);
         let previous = performance.now(),
           time = 0;
         const tick = (now: number) => {
           if (active !== flight) return;
           try {
-            const frameDt = Math.min((now - previous) / 1000, 1 / 30);
-            const dt = frameDt * PLAYBACK_RATE;
+            const frameDt = Math.max(0, (now - previous) / 1000);
+            const dt = Math.min(frameDt, 1 / 30) * PLAYBACK_RATE;
             previous = now;
             time = Math.min(time + dt, flight.ready ? DURATION : CONTACT_TIME);
-            root.dataset.spiderTransition =
+            const phase =
               time < CONTACT_TIME
                 ? "swinging"
                 : flight.ready
                   ? "pulling"
                   : "holding";
+            if (root.dataset.spiderTransition !== phase)
+              root.dataset.spiderTransition = phase;
             engine.render(time, dt, frameDt);
+            sound.update(time);
             if (time >= DURATION) {
               finish();
               return;
@@ -305,6 +328,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       );
       if (!target || reduced.matches || failed) return;
       event.preventDefault();
+      sound.unlock();
       void navigate(target, false);
     };
     const pop = () => {
@@ -322,7 +346,11 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         (!anchor.target || anchor.target === "_self")
       ) {
         router.prefetch(anchor.pathname + anchor.search);
-        if (!reduced.matches) void prepare().catch(() => {});
+        if (!reduced.matches) {
+          warmCaptureAssets(surface);
+          sound.warm();
+          void prepare().catch(() => {});
+        }
       }
     };
     const interrupt = () => {
@@ -351,8 +379,11 @@ export default function PageTransition({ children }: { children: ReactNode }) {
     screen.addEventListener("webglcontextlost", lost);
     reduced.addEventListener("change", interrupt);
     const preload = () => {
-      warmCaptureAssets();
-      if (!reduced.matches) void prepare().catch(() => {});
+      if (!reduced.matches) {
+        warmCaptureAssets(surface);
+        sound.warm();
+        void prepare().catch(() => {});
+      }
     };
     if (typeof window.requestIdleCallback === "function")
       idle = window.requestIdleCallback(preload, { timeout: 2000 });
@@ -379,6 +410,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         else clearTimeout(idle);
       }
       scene?.dispose();
+      sound.dispose();
     };
   }, [router, startRouteTransition]);
 

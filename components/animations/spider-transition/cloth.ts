@@ -79,6 +79,18 @@ export function createPageCloth(
   }
   rest.set(positions);
   previous.set(positions);
+  // These parts of the rest surface depend only on UVs and viewport size.
+  // Keep double precision so caching them does not change the simulated shape.
+  const shape = new Float64Array(count * 4);
+  for (let index = 0; index < count; index++) {
+    const u = uv[index * 2];
+    const verticalDistance = 1 - uv[index * 2 + 1] - 0.55;
+    shape[index * 4] = Math.hypot(u * 0.8, verticalDistance * 0.9);
+    shape[index * 4 + 1] = Math.sin(u * Math.PI * 0.92) * width * 0.17;
+    shape[index * 4 + 2] = Math.sin(u * Math.PI) * height * 0.075;
+    shape[index * 4 + 3] =
+      Math.sin(verticalDistance * 15 + u * 5) * height * 0.025;
+  }
 
   const edge = (a: number, b: number, stiffness: number) => {
     const ax = rest[a * 3] - rest[b * 3];
@@ -107,6 +119,9 @@ export function createPageCloth(
   geometry.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
+  (geometry.getAttribute("normal") as THREE.BufferAttribute).setUsage(
+    THREE.DynamicDrawUsage,
+  );
 
   const material = new THREE.ShaderMaterial({
     uniforms: {
@@ -180,14 +195,19 @@ export function createPageCloth(
       const u = uv[index * 2];
       const v = 1 - uv[index * 2 + 1];
       const verticalDistance = v - 0.55;
-      const distance = Math.hypot(u * 0.8, verticalDistance * 0.9);
+      const distance = shape[index * 4];
       const wave = smooth(distance * 0.22, 0.48 + distance * 0.22, pull);
       mobility[index] = wave;
+      if (wave < 0.00001) {
+        positions[i] = previous[i] = rest[i];
+        positions[i + 1] = previous[i + 1] = rest[i + 1];
+        positions[i + 2] = previous[i + 2] = 0;
+        continue;
+      }
       const gather = smooth(0.2 + distance * 0.13, 0.96, pull);
       const turn = gather * Math.PI;
       const foldPhase = u * Math.PI * 3.2 + verticalDistance * 2.7 - pull * 3;
-      const foldAmplitude =
-        Math.sin(u * Math.PI * 0.92) * width * 0.17 * gather;
+      const foldAmplitude = shape[index * 4 + 1] * gather;
       const curl = Math.sin(turn) * u * width * 0.2;
       const transverseFold = Math.sin(verticalDistance * 12 + u * 5 - pull * 9);
       const xOffset = u * width * (1 - gather * 1.58);
@@ -211,7 +231,7 @@ export function createPageCloth(
           (displacementY +
             yOffset +
             verticalDistance * height -
-            Math.sin(u * Math.PI) * height * 0.075 * gather +
+            shape[index * 4 + 2] * gather +
             transverseFold * height * 0.018 * gather);
       goals[i + 2] =
         wave *
@@ -219,14 +239,7 @@ export function createPageCloth(
           curl +
           Math.sin(foldPhase) * foldAmplitude +
           wrinkle * Math.min(width, height) * 0.014 +
-          Math.sin(verticalDistance * 15 + u * 5) * height * 0.025 * gather);
-
-      if (wave < 0.00001) {
-        positions[i] = previous[i] = rest[i];
-        positions[i + 1] = previous[i + 1] = rest[i + 1];
-        positions[i + 2] = previous[i + 2] = 0;
-        continue;
-      }
+          shape[index * 4 + 3] * gather);
 
       for (let axis = 0; axis < 3; axis++) {
         const component = i + axis;
@@ -245,6 +258,10 @@ export function createPageCloth(
       for (let edgeIndex = 0; edgeIndex < constraints.length; edgeIndex += 4) {
         const a = constraints[edgeIndex];
         const b = constraints[edgeIndex + 1];
+        const aWeight = a === gripIndex ? 0 : mobility[a];
+        const bWeight = b === gripIndex ? 0 : mobility[b];
+        const total = aWeight + bWeight;
+        if (total === 0) continue;
         const ai = a * 3;
         const bi = b * 3;
         const ax = positions[bi] - positions[ai];
@@ -259,10 +276,6 @@ export function createPageCloth(
         const compression = length < restLength ? 0.2 : 1;
         const correction =
           ((length - restLength) / length) * stiffness * compression;
-        const aWeight = a === gripIndex ? 0 : mobility[a];
-        const bWeight = b === gripIndex ? 0 : mobility[b];
-        const total = aWeight + bWeight;
-        if (total === 0) continue;
         const aShare = (correction * aWeight) / total;
         const bShare = (correction * bWeight) / total;
         positions[ai] += ax * aShare;
@@ -294,6 +307,9 @@ export function createPageCloth(
         return;
       const progress = clamp(pull);
       if (progress === 0) {
+        // Approach/route-hold frames keep the exact same flat sheet. Avoid
+        // rebuilding normals and uploading unchanged buffers every frame.
+        if (lastPull === 0) return;
         positions.set(rest);
         previous.set(rest);
         lastGrip.set(-width / 2, gripY, 0);
