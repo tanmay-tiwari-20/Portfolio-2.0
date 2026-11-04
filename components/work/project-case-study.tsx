@@ -8,6 +8,7 @@ import {
 } from "@/lib/work-content";
 import { MotionLayer } from "@/components/shell";
 import WorkMotion from "@/components/work/work-motion";
+import type { ReactNode } from "react";
 import {
   ProjectImage,
   ProjectLinks,
@@ -584,9 +585,11 @@ function ProjectNavigation({
 export default function ProjectCaseStudy({
   project,
   projects,
+  afterHero,
 }: {
   project: Project;
   projects: Project[];
+  afterHero?: ReactNode;
 }) {
   const art = getProjectArtDirection(project);
   return (
@@ -616,6 +619,7 @@ export default function ProjectCaseStudy({
         </div>
         <ProjectHero project={project} art={art} />
       </div>
+      {afterHero}
       <ProjectOverview project={project} />
       <ProjectFeatures art={art} project={project} />
       <ProjectGallery project={project} />

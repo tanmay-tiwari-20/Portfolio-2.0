@@ -5,6 +5,7 @@ import { published, repos } from "@/lib/db";
 import ProjectGallery from "@/components/project-gallery";
 import WorkHero from "@/components/work/work-hero";
 import WorkMotion from "@/components/work/work-motion";
+import ContributionCity from "@/components/work/contribution-city";
 import { MotionLayer } from "@/components/shell";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,7 @@ export default async function ProjectsPage() {
       <WorkMotion className="work-paper relative overflow-hidden">
         <WorkHero projects={items} />
       </WorkMotion>
+      <ContributionCity />
       <ProjectGallery projects={items} />
       <WorkMotion className="work-desk-surface px-5 pt-5 pb-16 sm:px-9 sm:pb-20 lg:px-14">
         <section className="relative mx-auto flex max-w-[1440px] flex-col justify-between gap-8 rounded-sm border border-[#6b3030] bg-[#712e36] px-7 py-10 text-[#fffaf7] shadow-[0_18px_35px_-20px_#553b3280] [--work-focus:#edbd83] sm:px-10 sm:py-12 lg:flex-row lg:items-end lg:px-14">

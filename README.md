@@ -37,6 +37,8 @@ For read-only-filesystem platforms such as Vercel, make content edits locally, c
 
 ## Theme and motion
 
+The GitHub contribution city has a daily refresh workflow at `.github/workflows/refresh-github-contributions.yml` (08:17 IST). Add the existing public-profile token as the repository Actions secret `GH_CONTRIBUTIONS_TOKEN`, and publish the workflow with the city files to `main`. It refreshes and validates the snapshot, commits only changed calendar data, and the connected Vercel Git integration deploys the new snapshot. A failed refresh leaves the last good city intact. See [the city setup report](docs/GITHUB_CONTRIBUTION_CITY.md) for one-time activation and verification.
+
 Change the palette and type in `app/globals.css`. All artwork is original CSS/SVG web geometry and abstract illustration. Motion uses Lenis with GSAP ScrollTrigger and honors `prefers-reduced-motion`; avoid adding movement that blocks reading or navigation.
 
 ## Contact form

@@ -1,0 +1,85 @@
+name: Refresh GitHub contribution city
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/refresh-github-contributions.yml
+      - scripts/fetch-github.mjs
+      - lib/github-contributions.ts
+      - scripts/github-contributions.test.ts
+  schedule:
+    # 08:17 Asia/Kolkata. Off the hour to reduce scheduling congestion.
+    - cron: "47 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-github-contributions
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.repository == 'tanmay-tiwari-20/Portfolio-2.0' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check contribution credential
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_CONTRIBUTIONS_TOKEN }}
+        run: |
+          if [ -z "$GITHUB_TOKEN" ]; then
+            echo "::error::Add GH_CONTRIBUTIONS_TOKEN in repository Settings > Secrets and variables > Actions. Use the read-only token that worked locally."
+            exit 1
+          fi
+
+      - name: Check out the latest default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Fetch the real contribution calendar
+        env:
+          # The user-read credential is available only to this step.
+          # Git push uses Actions' separate, short-lived repository token.
+          GITHUB_TOKEN: ${{ secrets.GH_CONTRIBUTIONS_TOKEN }}
+        run: npm run fetch:github
+
+      - name: Validate the refreshed snapshot
+        run: npm run test:github
+
+      - name: Commit and publish the updated snapshot
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git add -- data/github-contributions.json
+          if git diff --cached --quiet -- data/github-contributions.json; then
+            echo "Contribution calendar is unchanged. No commit or deployment needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: refresh GitHub contribution city"
+          # Keep concurrent human commits. Never force-push the default branch.
+          for attempt in 1 2 3; do
+            git fetch origin "$DEFAULT_BRANCH"
+            git rebase "origin/$DEFAULT_BRANCH"
+            if git push origin "HEAD:$DEFAULT_BRANCH"; then
+              exit 0
+            fi
+          done
+          echo "::error::Could not publish the snapshot after three attempts."
+          exit 1
