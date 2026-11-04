@@ -833,6 +833,10 @@ export default function DitherVeil({
       raf = requestAnimationFrame(frame);
     };
     wakeRef.current = wake;
+    // Export the existing canvas on demand without paying preserveDrawingBuffer
+    // costs during normal browsing. The capture listener reads it synchronously.
+    const captureFrame = () => renderer.render({ scene: viewMesh });
+    window.addEventListener("portfolio:capture-frame", captureFrame);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -905,6 +909,7 @@ export default function DitherVeil({
 
     return () => {
       cancelAnimationFrame(raf);
+      window.removeEventListener("portfolio:capture-frame", captureFrame);
       wakeRef.current = () => {};
       resizeObserver.disconnect();
       intersectionObserver.disconnect();

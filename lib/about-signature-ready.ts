@@ -172,7 +172,9 @@ function waitForPageTransition(
         return;
       }
 
-      let settled = true;
+      let settled = !document.documentElement.classList.contains(
+        "portfolio-transitioning",
+      );
       let ancestor = root.parentElement;
       while (ancestor && ancestor !== document.body) {
         const style = window.getComputedStyle(ancestor);

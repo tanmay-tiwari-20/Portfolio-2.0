@@ -398,6 +398,25 @@ test("aborting a navigation returns static and removes pending resources", async
   );
 });
 
+test("the cloth transition finishes before the destination signature starts", async (context) => {
+  const environment = setup(context);
+  environment.document.documentElement.classNames.add(
+    "portfolio-transitioning",
+  );
+  let settled = false;
+  const result = environment.start().then((value) => {
+    settled = true;
+    return value;
+  });
+  await environment.frames();
+  assert.equal(settled, false);
+  environment.document.documentElement.classNames.delete(
+    "portfolio-transitioning",
+  );
+  await environment.frames();
+  assert.equal(await result, "animate");
+});
+
 test("the loading timeout provides static output without granting animation readiness", async (context) => {
   const environment = setup(context);
   environment.document.readyState = "loading";

@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
-import Preloader from "@/components/animations/preloader";
 import { published, repos } from "@/lib/db";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -79,12 +78,11 @@ export default async function RootLayout({
           Skip to content
         </a>
         <Analytics />
-        <Preloader />
-        <SiteNav socials={socials} />
-        <main id="main">
-          <PageTransition>{children}</PageTransition>
-        </main>
-        <Footer name={profile?.name} email={profile?.email} />
+        <PageTransition>
+          <SiteNav socials={socials} />
+          <main id="main">{children}</main>
+          <Footer name={profile?.name} email={profile?.email} />
+        </PageTransition>
       </body>
     </html>
   );

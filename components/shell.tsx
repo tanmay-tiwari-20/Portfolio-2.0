@@ -82,6 +82,8 @@ export function MotionLayer() {
       | {
           raf: (t: number) => void;
           destroy: () => void;
+          stop: () => void;
+          start: () => void;
           on: (event: "scroll", callback: () => void) => () => void;
         }
       | undefined;
@@ -104,10 +106,16 @@ export function MotionLayer() {
     }> = [];
     let gsapMedia: { revert: () => void } | undefined;
     let cleanedUp = false;
+    const pauseForTransition = () => lenis?.stop();
+    const resumeAfterTransition = () => lenis?.start();
+    window.addEventListener("portfolio:transition-start", pauseForTransition);
+    window.addEventListener("portfolio:transition-end", resumeAfterTransition);
 
     const cleanupMotion = () => {
       if (cleanedUp) return;
       cleanedUp = true;
+      window.removeEventListener("portfolio:transition-start", pauseForTransition);
+      window.removeEventListener("portfolio:transition-end", resumeAfterTransition);
       cancelAnimationFrame(frame);
       cancelAnimationFrame(refreshFrame);
       interactionListeners.forEach(({ element, event, listener }) =>
@@ -147,6 +155,7 @@ export function MotionLayer() {
         });
 
         lenis.on("scroll", ScrollTrigger.update);
+        if (document.documentElement.classList.contains("portfolio-transitioning")) lenis.stop();
 
         const tick = (time: number) => {
           lenis?.raf(time);

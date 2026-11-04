@@ -1,0 +1,36 @@
+.spider-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  touch-action: none;
+  pointer-events: auto;
+  contain: strict;
+}
+.spider-transition[hidden] {
+  display: none;
+}
+.spider-transition__canvas,
+.spider-transition__freeze {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.spider-transition__canvas {
+  display: block;
+  visibility: hidden;
+}
+html.portfolio-transitioning,
+html.portfolio-transitioning body {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+html.portfolio-transitioning [data-transition-page] {
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spider-transition {
+    display: none !important;
+  }
+}

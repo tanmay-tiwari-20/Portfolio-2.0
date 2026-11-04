@@ -6,11 +6,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 // Dynamically import DitherVeil with ssr: false to prevent WebGL/canvas hydration issues
 const DitherVeil = dynamic(() => import("./animations/dither-veil"), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full bg-[#07090e] flex items-center justify-center">
-      <div className="w-5 h-5 border-2 border-white/15 border-t-[#ff003c] rounded-full animate-spin" />
-    </div>
-  ),
+  loading: () => null,
 });
 
 interface HeroPortraitProps {
@@ -80,6 +76,9 @@ export default function HeroPortrait({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
+        {/* The real portrait also covers the initial chunk/image preparation. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={imageSrc} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
         <DitherVeil
           src={imageSrc}
           fit="cover"

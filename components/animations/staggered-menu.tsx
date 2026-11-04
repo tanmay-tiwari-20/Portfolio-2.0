@@ -488,6 +488,24 @@ export default function StaggeredMenu({
 
   // Close menu on route change
   useEffect(() => {
+    const closeForTransition = () => {
+      if (!openRef.current) return;
+      openRef.current = false;
+      openTlRef.current?.kill();
+      closeTweenRef.current?.kill();
+      gsap.set([panelRef.current, ...preLayerElsRef.current].filter(Boolean), { xPercent: 100, x: 0 });
+      if (backdropRef.current) gsap.set(backdropRef.current, { opacity: 0 });
+      animateIcon(false);
+      animateText(false);
+      setOpen(false);
+      onStateChange?.(false);
+    };
+    window.addEventListener("portfolio:transition-start", closeForTransition);
+    return () => window.removeEventListener("portfolio:transition-start", closeForTransition);
+  }, [animateIcon, animateText, onStateChange]);
+
+  // Close menu on route change
+  useEffect(() => {
     if (openRef.current) {
       closeMenu();
     }
