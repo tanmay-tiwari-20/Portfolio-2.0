@@ -47,25 +47,6 @@ export default function AboutDetails({
 }: AboutDetailsProps) {
   return (
     <div className={styles.details} data-about-details>
-      <div className={styles.indexBar}>
-        <div className={styles.shell}>
-          <span className={styles.indexCaption}>
-            A little further in <ArrowDown size={13} aria-hidden="true" />
-          </span>
-          <nav className={styles.indexLinks} aria-label="Explore this page">
-            <Link href="#the-person">
-              <span>01</span> The practice
-            </Link>
-            <Link href="#community">
-              <span>02</span> The people
-            </Link>
-            <Link href="#experience">
-              <span>03</span> The experience
-            </Link>
-          </nav>
-        </div>
-      </div>
-
       <AboutPracticeStory
         content={content.practice}
         builders={builders}

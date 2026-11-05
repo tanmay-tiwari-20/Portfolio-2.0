@@ -15,6 +15,7 @@ import AboutDetails from "@/components/about/about-details";
 import AboutMotion from "@/components/about/about-motion";
 import SignatureReveal from "@/components/about/signature-reveal";
 import { MotionLayer } from "@/components/shell";
+import styles from "./about-hero.module.css";
 
 export const dynamic = "force-dynamic";
 
@@ -62,10 +63,11 @@ export default async function AboutPage() {
   return (
     <div className="about-page relative isolate overflow-hidden bg-[#090708] text-[#fffaf7]">
       <section className="hero about-hero" aria-labelledby="about-title">
+        <div className={styles.texture} aria-hidden="true" />
         <div className="hero-grid about-hero-grid">
           <div className="about-hero-copy min-w-0">
             <p
-              className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] leading-normal font-medium tracking-[0.14em] text-[var(--theme-paper)]/65 uppercase sm:mb-7 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mb-4 [@media(min-width:761px)_and_(max-height:600px)]:mb-3"
+              className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] leading-normal font-medium tracking-[0.14em] text-[var(--theme-paper)]/65 uppercase sm:mb-7 [@media(min-width:1061px)_and_(min-height:821px)]:text-[10px] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mb-4 [@media(min-width:761px)_and_(max-height:600px)]:mb-3"
               data-about-kicker
             >
               <span className="h-px w-6 bg-[#edbd83]" aria-hidden="true" />
@@ -78,7 +80,7 @@ export default async function AboutPage() {
 
             <h1
               id="about-title"
-              className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
+              className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:1061px)_and_(min-height:821px)]:text-[clamp(2.2rem,5vw,4.6rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
               data-about-intro
             >
               <span className="block">From 3D games</span>
@@ -87,44 +89,49 @@ export default async function AboutPage() {
               </em>
             </h1>
 
-            <div
-              className="mt-6 max-w-[47ch] text-[14px] leading-[1.75] text-[var(--theme-paper)]/75 sm:text-[15px] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-4 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[13px] [@media(min-width:761px)_and_(max-height:600px)]:mt-3 [@media(min-width:761px)_and_(max-height:600px)]:text-[12px] [@media(min-width:761px)_and_(max-height:600px)]:leading-[1.55]"
-              data-about-intro
-            >
+            <div className={styles.bio} data-about-intro>
               <p className="m-0">
-                I’m Tanmay, a full-stack developer and{" "}
+                I’m Tanmay, a{" "}
+                <span className={styles.highlight}>full-stack developer</span> and{" "}
                 <span className="whitespace-nowrap">
                   co-founder of{" "}
                   <a
                     href="https://hackshastra.in"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[var(--theme-paper)] underline decoration-[#edbd83]/60 underline-offset-4 transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
+                    className={`${styles.highlight} ${styles.company} underline decoration-[#edbd83]/60 underline-offset-4 transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]`}
                   >
                     HackShastra
                   </a>
                   .
                 </span>
               </p>
-              <p className="mt-3 mb-0 [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:450px)]:hidden">
+              <p className={styles.summary}>
                 I build web products, organise hackathons, and mentor students
-                turning ideas into working projects.
+                turning ideas into{" "}
+                <span className={`${styles.highlight} ${styles.outcome}`}>
+                  working projects
+                </span>
+                .
               </p>
             </div>
 
             <div
-              className="mt-5 w-full max-w-[20rem] md:mt-6 md:max-w-[28rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-3 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:max-w-[min(28rem,56vh)] [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:max-w-[min(24rem,48vh)]"
+              className="mt-5 w-full max-w-[20rem] md:mt-6 md:max-w-[28rem] [@media(min-width:1061px)_and_(min-height:821px)]:max-w-[31rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-3 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:max-w-[min(28rem,56vh)] [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:max-w-[min(24rem,48vh)]"
               data-about-intro
             >
-              <SignatureReveal imageSources={signatureImageSources} />
+              <SignatureReveal
+                imageSources={signatureImageSources}
+                className="[@media(min-width:1061px)_and_(min-height:821px)]:max-w-full"
+              />
             </div>
 
             <div
-              className="mt-4 flex max-w-[28rem] flex-wrap items-center gap-x-7 gap-y-1 border-t border-[var(--theme-paper)]/20 pt-2 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:pt-0"
+              className="mt-4 flex max-w-[28rem] flex-wrap items-center gap-x-7 gap-y-1 border-t border-[var(--theme-paper)]/20 pt-2 [@media(min-width:1061px)_and_(min-height:821px)]:max-w-[31rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:pt-0"
               data-about-intro
             >
               <Link
-                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-semibold text-[var(--theme-paper)] transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-semibold text-[var(--theme-paper)] transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
                 href="#the-person"
               >
                 More about me
@@ -135,7 +142,7 @@ export default async function AboutPage() {
                 />
               </Link>
               <Link
-                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-[var(--theme-paper)]/65 transition-colors duration-200 hover:text-[var(--theme-paper)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]"
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-[var(--theme-paper)]/65 transition-colors duration-200 hover:text-[var(--theme-paper)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
                 href="https://hackshastra.in"
                 target="_blank"
                 rel="noreferrer"
