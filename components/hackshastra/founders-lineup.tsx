@@ -6,63 +6,69 @@ import styles from "./founders-lineup.module.css";
 export default function FoundersLineup() {
   return (
     <div className={styles.lineup}>
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end md:gap-10">
-        <div className="min-w-0">
-          <p className="hs-mono mb-3 text-[var(--hs-red)]">J · I · T · S · U</p>
+      <div className={styles.topline}>
+        <p className={styles.kicker}>J · I · T · S · U</p>
+        <span className={styles.edition}>Five minds. One beginning.</span>
+      </div>
+
+      <div className={styles.header}>
+        <div>
           <h2 id="hs-founders-title" className={styles.heading}>
-            The founding collective.
+            The founding <br />
+            <span>collective.</span>
           </h2>
         </div>
-        <p className="max-w-sm text-sm leading-[1.8] text-[var(--hs-dim)]">
+        <p className={styles.intro}>
           Five people behind the beginning. A much wider community carrying it
           forward.
         </p>
       </div>
 
       <div className={styles.stage} data-hackshastra-image>
-        <div className={styles.annotation}>
-          <div className={styles.note}>
-            <span>That’s me</span>
-            <svg
-              className={styles.arrow}
-              viewBox="0 0 90 62"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M76 8C57 1 30 2 19 18C12 28 13 39 19 51M10 43L19 51L24 39"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        </div>
-
         <div className={styles.portraits}>
-          {hackshastraFounders.map((founder) => (
+          {hackshastraFounders.map((founder, index) => (
             <figure
               key={founder.name}
               className={styles.founder}
               data-centre={founder.isTanmay ? "true" : undefined}
             >
               <div className={styles.portrait}>
+                <span className={styles.index} aria-hidden="true">
+                  0{index + 1}
+                </span>
                 <span className={styles.initial} aria-hidden="true">
                   {founder.initial}
                 </span>
+                {founder.isTanmay && (
+                  <div className={styles.note} aria-hidden="true">
+                    <span>That’s me</span>
+                    <svg
+                      className={styles.arrow}
+                      viewBox="0 0 90 62"
+                      fill="none"
+                    >
+                      <path
+                        d="M76 8C57 1 30 2 19 18C12 28 13 39 19 51M10 43L19 51L24 39"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+                )}
                 <div className={styles.imagePlane}>
                   <BrandImage
                     src={founder.image}
                     alt={founder.name}
-                    sizes="(max-width: 639px) 21vw, (max-width: 1279px) 19vw, 240px"
+                    sizes="(max-width: 767px) 24vw, (max-width: 1552px) 20vw, 300px"
                     className="object-contain object-bottom"
                   />
                 </div>
               </div>
               <figcaption className={styles.caption}>
-                <span className="block">{founder.firstName}</span>
-                <span className="block">{founder.lastName}</span>
+                <span className={styles.firstName}>{founder.firstName}</span>
+                <span className={styles.lastName}>{founder.lastName}</span>
                 {founder.isTanmay && (
                   <span className="sr-only"> — that’s me, Tanmay</span>
                 )}
@@ -72,11 +78,17 @@ export default function FoundersLineup() {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-[var(--hs-line)] pt-4 sm:mt-8">
-        <p className="hs-mono text-[var(--hs-dim)]">
-          Different minds. A shared beginning.
+      <div className={styles.footer}>
+        <p className={styles.footerNote}>
+          <span className={styles.spark} aria-hidden="true">
+            ✳
+          </span>
+          <span>
+            Different minds.
+            <br />A shared beginning.
+          </span>
         </p>
-        <BrandLink href={hackshastra.about} className="text-sm">
+        <BrandLink href={hackshastra.about} className={styles.communityLink}>
           Meet the community
         </BrandLink>
       </div>

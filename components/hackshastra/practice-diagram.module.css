@@ -1,0 +1,157 @@
+.diagram {
+  display: grid;
+  min-width: 0;
+  align-items: center;
+  width: 100%;
+  color: var(--hs-paper, #fffaf7);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  max-height: 380px;
+  height: auto;
+  overflow: visible;
+}
+
+.canvas text {
+  font-family: var(--font-body);
+}
+
+.registration,
+.guide {
+  stroke: var(--hs-paper, #fffaf7);
+  stroke-opacity: 0.2;
+  stroke-width: 1;
+}
+
+.connector {
+  stroke: var(--hs-red, #ef463e);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.returnPath {
+  stroke: var(--hs-paper, #fffaf7);
+  stroke-width: 1;
+  stroke-dasharray: 3 6;
+  stroke-opacity: 0.34;
+}
+
+.outline {
+  fill: #191415;
+  stroke: var(--hs-paper, #fffaf7);
+  stroke-opacity: 0.28;
+  stroke-width: 1;
+}
+
+.backing {
+  fill: #191415;
+  stroke: var(--hs-paper, #fffaf7);
+  stroke-opacity: 0.25;
+  stroke-width: 1;
+}
+
+.redFill {
+  fill: var(--hs-red, #ef463e);
+}
+
+.paperFill {
+  fill: var(--hs-paper, #fffaf7);
+}
+
+.inkFill {
+  fill: var(--hs-ink, #090708);
+}
+
+.inkRule {
+  stroke: var(--hs-ink, #090708);
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+}
+
+.inkStroke,
+.paperStroke {
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.inkStroke {
+  stroke: var(--hs-ink, #090708);
+}
+
+.paperStroke {
+  stroke: var(--hs-paper, #fffaf7);
+}
+
+.canvas .micro,
+.canvas .inkMicro,
+.canvas .footer {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.1px;
+}
+
+.micro {
+  fill: var(--hs-dim, #b9b0ab);
+}
+
+.inkMicro,
+.inkLabel,
+.demo,
+.inkHand,
+.networkTitle {
+  fill: var(--hs-ink, #090708);
+}
+
+.label,
+.footer {
+  fill: var(--hs-paper, #fffaf7);
+}
+
+.canvas .label,
+.canvas .inkLabel {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -1px;
+}
+
+.canvas .demo {
+  font-family: var(--font-display);
+  font-size: 54px;
+  font-weight: 600;
+  letter-spacing: -4px;
+}
+
+.canvas .networkTitle {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -1.6px;
+}
+
+.canvas .hand,
+.canvas .inkHand {
+  font-family: Georgia, serif;
+  font-size: 21px;
+  font-style: italic;
+}
+
+.hand {
+  fill: var(--hs-paper, #fffaf7);
+}
+
+.invitation {
+  fill: #191415;
+  stroke: var(--hs-red, #ef463e);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+}
+
+@media (forced-colors: active) {
+  .diagram {
+    display: none;
+  }
+}

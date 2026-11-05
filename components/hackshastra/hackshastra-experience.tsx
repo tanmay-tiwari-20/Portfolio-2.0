@@ -7,6 +7,7 @@ import BrandLink from "./brand-link";
 import EventArchive, { type HackShastraEvent } from "./event-archive";
 import FoundersLineup from "./founders-lineup";
 import HackShastraFooter from "./hackshastra-footer";
+import PracticeExplorer from "./practice-explorer";
 
 function SectionLabel({
   number,
@@ -197,59 +198,155 @@ export default function HackShastraExperience({
         aria-labelledby="hs-story-title"
       >
         <div className="hs-shell">
-          <SectionLabel number="01">
-            An idea worth gathering around
-          </SectionLabel>
-          <div className="hs-story-grid grid gap-8 lg:grid-cols-[1.65fr_0.8fr] lg:gap-16">
-            <h2 id="hs-story-title" className="hs-statement">
-              <span className="block" data-hackshastra-line>
-                What if learning
-              </span>
-              <span className="block" data-hackshastra-line>
-                didn’t stop at
-              </span>
-              <span className="block hs-outline" data-hackshastra-line>
-                knowing?
-              </span>
-            </h2>
-            <div className="flex flex-col justify-end">
-              <Asterisk
-                size={54}
-                strokeWidth={1.25}
-                aria-hidden="true"
-                className="hs-story-asterisk text-[var(--hs-red)]"
-              />
-              <p className="text-lg leading-[1.7] font-medium">
+          <div className="hs-story-header">
+            <SectionLabel number="01">
+              An idea worth gathering around
+            </SectionLabel>
+            <p className="hs-mono hs-story-edition">
+              Field notes / Our beginning
+            </p>
+          </div>
+          <div className="hs-story-grid">
+            <div className="hs-story-copy">
+              <h2 id="hs-story-title" className="hs-statement">
+                <span className="block" data-hackshastra-line>
+                  What if learning
+                </span>
+                <span className="block" data-hackshastra-line>
+                  didn’t stop at
+                </span>
+                <span className="hs-story-question" data-hackshastra-line>
+                  <span className="hs-outline">knowing?</span>
+                  <svg
+                    className="hs-story-underline"
+                    viewBox="0 0 390 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 15C97 2 245 2 382 10M55 22C146 10 265 10 337 15" />
+                  </svg>
+                </span>
+              </h2>
+              <p className="hs-story-lede">
                 HackShastra exists in the space between what you learn and what
                 you make.
               </p>
-              <p className="mt-5 text-sm leading-[1.85] text-[var(--hs-dim)]">
-                It began in November 2024 with a question: why aren’t we
-                building more? That question grew into a student collective
-                connecting academic learning with hands-on engineering.
+              <p className="hs-story-origin">
+                One question in November 2024 became a student collective. A
+                place to find your people, get your hands dirty, and turn what
+                you know into something real.
               </p>
               <BrandLink
                 href={hackshastra.about}
-                className="mt-6 w-fit border-b border-current text-sm"
+                className="hs-story-link w-fit border-b border-current text-sm"
               >
                 Read the origin story
               </BrandLink>
             </div>
+
+            <div className="hs-story-board">
+              <div className="hs-story-board-grid" aria-hidden="true" />
+              <p className="hs-story-handnote">
+                Good things start with people.
+              </p>
+              <svg
+                className="hs-story-sketch"
+                viewBox="0 0 100 100"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M76 8C24 0 7 41 30 59C52 76 88 48 68 34C49 22 26 51 34 87M21 77L34 89L43 73" />
+              </svg>
+              <figure className="hs-story-photo hs-story-photo-main">
+                <div className="hs-story-photo-image" data-hackshastra-image>
+                  <BrandImage
+                    src={hackshastra.moments[0].src}
+                    alt={hackshastra.moments[0].alt}
+                    sizes="(max-width: 767px) 70vw, (min-width: 1600px) 460px, 32vw"
+                  />
+                </div>
+              </figure>
+              <figure className="hs-story-photo hs-story-photo-small">
+                <div className="hs-story-photo-image" data-hackshastra-image>
+                  <BrandImage
+                    src={hackshastra.moments[1].src}
+                    alt={hackshastra.moments[1].alt}
+                    sizes="(max-width: 767px) 36vw, (min-width: 1600px) 240px, 17vw"
+                  />
+                </div>
+                <figcaption className="hs-mono">Better, together.</figcaption>
+              </figure>
+              <div className="hs-story-note">
+                <div className="hs-story-note-top">
+                  <span className="hs-mono">The question / Nov ’24</span>
+                  <Asterisk size={25} strokeWidth={1.4} aria-hidden="true" />
+                </div>
+                <p>
+                  Why aren’t we
+                  <br />
+                  building more?
+                </p>
+                <span className="hs-story-note-bottom hs-mono">
+                  And so, we started.
+                </span>
+              </div>
+              <p className="hs-story-board-caption hs-mono">
+                Small beginnings. Shared ambition.
+              </p>
+            </div>
           </div>
-          <div className="hs-story-bottom mt-14 grid gap-7 border-t border-current/20 pt-7 md:mt-20 md:grid-cols-3 md:gap-12">
-            <p className="hs-mono">
-              A question in a college dorm.
-              <br />A community across campuses.
-            </p>
-            <p className="text-sm leading-[1.8] text-[var(--hs-dim)]">
-              A first meetup in July 2025. A national hackathon that September.
-              College chapters from October. The idea kept finding new people.
-            </p>
-            <p className="text-xl leading-snug font-semibold tracking-[-0.045em]">
-              Curiosity starts it.
-              <br />
-              Community carries it.
-            </p>
+
+          <div className="hs-story-bottom">
+            <div className="hs-story-timeline-heading">
+              <p className="hs-mono">How a question became a community</p>
+              <p>Curiosity starts it. Community carries it.</p>
+            </div>
+            <ol
+              className="hs-story-timeline"
+              aria-label="HackShastra beginnings"
+            >
+              {[
+                [
+                  "2024-11",
+                  "Nov 2024",
+                  "The first question",
+                  "An idea worth building on.",
+                ],
+                [
+                  "2025-07",
+                  "Jul 2025",
+                  "A room of possibilities",
+                  "The first community meetup.",
+                ],
+                [
+                  "2025-09",
+                  "Sep 2025",
+                  "The first big build",
+                  "Our first national hackathon.",
+                ],
+                [
+                  "2025-10",
+                  "Oct 2025",
+                  "Beyond one campus",
+                  "The start of student chapters.",
+                ],
+              ].map(([dateTime, date, title, description], index) => (
+                <li key={dateTime}>
+                  <div className="hs-story-milestone-marker" aria-hidden="true">
+                    {index === 0 ? (
+                      <Asterisk size={20} strokeWidth={1.5} />
+                    ) : (
+                      <span />
+                    )}
+                  </div>
+                  <time className="hs-mono" dateTime={dateTime}>
+                    {date}
+                  </time>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </section>
@@ -270,51 +367,11 @@ export default function HackShastraExperience({
             </span>
           </h2>
           <p className="max-w-xs text-sm leading-[1.85] text-[var(--hs-dim)]">
-            Different ways in. The same hands-on spirit. Spaces where students
-            can put their ideas to work.
+            Join a build. Find a fresh perspective. Bring your campus together.
+            There’s more than one way to make a start.
           </p>
         </div>
-        {[
-          [
-            "01",
-            "Gather. Make. Repeat.",
-            "Hackathons & technical events",
-            "From a first meetup to national hackathons and a technology expo, the community creates occasions to turn ideas into working projects.",
-          ],
-          [
-            "02",
-            "A little guidance. A big leap.",
-            "Mentorship & evaluation",
-            "Grand Hack IPEC paired an online mentorship phase with an in-person hackathon, bringing guidance and expert feedback into the building process.",
-          ],
-          [
-            "03",
-            "Bring it to your campus.",
-            "Student chapters",
-            "Campus chapters carry the community locally. IPEC and SRM–AP chapters have hosted their own gatherings, giving students a place to start.",
-          ],
-        ].map(([number, title, label, copy]) => (
-          <article
-            className="hs-practice-row relative grid gap-4 py-8 sm:py-10 md:grid-cols-[0.12fr_1fr_0.75fr] md:gap-10"
-            key={number}
-          >
-            <span
-              className="hs-rule absolute inset-x-0 top-0 h-px bg-[var(--hs-line)]"
-              data-hackshastra-rule
-              aria-hidden="true"
-            />
-            <span className="hs-mono text-[var(--hs-red)]">{number}</span>
-            <div>
-              <p className="hs-mono mb-3 text-[var(--hs-dim)]">{label}</p>
-              <h3 className="text-[clamp(1.65rem,3vw,2.6rem)] leading-[1.18] font-medium tracking-[-0.05em]">
-                {title}
-              </h3>
-            </div>
-            <p className="max-w-lg text-sm leading-[1.85] text-[var(--hs-dim)] md:pt-7">
-              {copy}
-            </p>
-          </article>
-        ))}
+        <PracticeExplorer />
       </section>
 
       <section
