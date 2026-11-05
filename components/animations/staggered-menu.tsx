@@ -80,8 +80,8 @@ const getServerMountedSnapshot = () => false;
 export default function StaggeredMenu({
   items = DEFAULT_ITEMS,
   socials = [],
-  prelayerColors = ["#161720", "#ff1a4b"], // Obsidian Charcoal -> Radiant Carmine Red
-  accentColor = "#ff003c",
+  prelayerColors = ["#1c1516", "#ef463e"],
+  accentColor = "#ef463e",
   onStateChange,
 }: StaggeredMenuProps) {
   const [open, setOpen] = useState(false);
@@ -232,7 +232,7 @@ export default function StaggeredMenu({
     const panelInsertTime = (layers.length ? layers.length * 0.08 : 0) + 0.04;
     const panelDuration = 0.65;
 
-    // Main stealth dark panel slides in
+    // Main navigation panel slides in
     tl.fromTo(
       panel,
       { xPercent: 100, x: 0 },
@@ -493,7 +493,10 @@ export default function StaggeredMenu({
       openRef.current = false;
       openTlRef.current?.kill();
       closeTweenRef.current?.kill();
-      gsap.set([panelRef.current, ...preLayerElsRef.current].filter(Boolean), { xPercent: 100, x: 0 });
+      gsap.set([panelRef.current, ...preLayerElsRef.current].filter(Boolean), {
+        xPercent: 100,
+        x: 0,
+      });
       if (backdropRef.current) gsap.set(backdropRef.current, { opacity: 0 });
       animateIcon(false);
       animateText(false);
@@ -501,7 +504,11 @@ export default function StaggeredMenu({
       onStateChange?.(false);
     };
     window.addEventListener("portfolio:transition-start", closeForTransition);
-    return () => window.removeEventListener("portfolio:transition-start", closeForTransition);
+    return () =>
+      window.removeEventListener(
+        "portfolio:transition-start",
+        closeForTransition,
+      );
   }, [animateIcon, animateText, onStateChange]);
 
   // Close menu on route change
@@ -558,6 +565,7 @@ export default function StaggeredMenu({
             className={`staggered-menu-overlay ${open ? "active" : ""}`}
             style={{ "--menu-accent": accentColor } as React.CSSProperties}
             aria-hidden={!open}
+            inert={!open}
           >
             {/* Backdrop Dark Scrim */}
             <div
@@ -567,7 +575,7 @@ export default function StaggeredMenu({
               aria-hidden="true"
             />
 
-            {/* Pre-Layers (Obsidian Charcoal & Radiant Carmine Red) */}
+            {/* Staggered color layers */}
             <div
               ref={preLayersRef}
               className="staggered-prelayers"
@@ -582,7 +590,7 @@ export default function StaggeredMenu({
               ))}
             </div>
 
-            {/* Main Navigation Panel (Stealth Nightfall Dark, Fits 100% Canvas Without Scroll) */}
+            {/* Navigation panel scrolls on compact screens without clipping links. */}
             <aside
               id="staggered-nav-panel"
               ref={panelRef}
@@ -590,7 +598,16 @@ export default function StaggeredMenu({
               role="dialog"
               aria-modal="true"
               aria-label="Site Navigation"
+              data-lenis-prevent
             >
+              <div className="panel-top-bar sm-bottom-section">
+                <span className="panel-eyebrow">
+                  <span className="panel-eyebrow-dot" aria-hidden="true" />
+                  Navigation
+                </span>
+                <span className="panel-page-count">Explore the portfolio</span>
+              </div>
+
               {/* Staggered Navigation Link List */}
               <nav className="panel-nav" aria-label="Primary Navigation">
                 <ul className="panel-nav-list" role="list">
@@ -605,7 +622,9 @@ export default function StaggeredMenu({
                           className={`panel-nav-link ${isActive ? "active" : ""}`}
                           aria-current={isActive ? "page" : undefined}
                         >
-                          <span className="sm-item-index">{indexStr}</span>
+                          <span className="sm-item-index" aria-hidden="true">
+                            {indexStr}
+                          </span>
                           <div className="panel-nav-text-col">
                             <div className="panel-nav-label-wrap">
                               <span className="sm-panel-itemLabel">
@@ -618,10 +637,16 @@ export default function StaggeredMenu({
                               </span>
                             )}
                           </div>
-                          <ArrowUpRight
-                            className="panel-item-arrow"
-                            size={24}
-                          />
+                          <span
+                            className="panel-item-action"
+                            aria-hidden="true"
+                          >
+                            <ArrowUpRight
+                              className="panel-item-arrow"
+                              size={20}
+                              strokeWidth={1.5}
+                            />
+                          </span>
                         </Link>
                       </li>
                     );
@@ -629,44 +654,49 @@ export default function StaggeredMenu({
                 </ul>
               </nav>
 
-              {/* Bottom Panel Section: Socials & Coordinates Only (No Direct Action Box) */}
-              <div className="sm-bottom-section">
-                <div className="panel-footer-row">
+              {/* Social links keep the secondary navigation quiet and easy to scan. */}
+              {socials.length > 0 && (
+                <div className="panel-footer sm-bottom-section">
                   <nav className="panel-socials" aria-label="Social links">
                     <div className="socials-heading-row">
-                      <div>
-                        <p className="socials-heading">Find me online</p>
-                      </div>
+                      <p className="socials-heading">Elsewhere</p>
+                      <span className="panel-footer-note">
+                        Let’s stay connected.
+                      </span>
                     </div>
-                    {socials.length > 0 ? (
-                      <div className="socials-links-grid">
-                        {socials.map((soc) => {
-                          const Icon = getSocialIcon(soc);
-                          const label = getSocialDisplayLabel(soc.label, soc.href);
-                          return (
-                            <a
-                              key={soc.id || `${soc.label}-${soc.href}`}
-                              href={soc.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="social-pill-link"
-                              aria-label={`Visit ${label}${soc.handle ? `, ${soc.handle}` : ""} (opens in a new tab)`}
-                              title={`${label}${soc.handle ? ` · ${soc.handle}` : ""}`}
-                            >
-                              <span className="social-icon-wrap">
-                                <Icon aria-hidden="true" />
-                              </span>
-                              <span className="social-link-label">{label}</span>
-                            </a>
-                          );
-                        })}
-                      </div>
-                    ) : (
-                      <p className="socials-empty">Social links will appear here.</p>
-                    )}
+                    <div className="socials-links-grid">
+                      {socials.map((soc) => {
+                        const Icon = getSocialIcon(soc);
+                        const label = getSocialDisplayLabel(
+                          soc.label,
+                          soc.href,
+                        );
+                        return (
+                          <a
+                            key={soc.id || `${soc.label}-${soc.href}`}
+                            href={soc.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="panel-social-link"
+                            aria-label={`Visit ${label}${soc.handle ? `, ${soc.handle}` : ""} (opens in a new tab)`}
+                            title={`${label}${soc.handle ? ` · ${soc.handle}` : ""}`}
+                          >
+                            <span className="social-icon-wrap">
+                              <Icon aria-hidden="true" />
+                            </span>
+                            <span className="social-link-label">{label}</span>
+                            <ArrowUpRight
+                              className="social-link-arrow"
+                              size={13}
+                              aria-hidden="true"
+                            />
+                          </a>
+                        );
+                      })}
+                    </div>
                   </nav>
                 </div>
-              </div>
+              )}
             </aside>
           </div>,
           document.body,
