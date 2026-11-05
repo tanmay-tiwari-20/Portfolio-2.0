@@ -67,7 +67,7 @@ export default async function AboutPage() {
         <div className="hero-grid about-hero-grid">
           <div className="about-hero-copy min-w-0">
             <p
-              className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] leading-normal font-medium tracking-[0.14em] text-[var(--theme-paper)]/65 uppercase sm:mb-7 [@media(min-width:1061px)_and_(min-height:821px)]:text-[10px] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mb-4 [@media(min-width:761px)_and_(max-height:600px)]:mb-3"
+              className="mb-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] leading-normal font-medium tracking-[0.14em] text-(--theme-paper)/65 uppercase sm:mb-7 [@media(min-width:1061px)_and_(min-height:821px)]:text-[10px] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mb-4 [@media(min-width:761px)_and_(max-height:600px)]:mb-3"
               data-about-kicker
             >
               <span className="h-px w-6 bg-[#edbd83]" aria-hidden="true" />
@@ -80,7 +80,7 @@ export default async function AboutPage() {
 
             <h1
               id="about-title"
-              className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-[var(--theme-paper)] max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:1061px)_and_(min-height:821px)]:text-[clamp(2.2rem,5vw,4.6rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
+              className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-(--theme-paper) max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:1061px)_and_(min-height:821px)]:text-[clamp(2.2rem,5vw,4.6rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
               data-about-intro
             >
               <span className="block">From 3D games</span>
@@ -117,7 +117,7 @@ export default async function AboutPage() {
             </div>
 
             <div
-              className="mt-5 w-full max-w-[20rem] md:mt-6 md:max-w-[28rem] [@media(min-width:1061px)_and_(min-height:821px)]:max-w-[31rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-3 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:max-w-[min(28rem,56vh)] [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:max-w-[min(24rem,48vh)]"
+              className="mt-5 w-full max-w-[20rem] md:mt-6 md:max-w-md [@media(min-width:1061px)_and_(min-height:821px)]:max-w-124 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-3 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:max-w-[min(28rem,56vh)] [@media(min-width:761px)_and_(max-height:600px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:max-w-[min(24rem,48vh)]"
               data-about-intro
             >
               <SignatureReveal
@@ -127,11 +127,11 @@ export default async function AboutPage() {
             </div>
 
             <div
-              className="mt-4 flex max-w-[28rem] flex-wrap items-center gap-x-7 gap-y-1 border-t border-[var(--theme-paper)]/20 pt-2 [@media(min-width:1061px)_and_(min-height:821px)]:max-w-[31rem] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:pt-0"
+              className="mt-4 flex max-w-md flex-wrap items-center gap-x-7 gap-y-1 border-t border-(--theme-paper)/20 pt-2 [@media(min-width:1061px)_and_(min-height:821px)]:max-w-124 [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:mt-2 [@media(min-width:761px)_and_(max-height:600px)]:pt-0"
               data-about-intro
             >
               <Link
-                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-semibold text-[var(--theme-paper)] transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-semibold text-(--theme-paper) transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
                 href="#the-person"
               >
                 More about me
@@ -142,7 +142,7 @@ export default async function AboutPage() {
                 />
               </Link>
               <Link
-                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-[var(--theme-paper)]/65 transition-colors duration-200 hover:text-[var(--theme-paper)] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
+                className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-(--theme-paper)/65 transition-colors duration-200 hover:text-(--theme-paper) focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
                 href="https://hackshastra.in"
                 target="_blank"
                 rel="noreferrer"

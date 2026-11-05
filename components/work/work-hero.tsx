@@ -23,7 +23,7 @@ export default function WorkHero({ projects }: { projects: Project[] }) {
       aria-labelledby="work-title"
       className={styles.hero}
     >
-      <div className="relative z-10 mx-auto w-full max-w-[800px] px-5 text-center">
+      <div className="relative z-10 mx-auto w-full max-w-200 px-5 text-center">
         <p
           data-work-reveal="hero"
           className="mb-3 flex items-center justify-center gap-2.5 text-[10px] font-medium tracking-[0.18em] text-[#79534a] uppercase"

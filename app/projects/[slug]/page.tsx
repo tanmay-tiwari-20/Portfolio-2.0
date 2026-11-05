@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { published, repos } from "@/lib/db";
 import ProjectCaseStudy from "@/components/work/project-case-study";
-import ContributionCity from "@/components/work/contribution-city";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +38,6 @@ export default async function ProjectDetail({
     <ProjectCaseStudy
       project={p}
       projects={projects}
-      afterHero={<ContributionCity />}
     />
   );
 }

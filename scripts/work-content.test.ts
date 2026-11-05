@@ -64,25 +64,6 @@ function renderCase(project: Project, collection = projects): string {
   );
 }
 
-test("shared project composition places supplied activity directly between the hero and overview", () => {
-  const html = renderToStaticMarkup(
-    createElement(
-      ImageConfigContext.Provider,
-      { value: { ...imageConfigDefault, ...nextConfig.images } },
-      createElement(ProjectCaseStudy, {
-        project: first,
-        projects,
-        afterHero: createElement("section", { "data-contribution-city": true }),
-      }),
-    ),
-  );
-  const hero = html.indexOf('id="project-title"');
-  const city = html.indexOf('data-contribution-city="true"');
-  const overview = html.indexOf('id="project-overview"');
-  assert.ok(hero >= 0 && hero < city && city < overview);
-  assert.equal((html.match(/data-contribution-city/g) || []).length, 1);
-});
-
 test("every existing project retains its current tags and has a distinct supported presentation", () => {
   assert.equal(projects.length, 7);
   const before = JSON.stringify(projects);

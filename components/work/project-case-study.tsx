@@ -60,7 +60,7 @@ function HeroTools({ project }: { project: Project }) {
   if (!project.tags.length) return null;
   return (
     <p
-      className="m-0 max-w-[58ch] text-[11px] leading-[1.9] text-[var(--work-muted,#72554e)]"
+      className="m-0 max-w-[58ch] text-[11px] leading-[1.9] text-(--work-muted,#72554e)"
       data-work-reveal="hero"
     >
       {project.tags.slice(0, 4).join(" / ")}
@@ -110,7 +110,7 @@ function Screenshot({
           <Maximize2 size={14} data-work-arrow />
         </span>
       </a>
-      <figcaption className="mt-2 text-right text-[10px] leading-normal tracking-[0.06em] text-[var(--work-muted,#72554e)]">
+      <figcaption className="mt-2 text-right text-[10px] leading-normal tracking-[0.06em] text-(--work-muted,#72554e)">
         Open full image <span aria-hidden="true">↗</span>
       </figcaption>
     </figure>
@@ -130,7 +130,7 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
             <ProjectMeta project={project} />
             <h1
               id="project-title"
-              className={`${title} mt-5 mb-4 break-words text-[clamp(2.3rem,min(4.5vw,7.8svh),5rem)]`}
+              className={`${title} mt-5 mb-4 wrap-break-word text-[clamp(2.3rem,min(4.5vw,7.8svh),5rem)]`}
               data-work-reveal="hero"
             >
               {project.title}
@@ -143,12 +143,12 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
               {art.statement}
             </p>
             <p
-              className="mt-4 mb-0 max-w-[40ch] text-[14px] leading-[1.65] text-[var(--work-muted,#72554e)]"
+              className="mt-4 mb-0 max-w-[40ch] text-[14px] leading-[1.65] text-(--work-muted,#72554e)"
               data-work-reveal="hero"
             >
               {art.summary}
             </p>
-            <div className="mt-5 border-t border-dashed border-[var(--work-line,#72554e33)] pt-4">
+            <div className="mt-5 border-t border-dashed border-(--work-line,#72554e33) pt-4">
               <HeroTools project={project} />
               <div className="mt-4" data-work-reveal="hero">
                 <ProjectLinks project={project} />
@@ -173,7 +173,7 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
         <ProjectMeta project={project} />
         <h1
           id="project-title"
-          className={`${title} ${headingSize} mt-4 mb-6 break-words lg:mb-5`}
+          className={`${title} ${headingSize} mt-4 mb-6 wrap-break-word lg:mb-5`}
           data-work-reveal="hero"
         >
           {project.title}
@@ -182,7 +182,7 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
         <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr] lg:items-center lg:gap-12">
           <div className="min-w-0">
             <div
-              className="work-note relative mb-5 max-w-[29rem] px-5 py-5 sm:px-6"
+              className="work-note relative mb-5 max-w-116 px-5 py-5 sm:px-6"
               data-work-reveal="hero"
             >
               <p
@@ -215,7 +215,7 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
       <div className="mt-3 grid items-end gap-5 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
         <h1
           id="project-title"
-          className={`${title} ${headingSize} m-0 max-w-[18ch] break-words`}
+          className={`${title} ${headingSize} m-0 max-w-[18ch] wrap-break-word`}
           data-work-reveal="hero"
         >
           {project.title}
@@ -230,12 +230,12 @@ function ProjectHero({ project, art }: { project: Project; art: Direction }) {
           >
             {art.statement}
           </p>
-          <p className="mt-3 mb-0 text-[13px] leading-[1.65] text-[var(--work-muted,#72554e)]">
+          <p className="mt-3 mb-0 text-[13px] leading-[1.65] text-(--work-muted,#72554e)">
             {art.summary}
           </p>
         </div>
       </div>
-      <div className="mt-3 mb-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 border-t border-dashed border-[var(--work-line,#72554e33)] pt-2">
+      <div className="mt-3 mb-4 flex flex-wrap items-center justify-between gap-x-8 gap-y-1 border-t border-dashed border-(--work-line,#72554e33) pt-2">
         <HeroTools project={project} />
         <div data-work-reveal="hero">
           <ProjectLinks project={project} compact />
@@ -280,13 +280,13 @@ function ProjectOverview({ project }: { project: Project }) {
           className="min-w-0 border-l border-[#b82f2b]/25 pl-5 sm:pl-7"
           data-work-reveal
         >
-          <p className="m-0 max-w-[60ch] text-[clamp(1rem,1.3vw,1.2rem)] leading-[1.8] text-[var(--work-muted,#72554e)]">
+          <p className="m-0 max-w-[60ch] text-[clamp(1rem,1.3vw,1.2rem)] leading-[1.8] text-(--work-muted,#72554e)">
             {project.description}
           </p>
-          <dl className="mt-6 grid grid-cols-[1fr_auto] gap-5 border-t border-dashed border-[var(--work-line,#72554e33)] pt-5">
+          <dl className="mt-6 grid grid-cols-[1fr_auto] gap-5 border-t border-dashed border-(--work-line,#72554e33) pt-5">
             <div>
               <dt className={label}>Discipline</dt>
-              <dd className="m-0 mt-2 max-w-[30ch] text-[13px] text-[var(--work-ink,#321b20)]">
+              <dd className="m-0 mt-2 max-w-[30ch] text-[13px] text-(--work-ink,#321b20)">
                 {project.category}
               </dd>
             </div>
@@ -355,7 +355,7 @@ function ProjectFeatures({
             className={
               isWorkflow
                 ? "relative min-w-0 py-6 sm:pr-8 lg:pr-10"
-                : "grid min-w-0 gap-4 border-b border-[var(--work-line,#72554e33)] py-6 last:border-b-0 sm:grid-cols-[3rem_1fr] sm:gap-7 lg:grid-cols-[3rem_1.1fr_1fr] lg:gap-10"
+                : "grid min-w-0 gap-4 border-b border-(--work-line,#72554e33) py-6 sm:grid-cols-[3rem_1fr] sm:gap-7 lg:grid-cols-[3rem_1.1fr_1fr] lg:gap-10"
             }
             data-work-reveal
           >
@@ -371,7 +371,7 @@ function ProjectFeatures({
               {feature.title}
             </h3>
             <p
-              className={`m-0 max-w-[43ch] text-[14px] leading-[1.8] text-[var(--work-muted,#72554e)] ${!isWorkflow ? "sm:col-start-2 lg:col-start-auto" : ""}`}
+              className={`m-0 max-w-[43ch] text-[14px] leading-[1.8] text-(--work-muted,#72554e) ${!isWorkflow ? "sm:col-start-2 lg:col-start-auto" : ""}`}
             >
               {feature.body}
             </p>
@@ -459,13 +459,13 @@ function ProjectStack({ art }: { art: Direction }) {
                 key={group.label}
                 className={
                   index
-                    ? "mt-5 border-t border-[var(--work-line,#72554e33)] pt-5"
+                    ? "mt-5 border-t border-(--work-line,#72554e33) pt-5"
                     : ""
                 }
                 data-work-reveal
               >
                 <dt className={`${label} mb-2`}>{group.label}</dt>
-                <dd className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-display text-[clamp(1.05rem,1.65vw,1.55rem)] font-medium leading-[1.7] tracking-[-0.025em] text-[var(--work-ink,#321b20)]">
+                <dd className="m-0 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-display text-[clamp(1.05rem,1.65vw,1.55rem)] font-medium leading-[1.7] tracking-tight text-(--work-ink,#321b20)">
                   {group.items.map((item, itemIndex) => (
                     <span
                       className="inline-flex min-w-0 items-baseline gap-3"
@@ -479,7 +479,7 @@ function ProjectStack({ art }: { art: Direction }) {
                           /
                         </span>
                       )}
-                      <span className="break-words">{item}</span>
+                      <span className="wrap-break-word">{item}</span>
                     </span>
                   ))}
                 </dd>
@@ -503,13 +503,13 @@ function ProjectNavigation({
   return (
     <nav className={`${shell} py-10 sm:py-14`} aria-label="Project navigation">
       <div
-        className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-[var(--work-line,#72554e33)] pb-3"
+        className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-(--work-line,#72554e33) pb-3"
         data-work-reveal
       >
         <p className={`${label} m-0`}>Next on the desk</p>
         <Link
           href="/projects"
-          className="inline-flex min-h-11 items-center gap-2 text-xs text-[var(--work-muted,#72554e)] transition-colors hover:text-[#a52e2b]"
+          className="inline-flex min-h-11 items-center gap-2 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
           data-work-link
         >
           <ArrowLeft size={14} data-work-arrow aria-hidden="true" /> All work
@@ -528,7 +528,7 @@ function ProjectNavigation({
             <h2
               className={`${title} ${sectionHeading} m-0 flex items-end gap-5 transition-colors group-hover:text-[#a52e2b]`}
             >
-              <span className="min-w-0 break-words">{next.title}</span>
+              <span className="min-w-0 wrap-break-word">{next.title}</span>
               <ArrowUpRight
                 className="mb-1 hidden h-[0.7em] w-[0.7em] shrink-0 text-[#a52e2b] sm:block"
                 strokeWidth={1}
@@ -536,7 +536,7 @@ function ProjectNavigation({
                 aria-hidden="true"
               />
             </h2>
-            <p className="mt-4 mb-0 text-xs text-[var(--work-muted,#72554e)]">
+            <p className="mt-4 mb-0 text-xs text-(--work-muted,#72554e)">
               {next.category}
               <span className="px-2" aria-hidden="true">
                 /
@@ -555,19 +555,19 @@ function ProjectNavigation({
       {previous && (
         <Link
           href={`/projects/${previous.slug}`}
-          className="group grid min-w-0 grid-cols-[1fr_5rem] items-center gap-5 border-t border-dashed border-[var(--work-line,#72554e33)] py-6 sm:grid-cols-[1fr_9rem]"
+          className="group grid min-w-0 grid-cols-[1fr_5rem] items-center gap-5 border-t border-dashed border-(--work-line,#72554e33) py-6 sm:grid-cols-[1fr_9rem]"
           data-work-link
         >
           <div className="min-w-0" data-work-reveal>
             <p className={`${label} m-0 mb-2`}>Previous project</p>
-            <span className="inline-flex min-w-0 items-center gap-3 font-display text-[clamp(1rem,2vw,1.7rem)] font-medium leading-[1.25] tracking-[-0.035em] transition-colors group-hover:text-[#a52e2b]">
+            <span className="inline-flex min-w-0 items-center gap-3 font-display text-[clamp(1rem,2vw,1.7rem)] font-medium leading-tight tracking-[-0.035em] transition-colors group-hover:text-[#a52e2b]">
               <ArrowLeft
                 size={18}
                 className="shrink-0"
                 data-work-arrow
                 aria-hidden="true"
               />
-              <span className="min-w-0 break-words">{previous.title}</span>
+              <span className="min-w-0 wrap-break-word">{previous.title}</span>
             </span>
           </div>
           <ProjectImage
@@ -585,11 +585,9 @@ function ProjectNavigation({
 export default function ProjectCaseStudy({
   project,
   projects,
-  afterHero,
 }: {
   project: Project;
   projects: Project[];
-  afterHero?: ReactNode;
 }) {
   const art = getProjectArtDirection(project);
   return (
@@ -599,18 +597,18 @@ export default function ProjectCaseStudy({
     >
       <div data-work-paper-hero>
         <div
-          className={`${shell} flex flex-wrap items-center justify-between gap-4 pt-24 lg:pt-[90px]`}
+          className={`${shell} flex flex-wrap items-center justify-between gap-4 pt-24 lg:pt-22.5`}
         >
           <Link
             href="/projects"
-            className="inline-flex min-h-11 items-center gap-3 text-xs text-[var(--work-muted,#72554e)] transition-colors hover:text-[#a52e2b]"
+            className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
             data-work-link
           >
             <ArrowLeft size={15} data-work-arrow aria-hidden="true" /> All work
           </Link>
           <a
             href="#project-overview"
-            className="inline-flex min-h-11 items-center gap-3 text-xs text-[var(--work-muted,#72554e)] transition-colors hover:text-[#a52e2b]"
+            className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
             data-work-link
           >
             Read the notes{" "}
@@ -619,7 +617,6 @@ export default function ProjectCaseStudy({
         </div>
         <ProjectHero project={project} art={art} />
       </div>
-      {afterHero}
       <ProjectOverview project={project} />
       <ProjectFeatures art={art} project={project} />
       <ProjectGallery project={project} />

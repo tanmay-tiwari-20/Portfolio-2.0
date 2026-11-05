@@ -115,7 +115,7 @@ export function ProjectLinks({
           aria-label={`Visit ${project.title} live (opens in a new tab)`}
           className={
             compact
-              ? "inline-flex min-h-11 items-center gap-2 text-xs text-[var(--work-muted)] transition-colors hover:text-[var(--work-accent)]"
+              ? "inline-flex min-h-11 items-center gap-2 text-xs text-(--work-muted) transition-colors hover:text-(--work-accent)"
               : "inline-flex min-h-12 items-center justify-center gap-6 rounded-full bg-[#9e302f] px-6 py-3 text-sm font-medium text-[#fffaf7] transition-colors hover:bg-[#792525]"
           }
         >
@@ -132,8 +132,8 @@ export function ProjectLinks({
           aria-label={`View ${project.title} source code (opens in a new tab)`}
           className={
             compact
-              ? "inline-flex min-h-11 items-center gap-2 text-xs text-[var(--work-muted)] transition-colors hover:text-[var(--work-accent)]"
-              : "inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-[var(--work-line)] px-5 py-3 text-sm text-[var(--work-ink)] transition-colors hover:border-[var(--work-accent)]"
+              ? "inline-flex min-h-11 items-center gap-2 text-xs text-(--work-muted) transition-colors hover:text-(--work-accent)"
+              : "inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-(--work-line) px-5 py-3 text-sm text-(--work-ink) transition-colors hover:border-(--work-accent)"
           }
         >
           <GitBranch size={15} aria-hidden="true" />
