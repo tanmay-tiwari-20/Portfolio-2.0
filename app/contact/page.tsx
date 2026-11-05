@@ -1,156 +1,106 @@
 import type { Metadata } from "next";
-import ContactForm from "@/components/contact-form";
-import { repos } from "@/lib/db";
-import { ArrowUpRight, Mail, Share2 } from "lucide-react";
-import { MotionLayer } from "@/components/shell";
-import { getSocialDisplayLabel } from "@/lib/social-label";
+import { ArrowDownRight, ArrowUpRight, MapPin } from "lucide-react";
+import ContactMotion from "@/components/contact/contact-motion";
+import ContactChannels from "@/components/contact/contact-channels";
+import { published, repos } from "@/lib/db";
+import { resolveContactLinks } from "@/lib/contact-links";
+import "./contact.css";
 
 export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
-  title: "Contact & Transmissions",
-  description: "Send a transmission, discuss a project, or connect on social platforms.",
+  title: "Contact — Let’s make something matter",
+  description:
+    "A project, a collaboration, or a conversation. Contact Tanmay Tiwari to build something thoughtful together.",
 };
 
 export default async function Contact() {
-  const [socials, profile] = await Promise.all([
-    repos.socials.getAll(),
+  const [socials, profiles] = await Promise.all([
+    published(repos.socials),
     repos.profile.getAll(),
   ]);
-
-  const person = profile[0];
+  const person = profiles[0];
 
   return (
-    <>
-      <section className="section-shell" style={{ paddingTop: 160, paddingBottom: 60 }}>
-        <div className="eyebrow">
-          <span className="eyebrow-line" /> SECURE COMMS // TRANSMISSIONS
+    <ContactMotion className="contact-page">
+      <div className="contact-container">
+        <div className="contact-layout">
+          <section className="contact-hero" aria-labelledby="contact-title">
+            <p className="contact-eyebrow" data-contact-intro>
+              <span aria-hidden="true" /> A GOOD PLACE TO BEGIN
+            </p>
+            <h1
+              id="contact-title"
+              className="contact-title"
+              aria-label="Let’s make something matter."
+            >
+              <span className="contact-line-mask">
+                <span data-contact-line>Let’s make</span>
+              </span>
+              <span className="contact-line-mask">
+                <span data-contact-line>something</span>
+              </span>
+              <span className="contact-line-mask">
+                <span data-contact-line>
+                  <em>matter.</em>
+                </span>
+              </span>
+            </h1>
+            <p className="contact-hero-copy" data-contact-intro>
+              A new project, a collaboration, or a simple hello. I’d love to
+              hear what you’re thinking.
+            </p>
+            <a
+              className="contact-hero-link"
+              href={
+                person?.email ? `mailto:${person.email}` : "#contact-channels"
+              }
+              data-contact-action
+              data-contact-intro
+            >
+              {person?.email ? "Send me an email" : "Find me online"}{" "}
+              <ArrowDownRight size={20} data-contact-arrow aria-hidden="true" />
+            </a>
+            {person?.location && (
+              <p className="contact-location" data-contact-intro>
+                <MapPin size={15} strokeWidth={1.7} aria-hidden="true" />
+                {person.location}
+                <span>Connected everywhere.</span>
+              </p>
+            )}
+          </section>
+
+          <section
+            id="contact-channels"
+            className="contact-panel"
+            aria-labelledby="contact-channels-title"
+            data-contact-reveal
+          >
+            <div className="contact-panel-heading">
+              <div className="contact-panel-overline">
+                <span className="contact-kicker">LET’S CONNECT</span>
+                <ArrowUpRight size={22} strokeWidth={1.5} aria-hidden="true" />
+              </div>
+              <h2 id="contact-channels-title">Say hello.</h2>
+              <p>Email me directly or connect with me below.</p>
+            </div>
+            <ContactChannels
+              email={person?.email}
+              socials={resolveContactLinks(socials)}
+            />
+          </section>
         </div>
-        <h1 className="display" style={{ fontSize: "clamp(48px, 7vw, 88px)", margin: "16px 0 20px" }}>
-          The next mission<br />
-          <em>starts here.</em>
-        </h1>
-        <p className="hero-lede" style={{ maxWidth: 640 }}>
-          Have an ambitious project, an architectural challenge, a hackathon invitation, or just want to talk shop? My communication channels are wide open.
-        </p>
-      </section>
 
-      <section className="section-shell" style={{ paddingBottom: 120 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
-            gap: 48,
-          }}
-        >
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 20 }}>
-              FREQUENCY & RADAR
-            </div>
-            <div style={{ display: "grid", gap: 14 }}>
-              {socials.map((s) => {
-                const label = getSocialDisplayLabel(s.label, s.href);
-                return (
-                  <a
-                    className="timeline-card"
-                    style={{
-                      margin: 0,
-                      padding: "20px 24px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    key={s.id}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                      <span
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: "var(--radius-pill)",
-                          backgroundColor: "var(--spidey-dark-700)",
-                          display: "grid",
-                          placeItems: "center",
-                          fontSize: 16,
-                          color: "var(--spidey-red)",
-                          border: "1px solid var(--line)",
-                        }}
-                      >
-                        <Share2 size={16} />
-                      </span>
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: 16, color: "#ffffff" }}>
-                          {label}
-                        </div>
-                        <div style={{ fontSize: 13, color: "var(--spidey-muted)" }}>
-                          {s.handle}
-                        </div>
-                      </div>
-                    </div>
-                    <span className="project-open-btn" style={{ position: "static", width: 36, height: 36 }}>
-                      <ArrowUpRight size={16} />
-                    </span>
-                  </a>
-                );
-              })}
-
-              {person?.email && (
-                <a
-                  className="timeline-card"
-                  style={{
-                    margin: 0,
-                    padding: "20px 24px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    borderColor: "var(--spidey-red)",
-                  }}
-                  href={`mailto:${person.email}`}
-                >
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <span
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "var(--radius-pill)",
-                        backgroundColor: "var(--spidey-red)",
-                        display: "grid",
-                        placeItems: "center",
-                        fontSize: 18,
-                        color: "#ffffff",
-                      }}
-                    >
-                      <Mail size={18} />
-                    </span>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 16, color: "#ffffff" }}>
-                        Direct Email
-                      </div>
-                      <div style={{ fontSize: 13, color: "var(--spidey-text-dim)" }}>
-                        {person.email}
-                      </div>
-                    </div>
-                  </div>
-                  <span className="project-open-btn" style={{ position: "static", width: 36, height: 36 }}>
-                    <ArrowUpRight size={16} />
-                  </span>
-                </a>
-              )}
-            </div>
-          </div>
-
-          <div>
-            <div className="eyebrow" style={{ marginBottom: 20 }}>
-              DISPATCH TRANSMISSION
-            </div>
-            <ContactForm />
-          </div>
-        </div>
-      </section>
-      <MotionLayer />
-    </>
+        <footer className="contact-colophon">
+          <p>
+            {person?.name || "Tanmay Tiwari"}
+            <span>Good conversations make good beginnings.</span>
+          </p>
+          <a href="#top" data-contact-action>
+            Back to top{" "}
+            <ArrowUpRight size={16} data-contact-arrow aria-hidden="true" />
+          </a>
+        </footer>
+      </div>
+    </ContactMotion>
   );
 }
