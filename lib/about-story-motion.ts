@@ -47,8 +47,8 @@ export function aboutStoryFrame(index: number, progress: number) {
   );
   return {
     opacity: Math.min(enter, 1 - exit),
-    y: 56 * (1 - enter - exit),
-    revealInset: 12 * (1 - enter),
+    y: 32 * (1 - enter - exit),
+    revealInset: 8 * (1 - enter),
     imageScale: 1 + 0.035 * (1 - localProgress),
   };
 }

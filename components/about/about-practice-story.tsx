@@ -224,26 +224,6 @@ export default function AboutPracticeStory({
       aria-labelledby="about-practice-title"
       data-enhanced={enhanced ? "true" : undefined}
     >
-      <header className={styles.introduction}>
-        <div className={styles.sectionLabel}>
-          <span>01 / THE APPROACH</span>
-          <span className={styles.labelRule} aria-hidden="true" />
-          <span>THREE CONNECTED PARTS</span>
-        </div>
-        <div className={styles.introductionGrid}>
-          <h2 id="about-practice-title" className={styles.sectionTitle}>
-            {content.title}
-            <span>
-              {content.subtitle} <em>{content.accent}</em>
-            </span>
-          </h2>
-          <p className={styles.introductionNote}>
-            {content.note}
-            <ArrowDown size={22} strokeWidth={1.25} aria-hidden="true" />
-          </p>
-        </div>
-      </header>
-
       <div ref={trackRef} className={styles.track}>
         {enhanced &&
           ABOUT_STORY_STOPS.map((stop, index) => (
@@ -251,11 +231,30 @@ export default function AboutPracticeStory({
               key={stop}
               id={`practice-scroll-stop-${index + 1}`}
               className={styles.scrollStop}
-              style={{ top: `calc((100% - 100svh) * ${stop})` }}
+              style={{ top: `calc((100% - var(--story-viewport)) * ${stop})` }}
               aria-hidden="true"
             />
           ))}
         <div className={styles.sticky}>
+          <header className={styles.introduction}>
+            <div className={styles.sectionLabel}>
+              <span>01 / THE APPROACH</span>
+              <span className={styles.labelRule} aria-hidden="true" />
+              <span>THREE CONNECTED PARTS</span>
+            </div>
+            <div className={styles.introductionGrid}>
+              <h2 id="about-practice-title" className={styles.sectionTitle}>
+                {content.title}
+                <span>
+                  {content.subtitle} <em>{content.accent}</em>
+                </span>
+              </h2>
+              <p className={styles.introductionNote}>
+                {content.note}
+                <ArrowDown size={22} strokeWidth={1.25} aria-hidden="true" />
+              </p>
+            </div>
+          </header>
           <div className={styles.chapterBar}>
             <span className={styles.chapterBarLabel}>A CLOSER LOOK</span>
             <nav className={styles.chapterNav} aria-label="Explore how I work">
@@ -337,8 +336,9 @@ function PracticeChapter({
   );
   const imageClip = useTransform(
     progress,
-    (value) => `inset(${aboutStoryFrame(index, value).revealInset}% 0% 0% 0%)`,
+    (value) => `inset(0% ${aboutStoryFrame(index, value).revealInset}% 0% 0%)`,
   );
+  const imageTravel = useTransform(travel, (value) => value * -0.35);
 
   return (
     <motion.article
@@ -350,11 +350,14 @@ function PracticeChapter({
       inert={enhanced && !active}
       style={{
         opacity: enhanced ? opacity : 1,
-        y: enhanced ? travel : 0,
         pointerEvents: enhanced && !active ? "none" : "auto",
       }}
     >
-      <motion.div className={styles.chapterCopy} data-story-copy>
+      <motion.div
+        className={styles.chapterCopy}
+        data-story-copy
+        style={{ y: enhanced ? travel : 0 }}
+      >
         <p className={styles.chapterEyebrow}>
           <span>0{index + 1}</span>
           <span>{chapter.label}</span>
@@ -383,7 +386,11 @@ function PracticeChapter({
         )}
       </motion.div>
 
-      <figure className={styles.figure} data-story-figure>
+      <motion.figure
+        className={styles.figure}
+        data-story-figure
+        style={{ y: enhanced ? imageTravel : 0 }}
+      >
         <motion.div
           className={`${styles.imageWindow} ${image.product ? styles.productWindow : ""}`}
           data-story-visual
@@ -399,7 +406,7 @@ function PracticeChapter({
               src={image.src}
               alt={image.alt}
               fill
-              sizes="(min-width: 1440px) 650px, (min-width: 960px) 51vw, (min-width: 640px) 80vw, 100vw"
+              sizes="(min-width: 1440px) 650px, (min-width: 700px) 51vw, 100vw"
               unoptimized
               className={styles.photograph}
             />
@@ -424,7 +431,7 @@ function PracticeChapter({
           </span>
           <span>0{index + 1} — 03</span>
         </figcaption>
-      </figure>
+      </motion.figure>
     </motion.article>
   );
 }
