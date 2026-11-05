@@ -160,21 +160,41 @@ function waitForPageTransition(
   return new Promise((resolve) => {
     let frame = 0;
     let settledFrames = 0;
+    const covered = () =>
+      Boolean(document.documentElement.dataset.spiderTransition) ||
+      document.documentElement.classList.contains("portfolio-transitioning");
 
     const finish = () => {
       window.cancelAnimationFrame(frame);
+      window.removeEventListener("portfolio:capture-frame", pause);
+      window.removeEventListener("portfolio:transition-start", pause);
+      window.removeEventListener("portfolio:transition-end", resume);
       signal.removeEventListener("abort", finish);
       resolve();
     };
+    const pause = () => {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      settledFrames = 0;
+    };
+    const resume = () => {
+      if (!frame && !signal.aborted)
+        frame = window.requestAnimationFrame(check);
+    };
     const check = () => {
+      frame = 0;
       if (signal.aborted || !root.isConnected) {
         finish();
         return;
       }
+      // The transition owns its completion signal; do no layout reads or
+      // recurring frame work while its cover is present.
+      if (covered()) {
+        settledFrames = 0;
+        return;
+      }
 
-      let settled = !document.documentElement.classList.contains(
-        "portfolio-transitioning",
-      );
+      let settled = true;
       let ancestor = root.parentElement;
       while (ancestor && ancestor !== document.body) {
         const style = window.getComputedStyle(ancestor);
@@ -193,9 +213,12 @@ function waitForPageTransition(
       else frame = window.requestAnimationFrame(check);
     };
 
+    window.addEventListener("portfolio:capture-frame", pause);
+    window.addEventListener("portfolio:transition-start", pause);
+    window.addEventListener("portfolio:transition-end", resume);
     signal.addEventListener("abort", finish, { once: true });
     if (signal.aborted) finish();
-    else frame = window.requestAnimationFrame(check);
+    else if (!covered()) resume();
   });
 }
 

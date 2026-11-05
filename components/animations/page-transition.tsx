@@ -26,6 +26,7 @@ type Flight = {
   committed: boolean;
   ready: boolean;
   frame: number;
+  readinessFrame: number;
   timeout: number;
   sawPending: boolean;
   focusBefore: HTMLElement | null;
@@ -45,6 +46,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   const commit = useRef<(key: string) => void>(() => {});
   const settlement = useRef<(pending: boolean) => void>(() => {});
   const latestKey = useRef(committedKey);
+  const latestPending = useRef(routePending);
 
   useLayoutEffect(() => {
     latestKey.current = committedKey;
@@ -52,6 +54,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }, [committedKey]);
 
   useEffect(() => {
+    latestPending.current = routePending;
     settlement.current(routePending);
   }, [routePending]);
 
@@ -70,7 +73,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
     let disposed = false,
       failed = false;
     let active: Flight | undefined;
-    let queued: URL | undefined;
     let idle: number | undefined;
     const root = document.documentElement;
 
@@ -121,6 +123,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       active = undefined;
       flight.controller.abort();
       cancelAnimationFrame(flight.frame);
+      cancelAnimationFrame(flight.readinessFrame);
       clearTimeout(flight.timeout);
       sound.stop(document.hidden);
       layer.hidden = true;
@@ -135,10 +138,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       if (focus && flight.committed) focusDestination();
       else if (!flight.committed && flight.focusBefore?.isConnected)
         flight.focusBefore.focus({ preventScroll: true });
-      const next = queued;
-      queued = undefined;
-      if (next && routeKey(next.href) !== latestKey.current && !disposed)
-        void navigate(next, false);
     }
 
     async function readyAfterCommit(flight: Flight) {
@@ -166,11 +165,11 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         }),
       ]);
       if (active === flight && !flight.controller.signal.aborted) {
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => {
+        flight.readinessFrame = requestAnimationFrame(() => {
+          flight.readinessFrame = requestAnimationFrame(() => {
             if (active === flight) flight.ready = true;
-          }),
-        );
+          });
+        });
       }
     }
 
@@ -199,12 +198,14 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         to.pathname = "/about";
       }
       if (active) {
-        if (!pop) {
-          queued = to;
-          return;
-        }
-        queued = undefined;
+        // A newer request owns navigation immediately. Do not queue another
+        // capture/flight behind several seconds of an obsolete destination.
         finish(false);
+        if (!pop)
+          startRouteTransition(() =>
+            router.push(to.pathname + to.search + to.hash),
+          );
+        return;
       }
       if (reduced.matches || failed) {
         if (!pop) router.push(to.pathname + to.search + to.hash);
@@ -218,8 +219,9 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         committed: false,
         ready: false,
         frame: 0,
+        readinessFrame: 0,
         timeout: 0,
-        sawPending: false,
+        sawPending: latestPending.current,
         focusBefore:
           document.activeElement instanceof HTMLElement
             ? document.activeElement
@@ -238,6 +240,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             innerHeight,
             devicePixelRatio || 1,
             navigator.hardwareConcurrency || 8,
+            (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
           ).captureRatio,
         );
         frozen.replaceChildren(snapshot.preview);
@@ -277,7 +280,12 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             const frameDt = Math.max(0, (now - previous) / 1000);
             const dt = Math.min(frameDt, 1 / 30) * PLAYBACK_RATE;
             previous = now;
-            time = Math.min(time + dt, flight.ready ? DURATION : CONTACT_TIME);
+            // Choreography follows wall time at every refresh rate. Only the
+            // numerical cloth integrator needs a bounded timestep.
+            time = Math.min(
+              time + frameDt * PLAYBACK_RATE,
+              flight.ready ? DURATION : CONTACT_TIME,
+            );
             const phase =
               time < CONTACT_TIME
                 ? "swinging"
@@ -354,7 +362,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       }
     };
     const interrupt = () => {
-      queued = undefined;
       finish();
     };
     const lost = (event: Event) => {
@@ -391,7 +398,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
 
     return () => {
       disposed = true;
-      queued = undefined;
       finish(false);
       commit.current = () => {};
       settlement.current = () => {};

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "profile-main",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2026-10-19T18:12:10.509Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "name": "Tanmay Tiwari",
+    "role": "Creative Developer & Community Builder",
+    "tagline": "Making the web a little more human.",
+    "bio": "I’m a creative developer who enjoys the full product experience—from sturdy engineering to the small visual details that make an interface feel alive. I co-founded HackShastra, a student-builder community where people learn together and turn early ideas into real projects. Whether I’m shaping a product or bringing people together, I want the web to feel more human and more inviting to build with.",
+    "location": "New Delhi, India",
+    "email": "workwithtakneekitanmay@gmail.com",
+    "resumeUrl": "",
+    "avatar": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/v1792423733/hero_ppp8ke.png",
+      "alt": "Tanmay Tiwari — Creative Developer"
+    },
+    "heroTitle": "With great code comes great possibility.",
+    "stats": [
+      {
+        "label": "Projects shipped",
+        "value": 6
+      },
+      {
+        "label": "Builders mentored",
+        "value": 3000
+      },
+      {
+        "label": "Years creating",
+        "value": 3
+      }
+    ]
+  }
+]

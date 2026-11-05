@@ -1,0 +1,127 @@
+{
+  "label": "after-capture-fixed",
+  "mode": "capture",
+  "base": "http://localhost:3000",
+  "date": "2026-11-05T19:38:36.738Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [],
+  "checks": [
+    {
+      "route": "/about",
+      "freezeMs": 240.39999999850988,
+      "nodes": 213,
+      "renderMs": 1772.0999999940395,
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "route": "/projects",
+      "freezeMs": 356.19999999552965,
+      "nodes": 216,
+      "renderMs": 832.3999999985099,
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Loading the script 'https://va.vercel-scripts.com/v1/script.debug.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Loading the script 'https://va.vercel-scripts.com/v1/script.debug.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    }
+  ]
+}

@@ -7,11 +7,14 @@ export function getTransitionResolution(
   height: number,
   dpr: number,
   cores = 8,
+  memoryGB = 8,
 ) {
   const w = positive(width, 1);
   const h = positive(height, 1);
   const density = positive(dpr, 1);
-  const low = w < 700 || positive(cores, 8) <= 4;
+  // Viewport width determines pixel work, not hardware capability. A fast
+  // phone keeps the full rig/cloth; a memory-constrained desktop is bounded.
+  const low = positive(cores, 8) <= 4 || positive(memoryGB, 8) <= 4;
   // Divide by square roots separately to avoid overflowing w * h.
   const ratio = (cap: number, pixels: number) =>
     Math.min(density, cap, Math.sqrt(pixels) / Math.sqrt(w) / Math.sqrt(h));

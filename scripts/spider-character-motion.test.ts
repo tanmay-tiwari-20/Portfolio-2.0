@@ -13,6 +13,23 @@ import {
 const projectedDistance = (a: THREE.Vector3, b: THREE.Vector3) =>
   Math.hypot(a.x - b.x, a.y - b.y);
 
+test("the detailed procedural suit stays within its rendering budget", () => {
+  const actor = createCharacter();
+  try {
+    let triangles = 0;
+    actor.group.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      const position = object.geometry.getAttribute("position");
+      triangles += (object.geometry.index?.count ?? position.count) / 3;
+      for (const value of position.array) assert.ok(Number.isFinite(value));
+    });
+    assert.ok(triangles < 110_000, `character contains ${triangles} triangles`);
+    assert.ok(actor.gripHand.parent && actor.webHand.parent);
+  } finally {
+    actor.dispose();
+  }
+});
+
 test("the limbs visibly compress and kick in staggered phases without moving the actor root", () => {
   const actor = createCharacter();
   // A fixed camera-facing orientation: measured motion can only come from the rig.

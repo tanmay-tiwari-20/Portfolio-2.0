@@ -1,0 +1,46 @@
+[
+  {
+    "id": "instagram",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 0,
+    "isPublished": true,
+    "label": "Instagram",
+    "href": "https://instagram.com/",
+    "handle": "@alexbuilds",
+    "icon": "◎"
+  },
+  {
+    "id": "linkedin",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 1,
+    "isPublished": true,
+    "label": "LinkedIn",
+    "href": "https://linkedin.com/",
+    "handle": "Alex Parker",
+    "icon": "in"
+  },
+  {
+    "id": "github",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2025-01-01",
+    "sortOrder": 2,
+    "isPublished": true,
+    "label": "GitHub",
+    "href": "https://github.com/",
+    "handle": "alexparker",
+    "icon": "⌘"
+  },
+  {
+    "id": "twitter",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2026-10-24T12:04:01.413Z",
+    "sortOrder": 3,
+    "isPublished": true,
+    "label": "X",
+    "href": "https://x.com/TakneekiTanmay",
+    "handle": "@TakneekiTanmay",
+    "icon": "𝕏"
+  }
+]

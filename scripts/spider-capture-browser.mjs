@@ -26,7 +26,7 @@ const modulePath = process.env.SPIDER_PLAYWRIGHT_MODULE;
 const { chromium } = await import(
   modulePath ? pathToFileURL(modulePath).href : "playwright-core"
 );
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, ...(process.env.SPIDER_BROWSER_EXECUTABLE ? { executablePath: process.env.SPIDER_BROWSER_EXECUTABLE } : {}) });
 
 try {
   const page = await browser.newPage({ viewport: { width: 960, height: 640 } });
@@ -126,7 +126,9 @@ try {
         swatches.length > 0 && probes.some((probe) => probe.text),
         "Fixture needs visible color and text",
       );
+      const captureStarted = performance.now();
       const snapshot = window.captureViewport(root, 1);
+      const freezeMs = performance.now() - captureStarted;
       const host = document.createElement("div");
       host.style.cssText =
         "position:fixed;inset:0;z-index:999999;pointer-events:none";
@@ -191,13 +193,66 @@ try {
         check(white > 20, `Missing rasterized text: ${probe.key}`);
       }
       host.remove();
-      return { errors, scroll: clickedScroll, probes: probes.length };
+      return { errors, scroll: clickedScroll, probes: probes.length, freezeMs, renderMs: performance.now()-captureStarted-freezeMs };
     }, position);
     assert.deepEqual(result.errors, [], `${position} capture regression`);
     console.log(
-      `${position}: scroll ${result.scroll}, ${result.probes} preview bounds, viewport colors and text passed`,
+      `${position}: scroll ${result.scroll}, ${result.probes} preview bounds, viewport colors and text passed; freeze ${result.freezeMs.toFixed(1)} ms, render ${result.renderMs.toFixed(1)} ms`,
     );
   }
+
+  // A route can add a stylesheet after warmup. Freeze values, canvas content,
+  // pseudo elements and SVG paint servers, then change the live source.
+  const dynamic = await page.evaluate(async () => {
+    document.body.replaceChildren();
+    scrollTo(0, 0);
+    const style = document.createElement("style");
+    style.textContent = `
+      :root { --capture-swatch: rgb(40, 170, 90); }
+      #dynamic-capture { position: relative; width: 960px; height: 640px; background: white; }
+      .capture-swatch { width: 120px; height: 80px; background: var(--capture-swatch); }
+      .capture-pseudo { position: absolute; left: 140px; top: 0; width: 80px; height: 80px; }
+      .capture-pseudo::before { content: ""; display: block; width: 80px; height: 80px; background: rgb(210, 40, 60); }
+      .capture-canvas { position: absolute; left: 240px; top: 0; width: 80px; height: 80px; }
+      .capture-svg { position: absolute; left: 340px; top: 0; width: 80px; height: 80px; }
+    `;
+    document.head.append(style);
+    const root = document.createElement("div");
+    root.id = "dynamic-capture";
+    root.innerHTML = `<div class="capture-swatch"></div><div class="capture-pseudo"></div>
+      <canvas class="capture-canvas" width="80" height="80"></canvas>
+      <svg class="capture-svg" viewBox="0 0 80 80"><defs><mask id="capture-mask"><rect width="80" height="80" fill="white"/></mask></defs><rect width="80" height="80" fill="rgb(150,70,200)" mask="url(#capture-mask)"/></svg>
+      <input type="password" value="do-not-capture"/>`;
+    document.body.append(root);
+    const context = root.querySelector("canvas").getContext("2d");
+    context.fillStyle = "rgb(30,100,220)"; context.fillRect(0,0,80,80);
+    const snapshot = window.captureViewport(root, 1);
+    const host = document.createElement("div"); host.attachShadow({mode:"open"}).append(snapshot.preview); document.body.append(host);
+    const password = snapshot.preview.querySelector('input[type="password"]');
+    const errors = [];
+    if (password?.value || password?.getAttribute("value")) errors.push("Password was copied");
+    // Change CSSOM and canvas after the synchronous freeze. The old frame must
+    // remain immutable while the new route or a live widget updates beneath it.
+    style.sheet.cssRules[0].style.setProperty("--capture-swatch", "rgb(230,180,20)");
+    context.fillStyle="black";context.fillRect(0,0,80,80);
+    const canvas = await snapshot.render(new AbortController().signal);
+    const pixels = canvas.getContext("2d");
+    for (const [name,x,rgb] of [["CSS variable",20,[40,170,90]],["pseudo",160,[210,40,60]],["canvas",260,[30,100,220]],["SVG mask",360,[150,70,200]]]) {
+      const actual=[...pixels.getImageData(x,20,1,1).data];
+      if(!rgb.every((n,i)=>Math.abs(n-actual[i])<=2)||actual[3]!==255) errors.push(`${name}: expected ${rgb}, got ${actual}`);
+    }
+    host.remove();
+    const next = window.captureViewport(root, 1);
+    const nextCanvas = await next.render(new AbortController().signal);
+    const updated = [...nextCanvas.getContext("2d").getImageData(20,20,1,1).data];
+    if (![230,180,20].every((n,i)=>Math.abs(n-updated[i])<=2)) errors.push(`Changed stylesheet was stale: ${updated}`);
+    const controller=new AbortController();controller.abort();
+    try { await next.render(controller.signal); errors.push("Aborted snapshot rendered"); } catch(error) { if(error.name!=="AbortError") errors.push(`Abort error: ${error}`); }
+    root.remove();style.remove();
+    return errors;
+  });
+  assert.deepEqual(dynamic, [], "dynamic capture regression");
+  console.log("Dynamic CSS, pseudo-element, canvas, SVG mask, password and cancellation passed");
 } finally {
   await browser.close();
 }

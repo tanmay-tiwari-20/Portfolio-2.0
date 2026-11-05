@@ -1,0 +1,646 @@
+{
+  "label": "baseline-dev",
+  "mode": "baseline",
+  "base": "http://localhost:3000",
+  "date": "2026-11-05T19:12:29.882Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/contact",
+      "clickHandlerMs": 3014.6,
+      "totalMs": 12173.2,
+      "synchronousCaptureMs": 2669.6,
+      "clickToSwingMs": 6254.2,
+      "clickToRouteCommitMs": 6703.5,
+      "captureStyleReads": 1202,
+      "captureBoundsReads": 499,
+      "previewNodes": 519,
+      "frames": {
+        "count": 530,
+        "medianMs": 7,
+        "p95Ms": 13.9,
+        "maxMs": 1270.8,
+        "over25ms": 11
+      },
+      "rafCallbackMs": {
+        "p95": 7.8,
+        "max": 18.4
+      },
+      "longTasks": [
+        {
+          "at": 2.8,
+          "duration": 3124,
+          "phase": "capturing"
+        },
+        {
+          "at": 3128.9,
+          "duration": 76,
+          "phase": "capturing"
+        },
+        {
+          "at": 3252.7,
+          "duration": 55,
+          "phase": "capturing"
+        },
+        {
+          "at": 3310.9,
+          "duration": 1414,
+          "phase": "capturing"
+        },
+        {
+          "at": 5040.6,
+          "duration": 1219,
+          "phase": "swinging"
+        },
+        {
+          "at": 6337.2,
+          "duration": 279,
+          "phase": "swinging"
+        },
+        {
+          "at": 6706,
+          "duration": 70,
+          "phase": "swinging"
+        },
+        {
+          "at": 6789.7,
+          "duration": 166,
+          "phase": "swinging"
+        },
+        {
+          "at": 6967.6,
+          "duration": 198,
+          "phase": "swinging"
+        },
+        {
+          "at": 7193,
+          "duration": 225,
+          "phase": "swinging"
+        },
+        {
+          "at": 7423.6,
+          "duration": 216,
+          "phase": "swinging"
+        },
+        {
+          "at": 7647.4,
+          "duration": 228,
+          "phase": "swinging"
+        },
+        {
+          "at": 7898.8,
+          "duration": 227,
+          "phase": "swinging"
+        }
+      ],
+      "phases": [
+        {
+          "at": 3018.6,
+          "phase": "capturing"
+        },
+        {
+          "at": 6259.6,
+          "phase": "swinging"
+        },
+        {
+          "at": 8988.1,
+          "phase": "pulling"
+        },
+        {
+          "at": 12000.5,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 6400.26,
+        "layoutMs": 153.84,
+        "styleMs": 247.98,
+        "layouts": 102,
+        "styleRecalculations": 182,
+        "heapUsedMB": 26.92,
+        "domNodes": 5666,
+        "documents": 19
+      },
+      "contextsCreated": [],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 1,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/contact",
+      "to": "/about",
+      "clickHandlerMs": 544.8,
+      "totalMs": 12500,
+      "synchronousCaptureMs": 541.3,
+      "clickToSwingMs": 1598.1,
+      "clickToRouteCommitMs": 7998.1,
+      "captureStyleReads": 250,
+      "captureBoundsReads": 113,
+      "previewNodes": 115,
+      "frames": {
+        "count": 1177,
+        "medianMs": 7,
+        "p95Ms": 14,
+        "maxMs": 298.6,
+        "over25ms": 14
+      },
+      "rafCallbackMs": {
+        "p95": 6.5,
+        "max": 22.8
+      },
+      "longTasks": [
+        {
+          "at": 2.2,
+          "duration": 1175,
+          "phase": "capturing"
+        },
+        {
+          "at": 1178.6,
+          "duration": 92,
+          "phase": "capturing"
+        },
+        {
+          "at": 1363.4,
+          "duration": 237,
+          "phase": "swinging"
+        },
+        {
+          "at": 7998,
+          "duration": 247,
+          "phase": "holding"
+        },
+        {
+          "at": 8325.4,
+          "duration": 50,
+          "phase": "holding"
+        },
+        {
+          "at": 8381.4,
+          "duration": 206,
+          "phase": "holding"
+        },
+        {
+          "at": 8617.9,
+          "duration": 214,
+          "phase": "pulling"
+        },
+        {
+          "at": 8864.3,
+          "duration": 212,
+          "phase": "pulling"
+        },
+        {
+          "at": 9129.6,
+          "duration": 207,
+          "phase": "pulling"
+        }
+      ],
+      "phases": [
+        {
+          "at": 547.5,
+          "phase": "capturing"
+        },
+        {
+          "at": 1600.9,
+          "phase": "swinging"
+        },
+        {
+          "at": 2911.9,
+          "phase": "holding"
+        },
+        {
+          "at": 9084.2,
+          "phase": "pulling"
+        },
+        {
+          "at": 12312.4,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 6563.74,
+        "layoutMs": 88.99,
+        "styleMs": 478.97,
+        "layouts": 294,
+        "styleRecalculations": 1499,
+        "heapUsedMB": 39.08,
+        "domNodes": 2292,
+        "documents": 8
+      },
+      "contextsCreated": [],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 1,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/",
+      "clickHandlerMs": 3010.2,
+      "totalMs": 11479.4,
+      "synchronousCaptureMs": 2814.5,
+      "clickToSwingMs": 5197.5,
+      "clickToRouteCommitMs": 6597.6,
+      "captureStyleReads": 1202,
+      "captureBoundsReads": 499,
+      "previewNodes": 519,
+      "frames": {
+        "count": 395,
+        "medianMs": 13.7,
+        "p95Ms": 20.7,
+        "maxMs": 784.8,
+        "over25ms": 13
+      },
+      "rafCallbackMs": {
+        "p95": 7.2,
+        "max": 41.8
+      },
+      "longTasks": [
+        {
+          "at": 7.4,
+          "duration": 4738,
+          "phase": "capturing"
+        },
+        {
+          "at": 4747.2,
+          "duration": 88,
+          "phase": "capturing"
+        },
+        {
+          "at": 4929.5,
+          "duration": 276,
+          "phase": "swinging"
+        },
+        {
+          "at": 6601.1,
+          "duration": 673,
+          "phase": "holding"
+        },
+        {
+          "at": 7290.8,
+          "duration": 94,
+          "phase": "holding"
+        },
+        {
+          "at": 7428.6,
+          "duration": 73,
+          "phase": "holding"
+        },
+        {
+          "at": 7502,
+          "duration": 357,
+          "phase": "holding"
+        },
+        {
+          "at": 7888.2,
+          "duration": 175,
+          "phase": "holding"
+        },
+        {
+          "at": 8078,
+          "duration": 82,
+          "phase": "pulling"
+        },
+        {
+          "at": 8173.2,
+          "duration": 82,
+          "phase": "pulling"
+        },
+        {
+          "at": 8290.6,
+          "duration": 85,
+          "phase": "pulling"
+        },
+        {
+          "at": 11233.6,
+          "duration": 55,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 3018.2,
+          "phase": "capturing"
+        },
+        {
+          "at": 5205.6,
+          "phase": "swinging"
+        },
+        {
+          "at": 6581.1,
+          "phase": "holding"
+        },
+        {
+          "at": 8167.3,
+          "phase": "pulling"
+        },
+        {
+          "at": 11275.6,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 6160.92,
+        "layoutMs": 598.82,
+        "styleMs": 552.73,
+        "layouts": 617,
+        "styleRecalculations": 1150,
+        "heapUsedMB": 48.57,
+        "domNodes": 7646,
+        "documents": 20
+      },
+      "contextsCreated": [
+        {
+          "type": "webgl2",
+          "at": 48559.60000000149,
+          "transition": false
+        },
+        {
+          "type": "webgl2",
+          "at": 48871.89999999851,
+          "transition": false
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 2,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/",
+      "to": "/projects",
+      "clickHandlerMs": 3875.9,
+      "totalMs": 14468.7,
+      "synchronousCaptureMs": 3413.2,
+      "clickToSwingMs": 6772,
+      "clickToRouteCommitMs": 10233.8,
+      "captureStyleReads": 2167,
+      "captureBoundsReads": 818,
+      "previewNodes": 833,
+      "frames": {
+        "count": 593,
+        "medianMs": 7,
+        "p95Ms": 20.9,
+        "maxMs": 458.4,
+        "over25ms": 25
+      },
+      "rafCallbackMs": {
+        "p95": 7.2,
+        "max": 49.7
+      },
+      "longTasks": [
+        {
+          "at": 2,
+          "duration": 6094,
+          "phase": "capturing"
+        },
+        {
+          "at": 6098.9,
+          "duration": 78,
+          "phase": "capturing"
+        },
+        {
+          "at": 6178,
+          "duration": 65,
+          "phase": "capturing"
+        },
+        {
+          "at": 6543.6,
+          "duration": 231,
+          "phase": "swinging"
+        },
+        {
+          "at": 9117.5,
+          "duration": 54,
+          "phase": "holding"
+        },
+        {
+          "at": 9191.3,
+          "duration": 95,
+          "phase": "holding"
+        },
+        {
+          "at": 10232.7,
+          "duration": 248,
+          "phase": "holding"
+        },
+        {
+          "at": 10483.6,
+          "duration": 164,
+          "phase": "holding"
+        },
+        {
+          "at": 10652.6,
+          "duration": 134,
+          "phase": "holding"
+        },
+        {
+          "at": 10842.6,
+          "duration": 194,
+          "phase": "holding"
+        },
+        {
+          "at": 11049.1,
+          "duration": 91,
+          "phase": "holding"
+        },
+        {
+          "at": 11176.7,
+          "duration": 81,
+          "phase": "pulling"
+        },
+        {
+          "at": 14214.4,
+          "duration": 61,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 3878.3,
+          "phase": "capturing"
+        },
+        {
+          "at": 6774.6,
+          "phase": "swinging"
+        },
+        {
+          "at": 8110.6,
+          "phase": "holding"
+        },
+        {
+          "at": 11175.8,
+          "phase": "pulling"
+        },
+        {
+          "at": 14264.2,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 8455.65,
+        "layoutMs": 426.76,
+        "styleMs": 635.34,
+        "layouts": 309,
+        "styleRecalculations": 348,
+        "heapUsedMB": 41.51,
+        "domNodes": 16332,
+        "documents": 20
+      },
+      "contextsCreated": [],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 2,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/projects",
+      "to": "/about",
+      "clickHandlerMs": 22484.8,
+      "totalMs": 28779.4,
+      "synchronousCaptureMs": 21046.6,
+      "clickToSwingMs": null,
+      "clickToRouteCommitMs": 27155.1,
+      "captureStyleReads": 8447,
+      "captureBoundsReads": 3938,
+      "previewNodes": 3938,
+      "frames": {
+        "count": 0,
+        "medianMs": 0,
+        "p95Ms": 0,
+        "maxMs": 0,
+        "over25ms": 0
+      },
+      "rafCallbackMs": {
+        "p95": 0.1,
+        "max": 0.1
+      },
+      "longTasks": [
+        {
+          "at": 1.4,
+          "duration": 22544,
+          "phase": "capturing"
+        },
+        {
+          "at": 22546.3,
+          "duration": 71,
+          "phase": "capturing"
+        },
+        {
+          "at": 22649.6,
+          "duration": 62,
+          "phase": "idle"
+        },
+        {
+          "at": 22977.6,
+          "duration": 52,
+          "phase": "idle"
+        },
+        {
+          "at": 27148.5,
+          "duration": 443,
+          "phase": "idle"
+        },
+        {
+          "at": 27706.5,
+          "duration": 271,
+          "phase": "idle"
+        },
+        {
+          "at": 28013.3,
+          "duration": 204,
+          "phase": "idle"
+        },
+        {
+          "at": 28223.3,
+          "duration": 175,
+          "phase": "idle"
+        },
+        {
+          "at": 28432.4,
+          "duration": 202,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 22486.8,
+          "phase": "capturing"
+        },
+        {
+          "at": 22711.7,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 21788.56,
+        "layoutMs": 329.54,
+        "styleMs": 1323.48,
+        "layouts": 265,
+        "styleRecalculations": 819,
+        "heapUsedMB": 45.24,
+        "domNodes": 25309,
+        "documents": 17
+      },
+      "contextsCreated": [],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    }
+  ],
+  "checks": [],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "[Spider transition] Native navigation retained; capture/3D unavailable. TimeoutError: signal timed out"
+    }
+  ],
+  "hardware": {
+    "cores": 12,
+    "memoryGB": 8,
+    "dpr": 1,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+  }
+}

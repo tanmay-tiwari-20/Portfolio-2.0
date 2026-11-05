@@ -79,14 +79,30 @@ function surfaceGeometry(surface: Surface, rings = 44, sides = 40) {
   return geometry;
 }
 
-function tube(points: THREE.Vector3[], radius: number, closed = false) {
+function tube(
+  points: THREE.Vector3[],
+  radius: number,
+  closed = false,
+  segments = Math.max(8, points.length * 2),
+) {
   return new THREE.TubeGeometry(
     new THREE.CatmullRomCurve3(points, closed),
-    Math.max(8, points.length * 2),
+    segments,
     radius,
     5,
     closed,
   );
+}
+
+function suitWebTube(points: THREE.Vector3[], radius: number) {
+  let length = 0;
+  for (let i = 1; i < points.length; i++)
+    length += points[i].distanceTo(points[i - 1]);
+  // Preserve every authored spline, strand and radius. Input samples describe
+  // the path, not its tessellation: a tiny mask strand formerly had 98 axial
+  // segments. These segments are at most ~2.3 CSS pixels at the largest actor
+  // size, with at least five per curved strand for a smooth silhouette.
+  return tube(points, radius, false, Math.max(5, Math.ceil(length / 0.012)));
 }
 
 function merge(parts: THREE.BufferGeometry[]) {
@@ -318,11 +334,11 @@ export function createCharacter(): SpiderCharacter {
         const p = surface(r / 50, (s / spokes) * TAU);
         if (include(p)) section.push(lift(p));
         else if (section.length > 1) {
-          lines.push(tube(section, radius));
+          lines.push(suitWebTube(section, radius));
           section = [];
         } else section = [];
       }
-      if (section.length > 1) lines.push(tube(section, radius));
+      if (section.length > 1) lines.push(suitWebTube(section, radius));
     }
     for (let r = 1; r < rings; r++) {
       for (let s = 0; s < spokes; s++) {
@@ -335,7 +351,7 @@ export function createCharacter(): SpiderCharacter {
             ),
           );
         });
-        if (points.every(include)) lines.push(tube(points, radius));
+        if (points.every(include)) lines.push(suitWebTube(points, radius));
       }
     }
     return merge(lines);

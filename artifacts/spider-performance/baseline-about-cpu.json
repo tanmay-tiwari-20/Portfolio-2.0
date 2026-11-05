@@ -1,0 +1,437 @@
+{
+  "label": "baseline-about-cpu",
+  "mode": "cpu",
+  "base": "http://localhost:3000",
+  "date": "2026-11-05T19:19:56.946Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/contact",
+      "clickHandlerMs": 2456.8,
+      "totalMs": 11223.4,
+      "synchronousCaptureMs": 2123.3,
+      "clickToSwingMs": 5952.6,
+      "clickToRouteCommitMs": 6353.4,
+      "captureStyleReads": 1202,
+      "captureBoundsReads": 499,
+      "previewNodes": 519,
+      "frames": {
+        "count": 519,
+        "medianMs": 7,
+        "p95Ms": 13.9,
+        "maxMs": 1395.9,
+        "over25ms": 15
+      },
+      "rafCallbackMs": {
+        "p95": 7.9,
+        "max": 21.8
+      },
+      "longTasks": [
+        {
+          "at": 1.6,
+          "duration": 2593,
+          "phase": "capturing"
+        },
+        {
+          "at": 2596.3,
+          "duration": 89,
+          "phase": "capturing"
+        },
+        {
+          "at": 2736,
+          "duration": 1516,
+          "phase": "capturing"
+        },
+        {
+          "at": 4601.6,
+          "duration": 55,
+          "phase": "swinging"
+        },
+        {
+          "at": 4658.8,
+          "duration": 1297,
+          "phase": "swinging"
+        },
+        {
+          "at": 6060.2,
+          "duration": 144,
+          "phase": "swinging"
+        },
+        {
+          "at": 6350.3,
+          "duration": 85,
+          "phase": "swinging"
+        },
+        {
+          "at": 6451.1,
+          "duration": 216,
+          "phase": "swinging"
+        },
+        {
+          "at": 6687.3,
+          "duration": 89,
+          "phase": "swinging"
+        },
+        {
+          "at": 6806.4,
+          "duration": 102,
+          "phase": "swinging"
+        },
+        {
+          "at": 6976.4,
+          "duration": 102,
+          "phase": "swinging"
+        },
+        {
+          "at": 7083.8,
+          "duration": 104,
+          "phase": "swinging"
+        },
+        {
+          "at": 7214.3,
+          "duration": 97,
+          "phase": "swinging"
+        }
+      ],
+      "phases": [
+        {
+          "at": 2459.3,
+          "phase": "capturing"
+        },
+        {
+          "at": 5956.3,
+          "phase": "swinging"
+        },
+        {
+          "at": 8044.9,
+          "phase": "pulling"
+        },
+        {
+          "at": 11057.7,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 5871.18,
+        "layoutMs": 201.41,
+        "styleMs": 262.83,
+        "layouts": 119,
+        "styleRecalculations": 200,
+        "heapUsedMB": 30.05,
+        "domNodes": 1330,
+        "documents": 6
+      },
+      "contextsCreated": [],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 1,
+        "totalTransitionContexts": 1
+      }
+    }
+  ],
+  "checks": [],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Loading the script 'https://va.vercel-scripts.com/v1/script.debug.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    }
+  ],
+  "cpuSelfTime": [
+    {
+      "name": "(program)",
+      "url": "",
+      "line": 0,
+      "ms": 3975.07
+    },
+    {
+      "name": "render",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 1151,
+      "ms": 1447.77
+    },
+    {
+      "name": "simulate",
+      "url": "http://localhost:3000/_next/static/chunks/components_animations_spider-transition_1j49h53ycontp._.js",
+      "line": 951,
+      "ms": 1419.92
+    },
+    {
+      "name": "(idle)",
+      "url": "",
+      "line": 0,
+      "ms": 696.74
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 295.75
+    },
+    {
+      "name": "freezeViewport",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 969,
+      "ms": 278.4
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 215.72
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 201.39
+    },
+    {
+      "name": "update",
+      "url": "http://localhost:3000/_next/static/chunks/components_animations_spider-transition_1j49h53ycontp._.js",
+      "line": 1548,
+      "ms": 185.34
+    },
+    {
+      "name": "cloneNode",
+      "url": "",
+      "line": 0,
+      "ms": 184.21
+    },
+    {
+      "name": "get actualScroll",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_lenis_dist_lenis_mjs_04un866p76_tc._.js",
+      "line": 962,
+      "ms": 154.3
+    },
+    {
+      "name": "browserContext",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 648,
+      "ms": 153.71
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 135.92
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 128.17
+    },
+    {
+      "name": "_getComputedProperty",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_gsap_04cg7u06b4o9i._.js",
+      "line": 145,
+      "ms": 125.95
+    },
+    {
+      "name": "fromBufferAttribute",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_core_18d0oq6so9l-t.js",
+      "line": 5091,
+      "ms": 113.4
+    },
+    {
+      "name": "getPropertyValue",
+      "url": "",
+      "line": 0,
+      "ms": 109.59
+    },
+    {
+      "name": "(garbage collector)",
+      "url": "",
+      "line": 0,
+      "ms": 85.52
+    },
+    {
+      "name": "getPropertyValue",
+      "url": "",
+      "line": 0,
+      "ms": 83.67
+    },
+    {
+      "name": "getPropertyValue",
+      "url": "",
+      "line": 0,
+      "ms": 78.64
+    },
+    {
+      "name": "computeVertexNormals",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_core_18d0oq6so9l-t.js",
+      "line": 14979,
+      "ms": 74.25
+    },
+    {
+      "name": "styleNode",
+      "url": "http://localhost:3000/_next/static/chunks/_1v-1ald8btec6._.js",
+      "line": 978,
+      "ms": 68.6
+    },
+    {
+      "name": "getPropertyValue",
+      "url": "",
+      "line": 0,
+      "ms": 65.86
+    },
+    {
+      "name": "getProgram",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_module_03rsyo66totzs.js",
+      "line": 10635,
+      "ms": 62.04
+    },
+    {
+      "name": "getParameters",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_module_03rsyo66totzs.js",
+      "line": 4622,
+      "ms": 58.06
+    },
+    {
+      "name": "getPropertyValue",
+      "url": "",
+      "line": 0,
+      "ms": 56.85
+    },
+    {
+      "name": "setProgram",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_module_03rsyo66totzs.js",
+      "line": 10730,
+      "ms": 47.79
+    },
+    {
+      "name": "checkScrollDimensions",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_framer-motion_dist_es_0z53zfcvn6kyg._.js",
+      "line": 3290,
+      "ms": 44.03
+    },
+    {
+      "name": "setXYZ",
+      "url": "http://localhost:3000/_next/static/chunks/node_modules_three_build_three_core_18d0oq6so9l-t.js",
+      "line": 14072,
+      "ms": 43.98
+    },
+    {
+      "name": "bindVertexArray",
+      "url": "",
+      "line": 0,
+      "ms": 42.46
+    }
+  ]
+}

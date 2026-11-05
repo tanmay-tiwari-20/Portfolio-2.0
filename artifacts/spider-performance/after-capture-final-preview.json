@@ -1,0 +1,308 @@
+{
+  "label": "after-capture-final-preview",
+  "mode": "capture",
+  "base": "http://127.0.0.1:3001",
+  "date": "2026-11-05T20:28:07.088Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [],
+  "checks": [
+    {
+      "route": "/about",
+      "freezeMs": 147.5,
+      "nodes": 150,
+      "renderMs": 1502.8999999985099,
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "route": "/projects",
+      "freezeMs": 269,
+      "nodes": 216,
+      "renderMs": 949.1000000014901,
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Refused to execute script from 'http://127.0.0.1:3001/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Refused to execute script from 'http://127.0.0.1:3001/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    }
+  ],
+  "networkFailures": [
+    {
+      "url": "http://127.0.0.1:3001/_vercel/insights/script.js",
+      "type": "script",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/hackathons?_rsc=Sdev7PUlRw12F58X",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/hackshastra?_rsc=yMFZbW3py_RmPDJX",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/hackathons?_rsc=yMFZbW3py_RmPDJX",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1400/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1400/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772402433/reach_xhdfbp.webp",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/_vercel/insights/script.js",
+      "type": "script",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/?_rsc=1TX1itLzob2zpySZ",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/projects/unoverse?_rsc=1TX1itLzob2zpySZ",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/projects/spools?_rsc=1TX1itLzob2zpySZ",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/projects/hackshastra-website?_rsc=1TX1itLzob2zpySZ",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3001/projects/baithak?_rsc=1TX1itLzob2zpySZ",
+      "type": "fetch",
+      "error": "net::ERR_ABORTED"
+    }
+  ]
+}

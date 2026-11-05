@@ -253,3 +253,26 @@ test("sustained slow frames resize before drawing and keep the lower ratio for l
     restore();
   }
 });
+
+test("observed rendering budget survives orientation changes without making small viewports blurrier", () => {
+  const { engine, renderer, snapshot, restore } = setup();
+  try {
+    engine.begin(snapshot, 1440, 900);
+    for (let frame = 0; frame < 30; frame++)
+      engine.render(0.4 + frame / 60, 1 / 60, 0.04);
+    const learnedPixels = 1440 * 900 * renderer.ratio ** 2;
+    const learnedRatio = renderer.ratio;
+    engine.begin(snapshot, 900, 1440);
+    assert.equal(renderer.ratio, learnedRatio);
+    engine.begin(snapshot, 2560, 1440);
+    assert.ok(2560 * 1440 * renderer.ratio ** 2 <= learnedPixels + 0.001);
+    engine.begin(snapshot, 375, 812);
+    assert.equal(
+      renderer.ratio,
+      1.75,
+      "a smaller canvas can restore sharpness",
+    );
+  } finally {
+    restore();
+  }
+});

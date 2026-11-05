@@ -1,0 +1,257 @@
+{
+  "label": "after-capture-grouped",
+  "mode": "capture",
+  "base": "http://localhost:3000",
+  "date": "2026-11-05T20:11:15.988Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [],
+  "checks": [
+    {
+      "route": "/about",
+      "freezeMs": 364.19999999552965,
+      "nodes": 213,
+      "cpuSelfTime": [
+        {
+          "name": "(program)",
+          "line": 0,
+          "ms": 2111.68
+        },
+        {
+          "name": "freezeViewport",
+          "line": 186,
+          "ms": 63.59
+        },
+        {
+          "name": "checkScrollDimensions",
+          "line": 3290,
+          "ms": 58.97
+        },
+        {
+          "name": "sample",
+          "line": 15,
+          "ms": 37.26
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 26.05
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 14.36
+        },
+        {
+          "name": "styleNode",
+          "line": 227,
+          "ms": 12.2
+        },
+        {
+          "name": "styleNode",
+          "line": 227,
+          "ms": 10.6
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 10.36
+        },
+        {
+          "name": "getBoundingClientRect",
+          "line": 0,
+          "ms": 10.32
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 9.97
+        },
+        {
+          "name": "styleNode",
+          "line": 227,
+          "ms": 9.87
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 9.58
+        },
+        {
+          "name": "getPropertyValue",
+          "line": 0,
+          "ms": 9.34
+        },
+        {
+          "name": "clone",
+          "line": 270,
+          "ms": 8.69
+        }
+      ],
+      "renderMs": 2514,
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Loading the script 'https://va.vercel-scripts.com/v1/script.debug.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    }
+  ],
+  "networkFailures": [
+    {
+      "url": "https://va.vercel-scripts.com/v1/script.debug.js",
+      "type": "script",
+      "error": "csp"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1793794723/WhatsApp_Image_2026-10-24_at_17.05.15_uvmw4v.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792681467/SAVE_20260411_010130.jpg_uug3v0.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1793384727/66ddca944ce436507c61882f_fhf2rr.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792435350/unoverse_landscape_1_hbm62p.png",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1772402433/reach_xhdfbp.webp",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1793384727/66ddca944ce436507c61882f_fhf2rr.jpg",
+      "type": "image",
+      "error": "net::ERR_NETWORK_ACCESS_DENIED"
+    }
+  ],
+  "failure": "page.goto: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/projects\", waiting until \"networkidle\"\u001b[22m\n\n    at C:\\Users\\hp\\portfolio\\scripts\\spider-profile-browser.mjs:158:18"
+}

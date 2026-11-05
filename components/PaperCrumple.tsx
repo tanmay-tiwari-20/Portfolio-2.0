@@ -746,6 +746,9 @@ const PaperCrumple = ({
     let previousAmount = -1,
       previousMemory = -1;
     const baseRotation = THREE.MathUtils.degToRad(finite(rotation, 0));
+    const covered = () =>
+      Boolean(document.documentElement.dataset.spiderTransition) ||
+      document.documentElement.classList.contains("portfolio-transitioning");
 
     function publish(next: PaperCrumpleState) {
       if (next === state) return;
@@ -856,7 +859,9 @@ const PaperCrumple = ({
 
     function render(time: number) {
       frame = 0;
-      if (disposed || !ready || contextLost || !inView || document.hidden)
+      if (
+        disposed || !ready || contextLost || !inView || document.hidden || covered()
+      )
         return;
       const dt = lastTime ? Math.min(0.04, (time - lastTime) / 1000) : 1 / 60;
       lastTime = time;
@@ -921,6 +926,7 @@ const PaperCrumple = ({
         ready &&
         inView &&
         !document.hidden &&
+        !covered() &&
         !contextLost
       )
         frame = requestAnimationFrame(render);
@@ -1230,6 +1236,17 @@ const PaperCrumple = ({
       if (document.hidden) cancel();
       else wake();
     }
+    function pauseForTransition() {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
+    }
+    function captureFrame() {
+      pauseForTransition();
+      // Redraw the retained pose for readback without advancing the springs.
+      if (!disposed && ready && inView && !contextLost && !document.hidden)
+        renderer.render(scene, camera);
+    }
     function motionChange() {
       reduceMotion = media.matches;
       if (reduceMotion) tiltX.target = tiltY.target = 0;
@@ -1261,6 +1278,9 @@ const PaperCrumple = ({
     hit.addEventListener("blur", blur);
     window.addEventListener("blur", cancel);
     document.addEventListener("visibilitychange", visibility);
+    window.addEventListener("portfolio:capture-frame", captureFrame);
+    window.addEventListener("portfolio:transition-start", pauseForTransition);
+    window.addEventListener("portfolio:transition-end", wake);
     media.addEventListener("change", motionChange);
     canvas.addEventListener("webglcontextlost", loseContext);
     canvas.addEventListener("webglcontextrestored", restoreContext);
@@ -1456,6 +1476,9 @@ const PaperCrumple = ({
       hit.removeEventListener("blur", blur);
       window.removeEventListener("blur", cancel);
       document.removeEventListener("visibilitychange", visibility);
+      window.removeEventListener("portfolio:capture-frame", captureFrame);
+      window.removeEventListener("portfolio:transition-start", pauseForTransition);
+      window.removeEventListener("portfolio:transition-end", wake);
       media.removeEventListener("change", motionChange);
       canvas.removeEventListener("webglcontextlost", loseContext);
       canvas.removeEventListener("webglcontextrestored", restoreContext);

@@ -606,6 +606,10 @@ export default function DitherVeil({
     let visible = true;
     let raf = 0;
     let last = performance.now();
+    const covered = () =>
+      Boolean(document.documentElement.dataset.spiderTransition) ||
+      document.documentElement.classList.contains("portfolio-transitioning");
+    let pausedAt = covered() || document.hidden ? last : 0;
     let trailUntil = 0;
     let presence = 0;
     let drift = 0;
@@ -703,6 +707,7 @@ export default function DitherVeil({
 
     const frame = (now: number) => {
       raf = 0;
+      if (!visible || document.hidden || covered()) return;
       const s = settingsRef.current;
       if (!s) return;
       const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
@@ -828,15 +833,39 @@ export default function DitherVeil({
     };
 
     const wake = () => {
-      if (raf || !visible) return;
+      if (raf || !visible || document.hidden || covered()) return;
       last = performance.now();
+      if (pausedAt) {
+        // Resume the same appearance after a canceled flight or hidden tab.
+        if (image) introStart += last - Math.max(pausedAt, introStart);
+        trailUntil += last - pausedAt;
+        bursts.forEach((burst) => {
+          burst.start += last - pausedAt;
+        });
+        pausedAt = 0;
+      }
       raf = requestAnimationFrame(frame);
+    };
+    const pause = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      if (!pausedAt) pausedAt = performance.now();
+    };
+    const visibilityChanged = () => {
+      if (document.hidden) pause();
+      else wake();
     };
     wakeRef.current = wake;
     // Export the existing canvas on demand without paying preserveDrawingBuffer
     // costs during normal browsing. The capture listener reads it synchronously.
-    const captureFrame = () => renderer.render({ scene: viewMesh });
+    const captureFrame = () => {
+      pause();
+      if (visible && !document.hidden) renderer.render({ scene: viewMesh });
+    };
     window.addEventListener("portfolio:capture-frame", captureFrame);
+    window.addEventListener("portfolio:transition-start", pause);
+    window.addEventListener("portfolio:transition-end", wake);
+    document.addEventListener("visibilitychange", visibilityChanged);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -910,6 +939,9 @@ export default function DitherVeil({
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("portfolio:capture-frame", captureFrame);
+      window.removeEventListener("portfolio:transition-start", pause);
+      window.removeEventListener("portfolio:transition-end", wake);
+      document.removeEventListener("visibilitychange", visibilityChanged);
       wakeRef.current = () => {};
       resizeObserver.disconnect();
       intersectionObserver.disconnect();

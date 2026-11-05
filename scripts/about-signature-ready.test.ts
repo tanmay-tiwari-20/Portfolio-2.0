@@ -413,8 +413,51 @@ test("the cloth transition finishes before the destination signature starts", as
   environment.document.documentElement.classNames.delete(
     "portfolio-transitioning",
   );
+  environment.window.dispatchEvent(new Event("portfolio:transition-end"));
   await environment.frames();
   assert.equal(await result, "animate");
+});
+
+test("covered signature waits for lifecycle events without polling frames or layout", async (context) => {
+  const environment = setup(context);
+  environment.document.documentElement.dataset.spiderTransition = "capturing";
+  let reads = 0;
+  environment.window.getComputedStyle = (element: TestElement) => {
+    reads += 1;
+    return element.style;
+  };
+  const result = environment.start();
+  await environment.frames(60);
+  assert.equal(reads, 0);
+  assert.equal(
+    environment.clock.pending,
+    1,
+    "only the readiness timeout remains",
+  );
+
+  // An end event followed immediately by another flight must not begin drawing.
+  environment.window.dispatchEvent(new Event("portfolio:transition-end"));
+  environment.document.documentElement.dataset.spiderTransition = "swinging";
+  environment.window.dispatchEvent(new Event("portfolio:capture-frame"));
+  await environment.frames(10);
+  assert.equal(reads, 0);
+  delete environment.document.documentElement.dataset.spiderTransition;
+  environment.window.dispatchEvent(new Event("portfolio:transition-end"));
+  await environment.frames();
+  assert.equal(await result, "animate");
+  assert.equal(environment.clock.pending, 0);
+  assert.equal(environment.window.listenerCount, 0);
+});
+
+test("aborting a covered signature removes its transition listeners", async (context) => {
+  const environment = setup(context);
+  environment.document.documentElement.dataset.spiderTransition = "holding";
+  const result = environment.start();
+  await environment.frames();
+  environment.controller.abort();
+  assert.equal(await result, "static");
+  assert.equal(environment.clock.pending, 0);
+  assert.equal(environment.window.listenerCount, 0);
 });
 
 test("the loading timeout provides static output without granting animation readiness", async (context) => {

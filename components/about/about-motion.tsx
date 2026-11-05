@@ -6,15 +6,94 @@ export default function AboutMotion() {
   useEffect(() => {
     let disposed = false;
     let initialized = false;
-    let readyListener: (() => void) | undefined;
-    let context: { revert: () => void } | undefined;
-    let detailsContext: { revert: () => void } | undefined;
+    let context: gsap.Context | undefined;
+    let detailsContext: gsap.Context | undefined;
+    let entrance: gsap.core.Timeline | undefined;
+    let initialize: (() => void) | undefined;
+    let scheduleDetailsRefresh: (() => void) | undefined;
+    let rebuildDetails: (() => void) | undefined;
+    let detailsDirty = false;
+    let readyFrame = 0;
+    const paused = new Set<gsap.core.Animation>();
+    const suspended = new Set<
+      NonNullable<gsap.core.Animation["scrollTrigger"]>
+    >();
     let removeDetailsPreferenceListener: (() => void) | undefined;
     let detailsObserver: ResizeObserver | undefined;
     let settleFrame = 0;
     let refreshFrame = 0;
     const aboutRoot = document.querySelector<HTMLElement>(".about-page");
     if (aboutRoot) aboutRoot.dataset.aboutEntranceComplete = "false";
+
+    const covered = () => {
+      const html = document.documentElement;
+      return (
+        Boolean(html.dataset.spiderTransition) ||
+        html.classList.contains("portfolio-transitioning") ||
+        html.classList.contains("portfolio-loading")
+      );
+    };
+    const pause = () => {
+      window.cancelAnimationFrame(readyFrame);
+      window.cancelAnimationFrame(settleFrame);
+      window.cancelAnimationFrame(refreshFrame);
+      const animations: gsap.core.Tween[] = detailsContext?.getTweens() ?? [];
+      if (entrance) {
+        if (!entrance.paused() && entrance.progress() < 1) {
+          paused.add(entrance);
+          entrance.pause();
+        }
+      }
+      animations.forEach((animation) => {
+        // Preserve the exact painted frame, including scrubbed detail layers.
+        const trigger = animation.scrollTrigger;
+        if (
+          trigger &&
+          !(trigger.vars.once && trigger.progress === 1) &&
+          !suspended.has(trigger)
+        ) {
+          const scrub = trigger.getTween();
+          if (scrub && !scrub.paused() && scrub.progress() < 1)
+            paused.add(scrub);
+          suspended.add(trigger);
+          trigger.disable(false, false);
+        }
+        if (!animation.paused() && animation.progress() < 1) {
+          paused.add(animation);
+          animation.pause();
+        }
+      });
+    };
+    const ready = () => {
+      window.cancelAnimationFrame(readyFrame);
+      readyFrame = window.requestAnimationFrame(() => {
+        readyFrame = 0;
+        // transition-end can immediately start a queued navigation.
+        if (disposed || covered() || !aboutRoot?.isConnected) return;
+        if (!initialized) initialize?.();
+        else {
+          suspended.forEach((trigger) => trigger.enable(false, false));
+          suspended.clear();
+          paused.forEach((animation) => animation.resume());
+          paused.clear();
+          if (detailsDirty) rebuildDetails?.();
+          scheduleDetailsRefresh?.();
+        }
+      });
+    };
+    const removeLifecycle = () => {
+      window.removeEventListener("portfolio:capture-frame", pause);
+      window.removeEventListener("portfolio:transition-start", pause);
+      window.removeEventListener("portfolio:transition-end", ready);
+      window.removeEventListener("portfolio:preloader-complete", ready);
+      window.cancelAnimationFrame(readyFrame);
+      paused.clear();
+      suspended.clear();
+    };
+    window.addEventListener("portfolio:capture-frame", pause);
+    window.addEventListener("portfolio:transition-start", pause);
+    window.addEventListener("portfolio:transition-end", ready);
+    window.addEventListener("portfolio:preloader-complete", ready);
 
     const markEntranceComplete = () => {
       if (disposed || !aboutRoot?.isConnected) return;
@@ -63,8 +142,8 @@ export default function AboutMotion() {
           "(prefers-reduced-motion: reduce)",
         );
 
-        const scheduleDetailsRefresh = () => {
-          if (disposed || !initialized) return;
+        scheduleDetailsRefresh = () => {
+          if (disposed || !initialized || covered()) return;
           window.cancelAnimationFrame(settleFrame);
           window.cancelAnimationFrame(refreshFrame);
           // React may commit the stacked/sticky story after the media event.
@@ -73,7 +152,8 @@ export default function AboutMotion() {
             settleFrame = 0;
             refreshFrame = window.requestAnimationFrame(() => {
               refreshFrame = 0;
-              if (!disposed && aboutRoot?.isConnected) ScrollTrigger.refresh();
+              if (!disposed && !covered() && aboutRoot?.isConnected)
+                ScrollTrigger.refresh();
             });
           });
         };
@@ -92,12 +172,13 @@ export default function AboutMotion() {
             if (width === previousWidth && height === previousHeight) return;
             previousWidth = width;
             previousHeight = height;
-            scheduleDetailsRefresh();
+            scheduleDetailsRefresh?.();
           });
           detailsObserver.observe(detailsRoot);
         }
 
         const initializeDetails = () => {
+          detailsDirty = false;
           detailsContext?.revert();
           detailsContext = undefined;
           if (disposed || !aboutRoot || detailsPreference.matches) return;
@@ -265,11 +346,16 @@ export default function AboutMotion() {
             showDetailsWithoutMotion();
           }
         };
+        rebuildDetails = initializeDetails;
 
         const onDetailsPreferenceChange = () => {
           if (disposed || !initialized) return;
+          if (covered()) {
+            detailsDirty = true;
+            return;
+          }
           initializeDetails();
-          scheduleDetailsRefresh();
+          scheduleDetailsRefresh?.();
         };
         detailsPreference.addEventListener("change", onDetailsPreferenceChange);
         removeDetailsPreferenceListener = () =>
@@ -278,8 +364,8 @@ export default function AboutMotion() {
             onDetailsPreferenceChange,
           );
 
-        const initialize = () => {
-          if (disposed || initialized) return;
+        initialize = () => {
+          if (disposed || initialized || covered()) return;
           initialized = true;
 
           context = gsap.context(() => {
@@ -288,16 +374,14 @@ export default function AboutMotion() {
               return;
             }
 
-            const entrance = gsap.timeline({
+            entrance = gsap.timeline({
               defaults: { ease: "power3.out" },
               onComplete: markEntranceComplete,
             });
             const kickers = gsap.utils.toArray<HTMLElement>(
               "[data-about-kicker]",
             );
-            const intro = gsap.utils.toArray<HTMLElement>(
-              "[data-about-intro]",
-            );
+            const intro = gsap.utils.toArray<HTMLElement>("[data-about-intro]");
             const visuals = gsap.utils.toArray<HTMLElement>(
               "[data-about-visual]",
             );
@@ -331,28 +415,11 @@ export default function AboutMotion() {
           ScrollTrigger.refresh();
         };
 
-        const root = document.documentElement;
-        const preloaderAlreadyComplete =
-          root.dataset.preloaderComplete === "true" ||
-          (!root.classList.contains("portfolio-loading") &&
-            !document.querySelector(".site-preloader"));
-
-        if (preloaderAlreadyComplete) {
-          initialize();
-        } else {
-          readyListener = initialize;
-          window.addEventListener("portfolio:preloader-complete", initialize, {
-            once: true,
-          });
-        }
+        ready();
       })
       .catch(() => {
         if (disposed) return;
-        if (readyListener)
-          window.removeEventListener(
-            "portfolio:preloader-complete",
-            readyListener,
-          );
+        removeLifecycle();
         context?.revert();
         detailsContext?.revert();
         removeDetailsPreferenceListener?.();
@@ -366,11 +433,7 @@ export default function AboutMotion() {
 
     return () => {
       disposed = true;
-      if (readyListener)
-        window.removeEventListener(
-          "portfolio:preloader-complete",
-          readyListener,
-        );
+      removeLifecycle();
       context?.revert();
       detailsContext?.revert();
       removeDetailsPreferenceListener?.();

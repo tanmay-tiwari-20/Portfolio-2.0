@@ -1,0 +1,1248 @@
+{
+  "label": "after-dev",
+  "mode": "baseline",
+  "base": "http://localhost:3000",
+  "date": "2026-11-05T19:43:40.937Z",
+  "browser": "156.0.8078.80",
+  "environment": "Headless Chromium on the development host; viewport/DPR emulation, not physical device benchmarks",
+  "navigations": [
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/contact",
+      "clickHandlerMs": 456,
+      "totalMs": 5810.2,
+      "synchronousCaptureMs": 247.6,
+      "clickToSwingMs": 2298.1,
+      "clickToRouteCommitMs": 2563.5,
+      "captureStyleReads": 696,
+      "captureBoundsReads": 499,
+      "previewNodes": 214,
+      "frames": {
+        "count": 345,
+        "medianMs": 7,
+        "p95Ms": 13.9,
+        "maxMs": 1041.6,
+        "over25ms": 13
+      },
+      "rafCallbackMs": {
+        "p95": 6.8,
+        "max": 34.5
+      },
+      "longTasks": [
+        {
+          "at": 1.8,
+          "duration": 584,
+          "phase": "capturing"
+        },
+        {
+          "at": 586.8,
+          "duration": 85,
+          "phase": "capturing"
+        },
+        {
+          "at": 735.4,
+          "duration": 92,
+          "phase": "capturing"
+        },
+        {
+          "at": 841,
+          "duration": 336,
+          "phase": "capturing"
+        },
+        {
+          "at": 1294.6,
+          "duration": 1006,
+          "phase": "swinging"
+        },
+        {
+          "at": 2393.8,
+          "duration": 106,
+          "phase": "swinging"
+        },
+        {
+          "at": 2561.5,
+          "duration": 65,
+          "phase": "holding"
+        },
+        {
+          "at": 2643.8,
+          "duration": 155,
+          "phase": "holding"
+        },
+        {
+          "at": 2816.3,
+          "duration": 74,
+          "phase": "pulling"
+        },
+        {
+          "at": 2937,
+          "duration": 74,
+          "phase": "pulling"
+        },
+        {
+          "at": 3022.7,
+          "duration": 60,
+          "phase": "pulling"
+        },
+        {
+          "at": 3095.5,
+          "duration": 68,
+          "phase": "pulling"
+        },
+        {
+          "at": 3204.4,
+          "duration": 62,
+          "phase": "pulling"
+        }
+      ],
+      "phases": [
+        {
+          "at": 458.8,
+          "phase": "capturing"
+        },
+        {
+          "at": 2301.2,
+          "phase": "swinging"
+        },
+        {
+          "at": 2809.4,
+          "phase": "holding"
+        },
+        {
+          "at": 2902.1,
+          "phase": "pulling"
+        },
+        {
+          "at": 5662.8,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 2420.81,
+        "layoutMs": 145.18,
+        "styleMs": 163.18,
+        "layouts": 123,
+        "styleRecalculations": 166,
+        "heapUsedMB": 36.52,
+        "domNodes": 4335,
+        "documents": 23
+      },
+      "contextsCreated": [],
+      "captureOperations": [
+        {
+          "at": 760.8,
+          "name": "serializeToString",
+          "duration": 26.7
+        },
+        {
+          "at": 1294.8,
+          "name": "drawImage",
+          "duration": 8
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 1,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/contact",
+      "to": "/about",
+      "clickHandlerMs": 88.3,
+      "totalMs": 6153.2,
+      "synchronousCaptureMs": 87,
+      "clickToSwingMs": 632,
+      "clickToRouteCommitMs": 2542.4,
+      "captureStyleReads": 242,
+      "captureBoundsReads": 113,
+      "previewNodes": 109,
+      "frames": {
+        "count": 591,
+        "medianMs": 7,
+        "p95Ms": 13.9,
+        "maxMs": 201.4,
+        "over25ms": 10
+      },
+      "rafCallbackMs": {
+        "p95": 6.9,
+        "max": 32.2
+      },
+      "longTasks": [
+        {
+          "at": 1.6,
+          "duration": 142,
+          "phase": "capturing"
+        },
+        {
+          "at": 143.8,
+          "duration": 62,
+          "phase": "capturing"
+        },
+        {
+          "at": 246.3,
+          "duration": 202,
+          "phase": "capturing"
+        },
+        {
+          "at": 531.5,
+          "duration": 102,
+          "phase": "swinging"
+        },
+        {
+          "at": 2539.5,
+          "duration": 137,
+          "phase": "holding"
+        },
+        {
+          "at": 2774.6,
+          "duration": 90,
+          "phase": "holding"
+        },
+        {
+          "at": 2879.7,
+          "duration": 89,
+          "phase": "holding"
+        },
+        {
+          "at": 2972.8,
+          "duration": 94,
+          "phase": "holding"
+        },
+        {
+          "at": 3101.9,
+          "duration": 89,
+          "phase": "pulling"
+        },
+        {
+          "at": 5927.5,
+          "duration": 63,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 90.3,
+          "phase": "capturing"
+        },
+        {
+          "at": 634,
+          "phase": "swinging"
+        },
+        {
+          "at": 1852.2,
+          "phase": "holding"
+        },
+        {
+          "at": 3092.9,
+          "phase": "pulling"
+        },
+        {
+          "at": 5922.2,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 3589.04,
+        "layoutMs": 74.24,
+        "styleMs": 238.6,
+        "layouts": 149,
+        "styleRecalculations": 460,
+        "heapUsedMB": 34.62,
+        "domNodes": 2049,
+        "documents": 17
+      },
+      "contextsCreated": [],
+      "captureOperations": [
+        {
+          "at": 112.4,
+          "name": "serializeToString",
+          "duration": 14.9
+        },
+        {
+          "at": 531.6,
+          "name": "drawImage",
+          "duration": 2.6
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 1,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/",
+      "clickHandlerMs": 287.3,
+      "totalMs": 12059.6,
+      "synchronousCaptureMs": 252.2,
+      "clickToSwingMs": 1135.2,
+      "clickToRouteCommitMs": 7870.4,
+      "captureStyleReads": 696,
+      "captureBoundsReads": 499,
+      "previewNodes": 214,
+      "frames": {
+        "count": 1058,
+        "medianMs": 7,
+        "p95Ms": 14,
+        "maxMs": 812.4,
+        "over25ms": 14
+      },
+      "rafCallbackMs": {
+        "p95": 4.9,
+        "max": 44.6
+      },
+      "longTasks": [
+        {
+          "at": 4.2,
+          "duration": 391,
+          "phase": "capturing"
+        },
+        {
+          "at": 395.8,
+          "duration": 87,
+          "phase": "capturing"
+        },
+        {
+          "at": 546.9,
+          "duration": 365,
+          "phase": "capturing"
+        },
+        {
+          "at": 990.8,
+          "duration": 149,
+          "phase": "swinging"
+        },
+        {
+          "at": 7870.6,
+          "duration": 673,
+          "phase": "holding"
+        },
+        {
+          "at": 8566.8,
+          "duration": 115,
+          "phase": "holding"
+        },
+        {
+          "at": 8717.6,
+          "duration": 81,
+          "phase": "holding"
+        },
+        {
+          "at": 8815.8,
+          "duration": 96,
+          "phase": "holding"
+        },
+        {
+          "at": 8931.2,
+          "duration": 80,
+          "phase": "pulling"
+        },
+        {
+          "at": 9012.4,
+          "duration": 301,
+          "phase": "pulling"
+        },
+        {
+          "at": 9336.5,
+          "duration": 113,
+          "phase": "pulling"
+        },
+        {
+          "at": 9511,
+          "duration": 80,
+          "phase": "pulling"
+        },
+        {
+          "at": 11822.9,
+          "duration": 55,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 291.9,
+          "phase": "capturing"
+        },
+        {
+          "at": 1139.9,
+          "phase": "swinging"
+        },
+        {
+          "at": 2307.2,
+          "phase": "holding"
+        },
+        {
+          "at": 9325.3,
+          "phase": "pulling"
+        },
+        {
+          "at": 11867.6,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 6351.26,
+        "layoutMs": 457.63,
+        "styleMs": 564.54,
+        "layouts": 811,
+        "styleRecalculations": 1811,
+        "heapUsedMB": 47.61,
+        "domNodes": 1911,
+        "documents": 7
+      },
+      "contextsCreated": [
+        {
+          "type": "webgl2",
+          "at": 37153,
+          "transition": false
+        },
+        {
+          "type": "webgl2",
+          "at": 37391.20000000298,
+          "transition": false
+        }
+      ],
+      "captureOperations": [
+        {
+          "at": 331.6,
+          "name": "serializeToString",
+          "duration": 27
+        },
+        {
+          "at": 991.1,
+          "name": "drawImage",
+          "duration": 4.3
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 2,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/",
+      "to": "/projects",
+      "clickHandlerMs": 164.4,
+      "totalMs": 15012.6,
+      "synchronousCaptureMs": 147.5,
+      "clickToSwingMs": 912.5,
+      "clickToRouteCommitMs": 13561.1,
+      "captureStyleReads": 935,
+      "captureBoundsReads": 817,
+      "previewNodes": 83,
+      "frames": {
+        "count": 931,
+        "medianMs": 13.8,
+        "p95Ms": 20.8,
+        "maxMs": 173.5,
+        "over25ms": 25
+      },
+      "rafCallbackMs": {
+        "p95": 4.4,
+        "max": 14.6
+      },
+      "longTasks": [
+        {
+          "at": 6.1,
+          "duration": 238,
+          "phase": "capturing"
+        },
+        {
+          "at": 245.9,
+          "duration": 83,
+          "phase": "capturing"
+        },
+        {
+          "at": 407.6,
+          "duration": 273,
+          "phase": "capturing"
+        },
+        {
+          "at": 767.3,
+          "duration": 152,
+          "phase": "swinging"
+        },
+        {
+          "at": 10648.8,
+          "duration": 50,
+          "phase": "holding"
+        },
+        {
+          "at": 10853.4,
+          "duration": 52,
+          "phase": "holding"
+        },
+        {
+          "at": 10912.3,
+          "duration": 65,
+          "phase": "holding"
+        },
+        {
+          "at": 13563.5,
+          "duration": 219,
+          "phase": "idle"
+        },
+        {
+          "at": 13785.2,
+          "duration": 151,
+          "phase": "idle"
+        },
+        {
+          "at": 13940.3,
+          "duration": 599,
+          "phase": "idle"
+        },
+        {
+          "at": 14611.6,
+          "duration": 81,
+          "phase": "idle"
+        },
+        {
+          "at": 14738.7,
+          "duration": 63,
+          "phase": "idle"
+        },
+        {
+          "at": 14837,
+          "duration": 57,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 171.2,
+          "phase": "capturing"
+        },
+        {
+          "at": 919.3,
+          "phase": "swinging"
+        },
+        {
+          "at": 2090.5,
+          "phase": "holding"
+        },
+        {
+          "at": 12214.8,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 8674.37,
+        "layoutMs": 353.67,
+        "styleMs": 719.79,
+        "layouts": 382,
+        "styleRecalculations": 1253,
+        "heapUsedMB": 64.5,
+        "domNodes": 20206,
+        "documents": 15
+      },
+      "contextsCreated": [],
+      "captureOperations": [
+        {
+          "at": 192.5,
+          "name": "serializeToString",
+          "duration": 23
+        },
+        {
+          "at": 767.4,
+          "name": "drawImage",
+          "duration": 2.5
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 2,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/projects",
+      "to": "/about",
+      "clickHandlerMs": 325,
+      "totalMs": 5680.3,
+      "synchronousCaptureMs": 296.5,
+      "clickToSwingMs": 1177.9,
+      "clickToRouteCommitMs": 1554.2,
+      "captureStyleReads": 4227,
+      "captureBoundsReads": 3934,
+      "previewNodes": 217,
+      "frames": {
+        "count": 421,
+        "medianMs": 7,
+        "p95Ms": 14,
+        "maxMs": 257,
+        "over25ms": 8
+      },
+      "rafCallbackMs": {
+        "p95": 7.4,
+        "max": 30.4
+      },
+      "longTasks": [
+        {
+          "at": 3.1,
+          "duration": 341,
+          "phase": "capturing"
+        },
+        {
+          "at": 345.2,
+          "duration": 55,
+          "phase": "capturing"
+        },
+        {
+          "at": 400.9,
+          "duration": 84,
+          "phase": "capturing"
+        },
+        {
+          "at": 519.5,
+          "duration": 90,
+          "phase": "capturing"
+        },
+        {
+          "at": 635.3,
+          "duration": 382,
+          "phase": "capturing"
+        },
+        {
+          "at": 1068.1,
+          "duration": 113,
+          "phase": "swinging"
+        },
+        {
+          "at": 1553.6,
+          "duration": 226,
+          "phase": "swinging"
+        },
+        {
+          "at": 1864.8,
+          "duration": 86,
+          "phase": "swinging"
+        },
+        {
+          "at": 1980.4,
+          "duration": 85,
+          "phase": "swinging"
+        },
+        {
+          "at": 2065.9,
+          "duration": 83,
+          "phase": "swinging"
+        },
+        {
+          "at": 2183.5,
+          "duration": 83,
+          "phase": "swinging"
+        },
+        {
+          "at": 5424.1,
+          "duration": 60,
+          "phase": "idle"
+        }
+      ],
+      "phases": [
+        {
+          "at": 328.8,
+          "phase": "capturing"
+        },
+        {
+          "at": 1181.8,
+          "phase": "swinging"
+        },
+        {
+          "at": 2381.1,
+          "phase": "pulling"
+        },
+        {
+          "at": 5418.8,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 3325.33,
+        "layoutMs": 148.91,
+        "styleMs": 295.07,
+        "layouts": 130,
+        "styleRecalculations": 273,
+        "heapUsedMB": 51.45,
+        "domNodes": 23479,
+        "documents": 27
+      },
+      "contextsCreated": [],
+      "captureOperations": [
+        {
+          "at": 538.2,
+          "name": "serializeToString",
+          "duration": 28.4
+        },
+        {
+          "at": 1068.2,
+          "name": "drawImage",
+          "duration": 3.1
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "dpr": 1,
+      "from": "/about",
+      "to": "/contact",
+      "clickHandlerMs": 317.3,
+      "totalMs": 7231.7,
+      "synchronousCaptureMs": 283.3,
+      "clickToSwingMs": 1255.1,
+      "clickToRouteCommitMs": 3990.8,
+      "captureStyleReads": 696,
+      "captureBoundsReads": 499,
+      "previewNodes": 214,
+      "frames": {
+        "count": 573,
+        "medianMs": 7,
+        "p95Ms": 14.1,
+        "maxMs": 222.3,
+        "over25ms": 14
+      },
+      "rafCallbackMs": {
+        "p95": 6.5,
+        "max": 34.1
+      },
+      "longTasks": [
+        {
+          "at": 2.2,
+          "duration": 421,
+          "phase": "capturing"
+        },
+        {
+          "at": 423.3,
+          "duration": 89,
+          "phase": "capturing"
+        },
+        {
+          "at": 598.1,
+          "duration": 373,
+          "phase": "capturing"
+        },
+        {
+          "at": 1067.6,
+          "duration": 190,
+          "phase": "swinging"
+        },
+        {
+          "at": 4051.7,
+          "duration": 75,
+          "phase": "holding"
+        },
+        {
+          "at": 4279.9,
+          "duration": 79,
+          "phase": "pulling"
+        },
+        {
+          "at": 4396.8,
+          "duration": 91,
+          "phase": "pulling"
+        },
+        {
+          "at": 4536.9,
+          "duration": 94,
+          "phase": "pulling"
+        },
+        {
+          "at": 4640.8,
+          "duration": 89,
+          "phase": "pulling"
+        },
+        {
+          "at": 4767.3,
+          "duration": 91,
+          "phase": "pulling"
+        }
+      ],
+      "phases": [
+        {
+          "at": 319.7,
+          "phase": "capturing"
+        },
+        {
+          "at": 1257.6,
+          "phase": "swinging"
+        },
+        {
+          "at": 2385.4,
+          "phase": "holding"
+        },
+        {
+          "at": 4147,
+          "phase": "pulling"
+        },
+        {
+          "at": 7072.6,
+          "phase": "idle"
+        }
+      ],
+      "counters": {
+        "scriptMs": 3789.26,
+        "layoutMs": 155.92,
+        "styleMs": 332.94,
+        "layouts": 548,
+        "styleRecalculations": 665,
+        "heapUsedMB": 41.36,
+        "domNodes": 13801,
+        "documents": 20
+      },
+      "contextsCreated": [],
+      "captureOperations": [
+        {
+          "at": 357,
+          "name": "serializeToString",
+          "duration": 27.5
+        },
+        {
+          "at": 1067.8,
+          "name": "drawImage",
+          "duration": 4.6
+        }
+      ],
+      "cleanup": {
+        "inert": false,
+        "hidden": true,
+        "previewNodes": 0,
+        "canvases": 1,
+        "totalWebGLContexts": 3,
+        "totalTransitionContexts": 1
+      }
+    }
+  ],
+  "checks": [],
+  "errors": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Loading the script 'https://va.vercel-scripts.com/v1/script.debug.js' violates the following Content Security Policy directive: \"script-src 'self' 'unsafe-inline' 'unsafe-eval'\". Note that 'script-src-elem' was not explicitly set, so 'script-src' is used as a fallback. The action has been blocked."
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "console": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED"
+    }
+  ],
+  "hardware": {
+    "cores": 12,
+    "memoryGB": 8,
+    "dpr": 1,
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+  }
+}

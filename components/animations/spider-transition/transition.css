@@ -30,6 +30,15 @@ html.portfolio-transitioning {
 html.portfolio-transitioning [data-transition-page] {
   pointer-events: none;
 }
+html.portfolio-transitioning [data-transition-page],
+html.portfolio-transitioning [data-transition-page] *,
+html.portfolio-transitioning [data-transition-page] *::before,
+html.portfolio-transitioning [data-transition-page] *::after {
+  animation-play-state: paused !important;
+}
+html[data-spider-transition="capturing"] {
+  cursor: progress;
+}
 @media (prefers-reduced-motion: reduce) {
   .spider-transition {
     display: none !important;

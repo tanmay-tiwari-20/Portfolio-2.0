@@ -15,7 +15,7 @@ test("capture and renderer backing stores respect viewport and pixel budgets", (
     [1920, 1080, 2, 4],
   ]) {
     const quality = getTransitionResolution(width, height, dpr, cores);
-    assert.equal(quality.low, width < 700 || cores <= 4);
+    assert.equal(quality.low, cores <= 4);
     for (const [ratio, cap, budget] of [
       [quality.captureRatio, quality.low ? 1.5 : 2, quality.low ? 2e6 : 5e6],
       [
@@ -29,12 +29,28 @@ test("capture and renderer backing stores respect viewport and pixel budgets", (
     }
   }
   assert.deepEqual(getTransitionResolution(390, 844, 3), {
-    low: true,
-    captureRatio: 1.5,
-    renderRatio: 1.25,
+    low: false,
+    captureRatio: 2,
+    renderRatio: 1.75,
   });
   assert.equal(getTransitionResolution(1440, 900, 1).renderRatio, 1);
   assert.ok(getTransitionResolution(3840, 2160, 3).renderRatio < 1);
+});
+
+test("hardware capability, not viewport width, selects the lighter configuration", () => {
+  for (const width of [320, 375, 430, 768, 1024, 1440, 1920, 2560]) {
+    assert.equal(getTransitionResolution(width, 900, 3, 8, 8).low, false);
+    for (const [cores, memoryGB] of [
+      [4, 8],
+      [8, 4],
+      [2, 2],
+    ]) {
+      const result = getTransitionResolution(width, 900, 3, cores, memoryGB);
+      assert.equal(result.low, true);
+      assert.ok(width * 900 * result.renderRatio ** 2 <= 1_500_000.001);
+    }
+  }
+  assert.equal(getTransitionResolution(320, 900, 3, 8, NaN).low, false);
 });
 
 test("invalid and extreme sizing inputs cannot produce invalid ratios", () => {

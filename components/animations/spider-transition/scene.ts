@@ -62,6 +62,7 @@ export function createTransitionScene(
   let density = 0;
   let disposed = false;
   let adaptation = createAdaptiveResolution(1);
+  let observedPixelBudget = Infinity;
   const palm = new THREE.Vector3(),
     webPalm = new THREE.Vector3(),
     grip = new THREE.Vector3();
@@ -95,11 +96,18 @@ export function createTransitionScene(
       height,
       dpr,
       navigator.hardwareConcurrency || 8,
+      (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
     );
     low = resolution.low;
-    adaptation = createAdaptiveResolution(resolution.renderRatio);
+    // Preserve learned GPU pressure through orientation/viewport changes.
+    // Smaller viewports can still regain sharpness within the observed budget.
+    const renderRatio = Math.min(
+      resolution.renderRatio,
+      Math.sqrt(observedPixelBudget / width / height),
+    );
+    adaptation = createAdaptiveResolution(renderRatio);
     // One allocation; separate setPixelRatio/setSize calls resize twice.
-    renderer.setDrawingBufferSize(width, height, resolution.renderRatio);
+    renderer.setDrawingBufferSize(width, height, renderRatio);
     camera.left = -width / 2;
     camera.right = width / 2;
     camera.top = height / 2;
@@ -152,7 +160,9 @@ export function createTransitionScene(
     // Arc accelerates into the bottom of the swing, then rises with the sheet.
     character.group.rotation.set(...motion.rotation);
     character.group.position.set(0, 0, 0);
-    character.group.updateMatrixWorld(true);
+    // Only the grip's ancestor chain is needed to place the rig. Updating the
+    // entire character here repeated every leg, finger and suit-mesh matrix.
+    character.gripHand.updateWorldMatrix(true, false);
     palm.setFromMatrixPosition(character.gripHand.matrixWorld);
     grip.set(...motion.grip);
     character.group.position.copy(grip).sub(palm);
@@ -175,8 +185,13 @@ export function createTransitionScene(
     );
     cloth?.update(dt, palm, pull);
     const nextRatio = adaptation.sample(frameDt);
-    if (nextRatio !== undefined)
+    if (nextRatio !== undefined) {
+      observedPixelBudget = Math.min(
+        observedPixelBudget,
+        width * height * nextRatio * nextRatio,
+      );
       renderer.setDrawingBufferSize(width, height, nextRatio);
+    }
     // Resize before drawing, so quality adjustments cannot expose a cleared frame.
     renderer.render(scene, camera);
   }

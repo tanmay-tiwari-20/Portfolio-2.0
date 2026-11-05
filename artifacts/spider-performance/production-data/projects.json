@@ -1,0 +1,230 @@
+[
+  {
+    "id": "project-01",
+    "createdAt": "2025-01-01",
+    "updatedAt": "2026-10-22T14:46:03.563Z",
+    "sortOrder": 0,
+    "isPublished": true,
+    "title": "Unoverse",
+    "slug": "unoverse",
+    "category": "Game Development",
+    "description": "Unoverse is a real-time 3D multiplayer UNO game built with Next.js, React Three Fiber, Express, Socket.IO, and TypeScript. It features a server-authoritative game engine, immersive 3D gameplay, WebRTC voice chat, customizable house rules, smart matchmaking with room codes, and seamless real-time multiplayer for an authentic UNO experience.",
+    "year": "2026",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "alt": "Unoverse"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Node.js",
+      "Express",
+      "Socket.IO",
+      "React Three Fiber",
+      "Three.js",
+      "Redis",
+      "WebRTC",
+      "Zustand",
+      "Docker",
+      "CrazyGames SDK"
+    ],
+    "featured": true,
+    "liveUrl": "https://unoverse-3d.vercel.app/",
+    "githubUrl": ""
+  },
+  {
+    "id": "project-02",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2026-10-22T11:19:24.566Z",
+    "sortOrder": 1,
+    "isPublished": true,
+    "title": "Spools",
+    "slug": "spools",
+    "category": "Social Media Platform",
+    "description": "Spools is a social space for sharing ideas, finding your people, and building things together. It is a full-stack social app built with the MERN stack. Share short posts, explore beyond your feed, start interest-based Circles, collaborate on multi-part Spool series, and chat in real time.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "alt": "Spools",
+      "fit": "contain"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Community",
+      "Vite",
+      "React Router",
+      "Recoil",
+      "Tailwind CSS",
+      "Chakra UI",
+      "Node.js",
+      "Express",
+      "Socket.IO",
+      "MongoDB",
+      "JWT",
+      "Bcrypt",
+      "Cloudinary",
+      "PWA",
+      "Social media"
+    ],
+    "featured": true,
+    "liveUrl": "https://spools.onrender.com",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Spools"
+  },
+  {
+    "id": "aXsigA2x-pnKjjRuO50uh",
+    "createdAt": "2026-10-22T11:34:26.366Z",
+    "updatedAt": "2026-10-22T11:34:26.366Z",
+    "sortOrder": 2,
+    "isPublished": true,
+    "title": "HackShastra Website",
+    "slug": "hackshastra-website",
+    "category": "Community Website",
+    "description": "This is an interactive, high-performance community platform and event management system built for the HackShastra community.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "alt": "HackShastra Website",
+      "fit": "contain"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Tailwind CSS",
+      "Community Website",
+      "MongoDB",
+      "Framer motion",
+      "GSAP",
+      "Lenis"
+    ],
+    "featured": true,
+    "liveUrl": "https://hackshastra.in",
+    "githubUrl": ""
+  },
+  {
+    "id": "project-03",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2026-10-22T11:25:22.146Z",
+    "sortOrder": 3,
+    "isPublished": true,
+    "title": "Baithak",
+    "slug": "baithak",
+    "category": "Video Meeting and Collaboration App",
+    "description": "Baithak is a video meeting and collaboration app built with Next.js. Its dashboard brings meeting creation, joining, scheduling, personal rooms, meeting history, and recordings together in one place. Meetings use Stream Video for real-time calls, while Clerk handles sign-in.",
+    "year": "2025",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "alt": "Baithak",
+      "fit": "contain"
+    },
+    "gallery": [],
+    "tags": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Clerk",
+      "Stream Video React SDK",
+      "Radix UI",
+      "PWA",
+      "Vercel",
+      "Video Meeting Website",
+      "Live video chat",
+      "WebRTC"
+    ],
+    "featured": true,
+    "liveUrl": "https://baithak-meet.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Baithak"
+  },
+  {
+    "id": "pjS0WP-9OXIX3zcc1fVW2",
+    "createdAt": "2026-10-22T14:35:47.991Z",
+    "updatedAt": "2026-10-22T14:42:43.715Z",
+    "sortOrder": 4,
+    "isPublished": true,
+    "title": "3D Shirt Showcaser",
+    "slug": "3d-shirt-showcaser",
+    "category": "3D Website",
+    "description": "3D Shirt Showcaser is an interactive web app using React, Three.js, and Tailwind CSS that lets users customize 3D shirt models with various textures and colors in real time. It offers a dynamic and engaging way to visualize products online.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "alt": "3D Shirt Showcaser"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Three.js",
+      "React Three Fiber",
+      "Tailwind CSS",
+      "3D model"
+    ],
+    "featured": false,
+    "liveUrl": "https://shirt-showcaser.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/shirt-showcaser"
+  },
+  {
+    "id": "5kzT5b_3bRn9YGhAkxO2E",
+    "createdAt": "2026-10-22T14:30:28.254Z",
+    "updatedAt": "2026-10-22T14:30:28.254Z",
+    "sortOrder": 5,
+    "isPublished": true,
+    "title": "Resumify",
+    "slug": "resumify",
+    "category": "Web Application",
+    "description": "Resumify is a full-stack resume review web app that lets users upload resumes, preview them, get ATS-based scores, and receive detailed feedback with improvement suggestions, all in a clean and interactive interface.",
+    "year": "2025",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "alt": "Resumify"
+    },
+    "gallery": [],
+    "tags": [
+      "TypeScript",
+      "React.js",
+      "Tailwind CSS",
+      "React Router",
+      "Puter Store",
+      "Blob Storage",
+      "Custom Data Structures",
+      "Resume",
+      "ATS-based scores"
+    ],
+    "featured": false,
+    "liveUrl": "https://resumify-silk.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Resumify"
+  },
+  {
+    "id": "igRsTHYyVGoq781fCNC00",
+    "createdAt": "2026-10-22T14:42:15.778Z",
+    "updatedAt": "2026-10-22T14:42:15.778Z",
+    "sortOrder": 6,
+    "isPublished": true,
+    "title": "Apple iPhone 15 Pro Website",
+    "slug": "apple-iphone-15-pro-website",
+    "category": "3D Website",
+    "description": "Apple iPhone 15 Pro Website is a React-based recreation of Apple's iPhone 15 Pro website. Featuring Tailwind CSS for responsive styling and Three.js for immersive 3D effects, this project incorporates GSAP animations for a dynamic user experience, closely mirroring the original site’s sleek design and interactive elements.",
+    "year": "2024",
+    "cover": {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "alt": "Apple iPhone 15 Pro Website"
+    },
+    "gallery": [],
+    "tags": [
+      "React",
+      "Tailwind CSS",
+      "Three.js",
+      "GSAP",
+      "GSAP ScrollTrigger",
+      "Apple Iphone",
+      "3D Website"
+    ],
+    "featured": false,
+    "liveUrl": "https://apple-i-phone15-theta.vercel.app",
+    "githubUrl": "https://github.com/tanmay-tiwari-20/Apple-iPhone15"
+  }
+]
