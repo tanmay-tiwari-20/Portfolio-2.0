@@ -61,6 +61,7 @@ export function createTransitionScene(
     low = false;
   let density = 0;
   let disposed = false;
+  let warming: Promise<void> | undefined;
   let adaptation = createAdaptiveResolution(1);
   let observedPixelBudget = Infinity;
   const palm = new THREE.Vector3(),
@@ -120,15 +121,37 @@ export function createTransitionScene(
     scene.add(cloth.mesh);
   }
 
-  function warmup(w: number, h: number) {
-    if (disposed) return;
+  function releaseResources() {
+    cloth?.dispose();
+    cloth = undefined;
+    blank.dispose();
+    character.dispose();
+    web.dispose();
+    renderer.dispose();
+  }
+
+  function warmup(w: number, h: number): Promise<void> {
+    if (disposed) return Promise.resolve();
+    if (warming) return warming;
     configure(w, h);
-    // Called during idle/intent preparation while the canvas is hidden. Compile
-    // all materials, then upload the real rig/web geometry in one hidden draw.
-    renderer.compile(scene, camera);
-    cloth!.mesh.visible = true;
-    render(CONTACT_TIME + 0.4, 0, 0);
-    clear();
+    // Await shader readiness during idle/intent preparation before uploading
+    // the real rig/web geometry in a hidden draw. A cold shader must not first
+    // finish compiling when the actor enters the visible swing.
+    warming = renderer
+      .compileAsync(scene, camera)
+      .then(() => {
+        if (disposed) return;
+        cloth!.mesh.visible = true;
+        render(CONTACT_TIME + 0.4, 0, 0);
+        clear();
+      })
+      .finally(() => {
+        warming = undefined;
+        // Three polls material programs until compileAsync settles; deleting
+        // their renderer properties earlier would break its pending callback.
+        if (disposed) releaseResources();
+      });
+    return warming;
   }
 
   function begin(snapshot: HTMLCanvasElement, w: number, h: number) {
@@ -214,12 +237,7 @@ export function createTransitionScene(
       if (disposed) return;
       disposed = true;
       clear();
-      cloth?.dispose();
-      cloth = undefined;
-      blank.dispose();
-      character.dispose();
-      web.dispose();
-      renderer.dispose();
+      if (!warming) releaseResources();
     },
   };
 }

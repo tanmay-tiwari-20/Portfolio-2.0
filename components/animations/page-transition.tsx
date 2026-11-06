@@ -24,7 +24,8 @@ type Flight = {
   controller: AbortController;
   from: string;
   committed: boolean;
-  ready: boolean;
+  ready: Promise<void>;
+  markReady: () => void;
   frame: number;
   readinessFrame: number;
   timeout: number;
@@ -81,10 +82,11 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         return Promise.reject(new Error("3D transition unavailable"));
       if (!preparation)
         preparation = import("./spider-transition/scene")
-          .then(({ createTransitionScene }) => {
+          .then(async ({ createTransitionScene }) => {
             if (disposed) throw new Error("Transition disposed");
             scene = createTransitionScene(screen);
-            scene.warmup(innerWidth, innerHeight);
+            await scene.warmup(innerWidth, innerHeight);
+            if (disposed) throw new Error("Transition disposed");
             return scene;
           })
           .catch((error: unknown) => {
@@ -167,7 +169,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       if (active === flight && !flight.controller.signal.aborted) {
         flight.readinessFrame = requestAnimationFrame(() => {
           flight.readinessFrame = requestAnimationFrame(() => {
-            if (active === flight) flight.ready = true;
+            if (active === flight) flight.markReady();
           });
         });
       }
@@ -213,11 +215,16 @@ export default function PageTransition({ children }: { children: ReactNode }) {
       }
       const from = latestKey.current;
       if (from === routeKey(to.href)) return;
+      let markReady!: () => void;
+      const ready = new Promise<void>((resolve) => {
+        markReady = resolve;
+      });
       const flight: Flight = {
         controller: new AbortController(),
         from,
         committed: false,
-        ready: false,
+        ready,
+        markReady,
         frame: 0,
         readinessFrame: 0,
         timeout: 0,
@@ -227,6 +234,10 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             ? document.activeElement
             : null,
       };
+      // Release preparation on Escape, resize, or a newer navigation as well.
+      flight.controller.signal.addEventListener("abort", markReady, {
+        once: true,
+      });
       active = flight;
       root.dataset.spiderTransition = "capturing";
       let navigationSent = pop;
@@ -268,6 +279,19 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         ]);
         if (active !== flight || flight.controller.signal.aborted) return;
         engine.begin(texture, snapshot.width, snapshot.height);
+        // A cold route used to park the character at the left-hand contact
+        // point for seconds. Keep the instant frozen cover until the destination
+        // can be revealed, then play the entire swing without a readiness stop.
+        await flight.ready;
+        if (active !== flight || flight.controller.signal.aborted) return;
+        clearTimeout(flight.timeout);
+        flight.timeout = window.setTimeout(
+          () => finish(),
+          (DURATION / PLAYBACK_RATE) * 1000 + 2000,
+        );
+        // WebGL may discard a hidden drawing buffer while the route loads.
+        // Refresh the uploaded page immediately before replacing the cover.
+        engine.render(0, 0, 0);
         screen.style.visibility = "visible";
         frozen.replaceChildren();
         root.dataset.spiderTransition = "swinging";
@@ -282,16 +306,8 @@ export default function PageTransition({ children }: { children: ReactNode }) {
             previous = now;
             // Choreography follows wall time at every refresh rate. Only the
             // numerical cloth integrator needs a bounded timestep.
-            time = Math.min(
-              time + frameDt * PLAYBACK_RATE,
-              flight.ready ? DURATION : CONTACT_TIME,
-            );
-            const phase =
-              time < CONTACT_TIME
-                ? "swinging"
-                : flight.ready
-                  ? "pulling"
-                  : "holding";
+            time = Math.min(time + frameDt * PLAYBACK_RATE, DURATION);
+            const phase = time < CONTACT_TIME ? "swinging" : "pulling";
             if (root.dataset.spiderTransition !== phase)
               root.dataset.spiderTransition = phase;
             engine.render(time, dt, frameDt);

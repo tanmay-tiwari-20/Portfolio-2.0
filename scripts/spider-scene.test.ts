@@ -16,7 +16,14 @@ class Renderer {
   };
   events: string[] = [];
   sizes: Array<[number, number, number]> = [];
-  draws: Array<{ cloth: Cloth; texture: THREE.Texture; visible: boolean }> = [];
+  draws: Array<{
+    cloth: Cloth;
+    texture: THREE.Texture;
+    visible: boolean;
+    characterVisible: boolean;
+    webVisible: boolean;
+  }> = [];
+  compilation = Promise.resolve();
   compileCount = 0;
   disposeCount = 0;
   ratio = 1;
@@ -31,10 +38,11 @@ class Renderer {
   getPixelRatio() {
     return this.ratio;
   }
-  compile(scene: THREE.Scene) {
+  compileAsync(scene: THREE.Scene) {
     this.events.push("compile");
     this.compileCount++;
     assert.ok(scene.getObjectByName("outgoing-page-cloth"));
+    return this.compilation;
   }
   render(scene: THREE.Scene, camera: THREE.OrthographicCamera) {
     this.events.push("render");
@@ -45,6 +53,9 @@ class Renderer {
       cloth,
       texture: cloth.material.uniforms.pageMap.value,
       visible: cloth.visible,
+      characterVisible: scene.getObjectByName("Original woven spider suit")!
+        .visible,
+      webVisible: scene.getObjectByName("fibrous-swing-web")!.visible,
     });
   }
   clear() {
@@ -102,11 +113,23 @@ function assertFlat(cloth: Cloth, width: number, height: number) {
   assert.equal(cloth.material.uniforms.bendAmount.value, 0);
 }
 
-test("warmup compiles and draws the real scene, then begin reuses and resets its cloth", () => {
+test("warmup awaits shader readiness before drawing the real scene, then begin reuses and resets its cloth", async () => {
   const { engine, renderer, snapshot, restore } = setup();
+  let finishCompilation!: () => void;
+  renderer.compilation = new Promise<void>((resolve) => {
+    finishCompilation = resolve;
+  });
   try {
-    engine.warmup(1440, 900);
+    const ready = engine.warmup(1440, 900);
+    assert.equal(engine.warmup(1440, 900), ready);
     assert.equal(renderer.compileCount, 1);
+    assert.equal(
+      renderer.draws.length,
+      0,
+      "cold shaders must finish before the hidden upload draw",
+    );
+    finishCompilation();
+    await ready;
     assert.ok(
       renderer.events.indexOf("compile") < renderer.events.indexOf("render"),
     );
@@ -117,6 +140,11 @@ test("warmup compiles and draws the real scene, then begin reuses and resets its
       "warmup must actually draw the page material",
     );
     assert.equal(warm.cloth.visible, false, "warmup leaves no visible cloth");
+    assert.ok(
+      warm.characterVisible,
+      "warmup draws the visible actor materials",
+    );
+    assert.ok(warm.webVisible, "warmup draws the visible web materials");
     assert.ok(warm.texture instanceof THREE.DataTexture);
     engine.begin(snapshot, 1440, 900);
     const start = renderer.draws.at(-1)!;
@@ -129,6 +157,35 @@ test("warmup compiles and draws the real scene, then begin reuses and resets its
     assert.ok(start.texture instanceof THREE.CanvasTexture);
     assert.equal(start.texture.image, snapshot);
     assertFlat(start.cloth, 1440, 900);
+  } finally {
+    restore();
+  }
+});
+
+test("disposal during shader preparation waits for the compiler and never draws afterward", async () => {
+  const { engine, renderer, snapshot, restore } = setup();
+  let finishCompilation!: () => void;
+  renderer.compilation = new Promise<void>((resolve) => {
+    finishCompilation = resolve;
+  });
+  try {
+    const ready = engine.warmup(1440, 900);
+    engine.dispose();
+    engine.dispose();
+    assert.equal(
+      renderer.disposeCount,
+      0,
+      "pending compiler polling must retain its material programs",
+    );
+    finishCompilation();
+    await ready;
+    assert.equal(renderer.disposeCount, 1);
+    assert.equal(renderer.draws.length, 0);
+    engine.begin(snapshot, 1440, 900);
+    await engine.warmup(1440, 900);
+    engine.render(1, 1 / 60);
+    assert.equal(renderer.compileCount, 1);
+    assert.equal(renderer.draws.length, 0);
   } finally {
     restore();
   }
