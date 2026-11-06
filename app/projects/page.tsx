@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { published, repos } from "@/lib/db";
@@ -7,18 +6,17 @@ import WorkHero from "@/components/work/work-hero";
 import WorkMotion from "@/components/work/work-motion";
 import ContributionCity from "@/components/work/contribution-city";
 import { MotionLayer } from "@/components/shell";
+import { pageMetadata, pageGraph } from "@/lib/seo";
+import SeoJsonLd from "@/components/seo-json-ld";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "Selected Work",
-  description:
-    "Games, social spaces, interactive websites and web applications. Explore selected projects by Tanmay Tiwari.",
-};
+export const metadata = pageMetadata("projects");
 
 export default async function ProjectsPage() {
   const items = await published(repos.projects);
   return (
     <div className="work-desk-surface">
+      <SeoJsonLd data={pageGraph("projects")} />
       <WorkMotion className="work-paper relative overflow-hidden">
         <WorkHero projects={items} />
       </WorkMotion>

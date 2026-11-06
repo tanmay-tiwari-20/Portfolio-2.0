@@ -244,7 +244,7 @@ export default function HomeExperienceJourney({ experiences }: Props) {
 
       <div className="journey-heading-row reveal">
         <h2 className="display" id="journey-title">
-          <span className="journey-heading-line">Shipping software.</span>
+          <span className="journey-heading-line">Shipping software.</span>{" "}
           <em className="journey-heading-line">Building community.</em>
         </h2>
         <div className="journey-heading-aside">

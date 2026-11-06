@@ -71,7 +71,11 @@ export function ProjectImage({
         >
           <Image
             src={getOptimizedUrl(asset.url, priority ? 2000 : 1600)}
-            alt={asset.alt || `${project.title} interface`}
+            alt={
+              asset.alt && asset.alt !== project.title
+                ? asset.alt
+                : `Screenshot of ${project.title}`
+            }
             fill
             sizes={sizes}
             priority={priority}

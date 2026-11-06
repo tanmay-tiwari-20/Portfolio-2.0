@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowDownRight, ArrowUpRight, Plus } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Plus } from "lucide-react";
 import type {
   AboutMoment,
   AboutPageContent,
@@ -375,7 +375,6 @@ function MomentPhoto({
               ? "(max-width: 760px) 92vw, 62vw"
               : "(max-width: 760px) 92vw, 32vw"
           }
-          unoptimized
           className={styles.photo}
           data-about-parallax
         />

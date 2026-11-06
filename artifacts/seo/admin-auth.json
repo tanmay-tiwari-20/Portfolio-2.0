@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "route protection",
+    "incorrect password",
+    "CSRF rejection",
+    "login cookie",
+    "production Secure cookie behind HTTPS origin",
+    "refresh",
+    "session renewal",
+    "logout replay rejection",
+    "login throttling"
+  ]
+}

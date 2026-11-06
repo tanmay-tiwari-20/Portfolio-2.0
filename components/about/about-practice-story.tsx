@@ -29,6 +29,7 @@ import {
   fitsAboutStoryStage,
 } from "@/lib/about-story-motion";
 import styles from "./about-practice-story.module.css";
+import { cloudinaryLoader } from "@/lib/cloudinary/urls";
 
 type StoryImage = {
   src: string;
@@ -404,10 +405,10 @@ function PracticeChapter({
           >
             <Image
               src={image.src}
+              loader={cloudinaryLoader}
               alt={image.alt}
               fill
               sizes="(min-width: 1440px) 650px, (min-width: 700px) 51vw, 100vw"
-              unoptimized
               className={styles.photograph}
             />
           </motion.div>

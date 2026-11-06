@@ -1,40 +1,39 @@
-import type { Metadata } from "next";
 import { MapPin } from "lucide-react";
 import ContactMotion from "@/components/contact/contact-motion";
 import ContactChannels from "@/components/contact/contact-channels";
-import { published, repos } from "@/lib/db";
+import { published, publicSocials, repos } from "@/lib/db";
 import { resolveContactLinks } from "@/lib/contact-links";
 import "./contact.css";
+import { pageMetadata, pageGraph } from "@/lib/seo";
+import SeoJsonLd from "@/components/seo-json-ld";
 
 export const dynamic = "force-dynamic";
-export const metadata: Metadata = {
-  title: "Contact — Let's talk",
-  description:
-    "Have a project in mind or an idea to share? Get in touch with Tanmay Tiwari by email or connect online.",
-};
+export const metadata = pageMetadata("contact");
 
 export default async function Contact() {
   const [socials, profiles] = await Promise.all([
-    published(repos.socials),
-    repos.profile.getAll(),
+    publicSocials(),
+    published(repos.profile),
   ]);
   const person = profiles[0];
 
   return (
     <ContactMotion className="contact-page">
+      <SeoJsonLd data={pageGraph("contact")} />
       <div className="contact-container">
         <div className="contact-layout">
           <section className="contact-hero" aria-labelledby="contact-title">
             <p className="contact-eyebrow" data-contact-intro>
-              <span aria-hidden="true" /> LET’S CONNECT
+              <span aria-hidden="true" /> CONTACT{" "}
+              {person?.name || "Tanmay Tiwari"}
             </p>
             <h1
               id="contact-title"
               className="contact-title"
-              aria-label="Good things start with hello."
+              aria-label={`Contact ${person?.name || "Tanmay Tiwari"}: Good things start with hello.`}
             >
-              <span data-contact-line>Good things</span>
-              <span data-contact-line>start with</span>
+              <span data-contact-line>Good things</span>{" "}
+              <span data-contact-line>start with</span>{" "}
               <em data-contact-line>hello.</em>
             </h1>
             <p className="contact-hero-copy" data-contact-intro>

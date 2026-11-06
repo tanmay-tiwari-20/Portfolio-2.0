@@ -4,8 +4,11 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
-import { published, repos } from "@/lib/db";
+import { publicSocials, published, repos } from "@/lib/db";
 import SiteAnalytics from "@/components/site-analytics";
+import SeoJsonLd from "@/components/seo-json-ld";
+import { globalGraph } from "@/lib/seo";
+import { publicPages, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +23,9 @@ const poppins = localFont({
   ],
   variable: "--font-poppins",
   display: "swap",
+  // Only the variable body font is critical on every route; avoid eagerly
+  // downloading six display-font weights before the hero image.
+  preload: false,
 });
 
 const inter = localFont({
@@ -29,38 +35,18 @@ const inter = localFont({
   display: "swap",
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const settings = (await repos.settings.getAll())[0];
-  const profile = (await repos.profile.getAll())[0];
-  const siteTitle = settings?.title || `${profile?.name || "Tanmay Tiwari"} — ${profile?.role || "Creative Developer & Architect"}`;
-  const siteDescription = settings?.description || profile?.tagline || "Creative developer and technical architect building high-performance web applications.";
-  const ogImage = settings?.ogImage?.url || "/og.svg";
-  return {
-  title: { default: siteTitle, template: `%s — ${profile?.name || "Tanmay Tiwari"}` },
-  description: siteDescription,
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  ),
+export const metadata: Metadata = {
+  title: { default: publicPages.home.title, template: `%s | ${SITE_NAME}` },
+  description: publicPages.home.description,
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
     apple: "/icon.svg",
   },
-  openGraph: {
-    title: siteTitle,
-    description: siteDescription,
-    type: "website",
-    images: [ogImage],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteTitle,
-    description: siteDescription,
-    images: [ogImage],
-  },
   robots: { index: true, follow: true },
-  };
-}
+};
 
 export default async function RootLayout({
   children,
@@ -68,12 +54,13 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   const [profile, socials] = await Promise.all([
-    repos.profile.getAll().then(([item]) => item),
-    published(repos.socials),
+    published(repos.profile).then(([item]) => item),
+    publicSocials(),
   ]);
   return (
     <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
       <body id="top" className="font-body bg-spidey-dark-900 text-spidey-paper">
+        <SeoJsonLd data={globalGraph(profile, socials)} />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

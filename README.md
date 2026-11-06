@@ -60,3 +60,17 @@ Set `NEXT_PUBLIC_WEB3FORMS_KEY` from Web3Forms. For Docker, pass it as a build a
 
 
 
+
+## SEO and search readiness
+
+The preferred domain is `https://takneekitanmay.tech`, centralized in `lib/site.ts`.
+The alternate Vercel host redirects to the matching canonical URL. Public page
+metadata, sitemap, JSON-LD, social PNGs and `llms.txt` share published content.
+
+Read [the implementation and deployment report](docs/SEO_IMPLEMENTATION_REPORT.md)
+and [the source-backed search-intent strategy](docs/SEO_RESEARCH.md). Run
+`npm run test:seo`, `npm run typecheck`, `npm run lint` and `npm run build` before
+deployment. Against a running production server, run
+`npm run audit:seo -- http://localhost:3000`; use the live production URL and
+`--external` for the deployment check. Reports explicitly distinguish local
+verification from unverified CDN, search-console and Lighthouse results.

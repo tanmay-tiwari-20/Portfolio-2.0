@@ -474,17 +474,23 @@ export default function DitherVeil({
     const container = containerRef.current;
     if (!container) return;
 
-    const reducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const renderer = new Renderer({
-      dpr: Math.min(window.devicePixelRatio || 1, 2),
-      alpha: false,
-      antialias: false,
-    });
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = motionPreference.matches;
+    let renderer: Renderer;
+    try {
+      renderer = new Renderer({
+        dpr: Math.min(window.devicePixelRatio || 1, 2),
+        alpha: false,
+        antialias: false,
+      });
+    } catch {
+      // The real portrait remains useful when WebGL is unavailable.
+      return;
+    }
     const gl = renderer.gl;
     const canvas = gl.canvas;
     canvas.style.display = "block";
+    canvas.style.visibility = "hidden";
     canvas.style.position = "absolute";
     canvas.style.inset = "0";
     canvas.style.zIndex = "1";
@@ -766,7 +772,7 @@ export default function DitherVeil({
       maskUniforms.uRadius.value = s.revealRadius * (0.45 + 0.55 * presence);
       maskUniforms.uSoftness.value = s.softness;
       maskUniforms.uStrength.value = presence;
-      maskUniforms.uFade.value = Math.max(fade, minFade);
+      maskUniforms.uFade.value = reducedMotion ? 1 : Math.max(fade, minFade);
       viewUniforms.uBurstWidth.value = Math.max(60, s.revealRadius * 0.9);
       renderer.render({ scene: maskMesh, target: masks[1] });
       masks.reverse();
@@ -818,9 +824,12 @@ export default function DitherVeil({
       viewUniforms.uContrast.value = s.contrast;
       viewUniforms.uBrightness.value = s.brightness;
       viewUniforms.uReverse.value = s.reverse ? 1 : 0;
-      const intro = image ? Math.min(1, (now - introStart) / INTRO_MS) : 0;
+      const intro = image
+        ? reducedMotion ? 1 : Math.min(1, (now - introStart) / INTRO_MS)
+        : 0;
       viewUniforms.uIntro.value = 1 - Math.pow(1 - intro, 2);
       renderer.render({ scene: viewMesh });
+      if (image) canvas.style.visibility = "visible";
 
       const busy =
         pointer.inside ||
@@ -855,6 +864,16 @@ export default function DitherVeil({
       if (document.hidden) pause();
       else wake();
     };
+    const motionChanged = () => {
+      reducedMotion = motionPreference.matches;
+      if (reducedMotion) {
+        pointer.inside = false;
+        presence = 0;
+        bursts.length = 0;
+        trailUntil = 0;
+      }
+      wake();
+    };
     wakeRef.current = wake;
     // Export the existing canvas on demand without paying preserveDrawingBuffer
     // costs during normal browsing. The capture listener reads it synchronously.
@@ -866,6 +885,7 @@ export default function DitherVeil({
     window.addEventListener("portfolio:transition-start", pause);
     window.addEventListener("portfolio:transition-end", wake);
     document.addEventListener("visibilitychange", visibilityChanged);
+    motionPreference.addEventListener("change", motionChanged);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -893,6 +913,7 @@ export default function DitherVeil({
       pointer.placed = true;
     };
     const onMove = (e: PointerEvent) => {
+      if (reducedMotion) return;
       locate(e);
       if (!pointer.inside) {
         pointer.inside = true;
@@ -905,6 +926,7 @@ export default function DitherVeil({
       wake();
     };
     const onDown = (e: PointerEvent) => {
+      if (reducedMotion) return;
       onMove(e);
       if (
         !settingsRef.current?.clickBurst ||
@@ -942,6 +964,7 @@ export default function DitherVeil({
       window.removeEventListener("portfolio:transition-start", pause);
       window.removeEventListener("portfolio:transition-end", wake);
       document.removeEventListener("visibilitychange", visibilityChanged);
+      motionPreference.removeEventListener("change", motionChanged);
       wakeRef.current = () => {};
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
@@ -962,6 +985,7 @@ export default function DitherVeil({
       ref={containerRef}
       className={`relative w-full h-full overflow-hidden touch-pan-y ${className}`.trim()}
       style={style}
-    ><img src={src} alt="" aria-hidden="true" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: fit, zIndex: 0, pointerEvents: "none" }} /></div>
+      aria-hidden="true"
+    />
   );
 }

@@ -1,0 +1,47 @@
+▲ Next.js 16.4.2 (Turbopack)
+- Environments: .env
+✓ Running next.config.ts took 1140ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 32.5s
+  Running TypeScript ...
+  Finished TypeScript in 76s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/10) ...
+  Generating static pages using 11 workers (2/10) 
+  Generating static pages using 11 workers (4/10) 
+  Generating static pages using 11 workers (7/10) 
+✓ Generating static pages using 11 workers (10/10) in 4.3s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /about
+├ ƒ /api/admin/cloudinary-sign
+├ ƒ /api/admin/content
+├ ƒ /api/admin/database
+├ ƒ /api/admin/export
+├ ƒ /api/admin/import
+├ ƒ /api/admin/login
+├ ƒ /api/admin/media
+├ ƒ /contact
+├ ƒ /experience
+├ ƒ /hackathons
+├ ƒ /hackshastra
+├ ○ /icon.svg
+├ ƒ /llms.txt
+├ ƒ /projects
+├ ƒ /projects/[slug]
+├ ○ /robots.txt
+├ ƒ /secret-admin
+├ ƒ /secret-admin/login
+├ ƒ /sitemap.xml
+└ ƒ /social/[key]
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -31,6 +31,7 @@ export async function proxy(req: NextRequest) {
     }
   }
   response.headers.set("Cache-Control", "no-store, private");
+  response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   return response;
 }
 

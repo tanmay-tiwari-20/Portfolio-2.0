@@ -4,10 +4,10 @@
     "createdAt": "2025-01-01",
     "updatedAt": "2025-01-01",
     "sortOrder": 0,
-    "isPublished": true,
+    "isPublished": false,
     "label": "Instagram",
     "href": "https://instagram.com/",
-    "handle": "@alexbuilds",
+    "handle": "",
     "icon": "◎"
   },
   {
@@ -17,8 +17,8 @@
     "sortOrder": 1,
     "isPublished": true,
     "label": "LinkedIn",
-    "href": "https://linkedin.com/",
-    "handle": "Alex Parker",
+    "href": "https://www.linkedin.com/in/tanmay-tiwari20/",
+    "handle": "Tanmay Tiwari",
     "icon": "in"
   },
   {
@@ -28,8 +28,8 @@
     "sortOrder": 2,
     "isPublished": true,
     "label": "GitHub",
-    "href": "https://github.com/",
-    "handle": "alexparker",
+    "href": "https://github.com/tanmay-tiwari-20",
+    "handle": "tanmay-tiwari-20",
     "icon": "⌘"
   },
   {

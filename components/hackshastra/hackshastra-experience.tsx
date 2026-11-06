@@ -52,10 +52,10 @@ export default function HackShastraExperience({
             <div className="hs-story-copy">
               <h2 id="hs-story-title" className="hs-statement">
                 <span className="block" data-hackshastra-line>
-                  What if learning
+                  What if learning{" "}
                 </span>
                 <span className="block" data-hackshastra-line>
-                  didn’t stop at
+                  didn’t stop at{" "}
                 </span>
                 <span className="hs-story-question" data-hackshastra-line>
                   <span className="hs-outline">knowing?</span>
@@ -202,7 +202,7 @@ export default function HackShastraExperience({
         <div className="hs-section-heading flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <h2 id="hs-practice-title" className="hs-heading">
             <span className="block" data-hackshastra-line>
-              Less someday.
+              Less someday.{" "}
             </span>
             <span className="block text-[var(--hs-red)]" data-hackshastra-line>
               More let’s build.
@@ -226,7 +226,7 @@ export default function HackShastraExperience({
           <div className="hs-section-heading flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <h2 id="hs-events-title" className="hs-heading">
               <span className="block" data-hackshastra-line>
-                It starts with
+                It starts with{" "}
               </span>
               <span
                 className="block text-[var(--hs-red)]"
@@ -256,7 +256,7 @@ export default function HackShastraExperience({
         <div className="grid gap-8 lg:grid-cols-[1.5fr_0.75fr] lg:items-end lg:gap-20">
           <h2 id="hs-people-title" className="hs-heading">
             <span className="block" data-hackshastra-line>
-              Come for the build.
+              Come for the build.{" "}
             </span>
             <span className="block" data-hackshastra-line>
               Stay for <span className="text-[var(--hs-red)]">the people.</span>

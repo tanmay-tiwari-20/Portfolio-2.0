@@ -366,6 +366,23 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
       const to = new URL(location.href);
       if (routeKey(to.href) !== latestKey.current) void navigate(to, true);
     };
+    const warmOnIntent = () => {
+      if (idle !== undefined || reduced.matches || disposed || document.hidden)
+        return;
+      const preload = () => {
+        idle = undefined;
+        if (reduced.matches || disposed || document.hidden) return;
+        warmCaptureAssets(surface);
+        sound.warm();
+        void prepare().catch(() => {});
+      };
+      // Compile the scene and prepare audio only after navigation intent. Doing
+      // this on every document mount competes with hero rendering and hydration.
+      // Yield the pointer/focus event before doing this nonessential work.
+      if (typeof window.requestIdleCallback === "function")
+        idle = window.requestIdleCallback(preload, { timeout: 1000 });
+      else idle = window.setTimeout(preload, 100);
+    };
     const warm = (event: Event) => {
       const anchor = (event.target as Element | null)?.closest?.("a[href]");
       if (
@@ -377,11 +394,7 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
         (!anchor.target || anchor.target === "_self")
       ) {
         router.prefetch(anchor.pathname + anchor.search);
-        if (!reduced.matches) {
-          warmCaptureAssets(surface);
-          sound.warm();
-          void prepare().catch(() => {});
-        }
+        warmOnIntent();
       }
     };
     const interrupt = () => {
@@ -408,17 +421,6 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
     document.addEventListener("visibilitychange", visibility);
     screen.addEventListener("webglcontextlost", lost);
     reduced.addEventListener("change", interrupt);
-    const preload = () => {
-      if (!reduced.matches) {
-        warmCaptureAssets(surface);
-        sound.warm();
-        void prepare().catch(() => {});
-      }
-    };
-    if (typeof window.requestIdleCallback === "function")
-      idle = window.requestIdleCallback(preload, { timeout: 2000 });
-    else idle = window.setTimeout(preload, 1000);
-
     return () => {
       disposed = true;
       finish(false);

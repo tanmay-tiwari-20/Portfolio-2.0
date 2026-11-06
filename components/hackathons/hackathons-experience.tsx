@@ -322,6 +322,14 @@ export default function HackathonsExperience({
               {person}
               <span>For the ideas. For the people. For the next build.</span>
             </Link>
+            <nav aria-label="Related work" className="flex flex-wrap gap-x-6 gap-y-2">
+              <Link href="/hackshastra" className="hk-text-link" data-hk-link>
+                The HackShastra community
+              </Link>
+              <Link href="/projects" className="hk-text-link" data-hk-link>
+                Explore my projects
+              </Link>
+            </nav>
             <a href="#hk-top" className="hk-text-link" data-hk-link>
               Back to the top{" "}
               <ArrowUp size={17} aria-hidden="true" data-hk-arrow />

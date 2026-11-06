@@ -111,9 +111,14 @@ export default function HackShastraHero() {
           <p className={styles.eyebrow} data-hackshastra-intro>
             <span /> A home for the ones who build
           </p>
-          <h1 id="hs-title" className={styles.title} data-hackshastra-intro>
+          <h1
+            id="hs-title"
+            aria-label="HackShastra: Big ideas. Built together."
+            className={styles.title}
+            data-hackshastra-intro
+          >
             <span>
-              Big ideas<span className={styles.period}>.</span>
+              Big ideas<span className={styles.period}>.</span>{" "}
             </span>
             <span>
               Built{" "}
@@ -126,8 +131,9 @@ export default function HackShastraHero() {
             <span className={styles.together}>together.</span>
           </h1>
           <p className={styles.lede} data-hackshastra-intro>
-            Turn your curiosity into something real. A student-led community for
-            bold ideas, late-night builds, and your kind of people.
+            HackShastra is a student-led technology community, co-founded by
+            Tanmay Tiwari. A place for bold ideas, shared learning, and building
+            together.
           </p>
           <div className={styles.actions} data-hackshastra-intro>
             <BrandLink href={hackshastra.website} className={styles.primary}>

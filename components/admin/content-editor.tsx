@@ -1,25 +1,37 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 const collections = ["profile", "experiences", "projects", "events", "hackathons", "socials", "settings"] as const;
 type Collection = typeof collections[number];
 type Row = { id: string };
+async function readCollection(key: Collection): Promise<Row[]> {
+  const response = await fetch(`/api/admin/content?collection=${key}`);
+  const rows = await response.json();
+  if (!response.ok) throw new Error(rows.error || "Could not load records.");
+  return rows;
+}
 export default function ContentEditor() {
   const [collection, setCollection] = useState<Collection>("projects");
   const [source, setSource] = useState("[]");
   const [original, setOriginal] = useState<Row[]>([]);
   const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false);
-  const load = useCallback(async (key: Collection) => {
+  const [busy, setBusy] = useState(true);
+  useEffect(() => {
+    let active = true;
+    void readCollection("projects").then((rows) => {
+      if (active) { setOriginal(rows); setSource(JSON.stringify(rows, null, 2)); }
+    }).catch((error) => {
+      if (active) setMessage(error instanceof Error ? error.message : "Could not load records.");
+    }).finally(() => { if (active) setBusy(false); });
+    return () => { active = false; };
+  }, []);
+  async function selectCollection(key: Collection) {
     setCollection(key); setBusy(true); setMessage("");
     try {
-      const response = await fetch(`/api/admin/content?collection=${key}`);
-      const rows = await response.json();
-      if (!response.ok) throw new Error(rows.error || "Could not load records.");
+      const rows = await readCollection(key);
       setOriginal(rows); setSource(JSON.stringify(rows, null, 2));
     } catch (error) { setMessage(error instanceof Error ? error.message : "Could not load records."); }
     finally { setBusy(false); }
-  }, []);
-  useEffect(() => { void load("projects"); }, [load]);
+  }
   async function save() {
     setBusy(true); setMessage("");
     try {
@@ -52,7 +64,7 @@ export default function ContentEditor() {
   }
   return <section className="admin-card" style={{ maxWidth: "none", margin: "24px 0" }}>
     <h2>Content editor</h2><p className="form-note">Edit the selected collection as JSON. Save creates, updates, removes, and reorders records after server validation.</p>
-    <div className="editor-toolbar"><select value={collection} onChange={event => void load(event.target.value as Collection)}>{collections.map(item => <option key={item} value={item}>{item}</option>)}</select><button className="filter-chip" onClick={() => void load(collection)}>Reload</button><a className="filter-chip" href="/api/admin/export">Download backup</a><label className="filter-chip">Import backup<input type="file" accept="application/json,.json" hidden onChange={event => { const file = event.target.files?.[0]; if (file) void importBackup(file); }}/></label></div>
+    <div className="editor-toolbar"><select value={collection} onChange={event => void selectCollection(event.target.value as Collection)}>{collections.map(item => <option key={item} value={item}>{item}</option>)}</select><button className="filter-chip" onClick={() => void selectCollection(collection)}>Reload</button><a className="filter-chip" href="/api/admin/export">Download backup</a><label className="filter-chip">Import backup<input type="file" accept="application/json,.json" hidden onChange={event => { const file = event.target.files?.[0]; if (file) void importBackup(file); }}/></label></div>
     <textarea className="json-editor" value={source} onChange={event => setSource(event.target.value)} spellCheck={false} aria-label={`${collection} JSON`}/><button className="button button-primary" disabled={busy} onClick={() => void save()}>{busy ? "Saving…" : "Save changes"}<span>↗</span></button>{message && <p className="form-note" role="status">{message}</p>}
   </section>;
 }

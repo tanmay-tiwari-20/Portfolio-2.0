@@ -59,6 +59,18 @@ function articles(html: string) {
   );
 }
 
+function hasImage(html: string, source: string) {
+  const original = new URL(source);
+  const asset = original.pathname.split("/image/upload/")[1];
+  return [...html.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].some(([, src]) => {
+    const rendered = new URL(src.replaceAll("&amp;", "&"));
+    return (
+      rendered.origin === original.origin &&
+      rendered.pathname.endsWith(`/${asset}`)
+    );
+  });
+}
+
 test("server output keeps all three chapters readable before JavaScript enhances the story", () => {
   const html = render();
   const chapters = articles(html);
@@ -114,8 +126,10 @@ test("project covers render as real images in their own chapters with their supp
     craftImage,
     practiceImage,
   ].entries()) {
-    assert.ok(chapters[index].includes(`src="${image.src}"`));
+    assert.ok(hasImage(chapters[index], image.src));
     assert.ok(chapters[index].includes(`alt="${image.alt}"`));
+    assert.match(chapters[index], /<img\b[^>]*\bsrcSet="[^"]+\b640w[^\"]*"/);
+    assert.match(chapters[index], /<img\b[^>]*\bloading="lazy"/);
   }
   assert.ok(chapters[0].includes("story_productWindow"));
   assert.ok(chapters[1].includes("story_productWindow"));
@@ -128,13 +142,13 @@ test("manual photographs override the craft cover and missing optional assets re
   const manual = articles(
     render({ workImage, craftImage, practiceImage2: practiceImage }),
   );
-  assert.ok(manual[1].includes(`src="${practiceImage.src}"`));
-  assert.ok(!manual[1].includes(`src="${craftImage.src}"`));
+  assert.ok(hasImage(manual[1], practiceImage.src));
+  assert.ok(!hasImage(manual[1], craftImage.src));
   assert.ok(!manual[1].includes("story_productWindow"));
-  assert.ok(manual[2].includes(`src="${communityImage.src}"`));
+  assert.ok(hasImage(manual[2], communityImage.src));
   const fallback = articles(render());
   for (const chapter of fallback) {
-    assert.ok(chapter.includes(`src="${communityImage.src}"`));
+    assert.ok(hasImage(chapter, communityImage.src));
     assert.ok(chapter.includes(`alt="${communityImage.alt}"`));
     assert.ok(!chapter.includes("story_productWindow"));
   }
@@ -191,9 +205,9 @@ test("saved admin content and image fit override defaults, captions, and legacy 
   assert.match(html, /A saved introduction from the page editor\./);
   assert.match(chapters[0], /This is the edited engineering chapter\./);
   assert.match(chapters[0], /An edited image caption\./);
-  assert.ok(chapters[0].includes(`src="${practiceImage.src}"`));
+  assert.ok(hasImage(chapters[0], practiceImage.src));
   assert.ok(chapters[0].includes("story_productWindow"));
-  assert.ok(chapters[1].includes(`src="${workImage.src}"`));
+  assert.ok(hasImage(chapters[1], workImage.src));
   assert.ok(!chapters[1].includes("story_productWindow"));
-  assert.ok(chapters[2].includes(`src="${communityImage.src}"`));
+  assert.ok(hasImage(chapters[2], communityImage.src));
 });

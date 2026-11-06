@@ -32,7 +32,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
           </span>
           <span>{project.category}</span>
         </p>
-        <h2
+        <h3
           id={`title-${project.slug}`}
           aria-label={project.title}
           className="font-display m-0 text-[clamp(2.2rem,min(3.9vw,6.8svh),3.8rem)] leading-[1.08] font-medium tracking-[-0.06em] text-[#361e22]"
@@ -49,7 +49,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
               aria-hidden="true"
             />
           </Link>
-        </h2>
+        </h3>
         <div
           className={
             art.layout === "studio"
@@ -73,7 +73,7 @@ function ProjectEntry({ project, index }: { project: Project; index: number }) {
             href={href}
             className="inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-[#a52e2b] underline decoration-[#a52e2b]/30 underline-offset-4 transition-colors hover:text-[#682722]"
           >
-            Open project
+            Explore {art.shortTitle}
             <ArrowUpRight data-work-arrow size={14} aria-hidden="true" />
           </Link>
           <ProjectLinks project={project} compact />
@@ -142,8 +142,8 @@ export default function ProjectGallery({ projects }: { projects: Project[] }) {
         <div className="work-sheet flex flex-col justify-between gap-5 px-5 py-5 sm:px-7 lg:flex-row lg:items-center">
           <div>
             <h2 className="font-display m-0 text-[clamp(1.5rem,2.4vw,2rem)] font-medium tracking-[-0.045em]">
-              Take a closer{" "}
-              <em className="font-[Georgia,serif] text-[#a52e2b]">look.</em>
+              Explore the{" "}
+              <em className="font-[Georgia,serif] text-[#a52e2b]">projects.</em>
             </h2>
             <p
               className="mt-1 mb-0 text-[11px] text-[#72554e]"

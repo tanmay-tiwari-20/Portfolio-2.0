@@ -3,6 +3,9 @@ import { createRequire } from "node:module";
 import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { ImageConfigContext } from "next/dist/shared/lib/image-config-context.shared-runtime";
+import { imageConfigDefault } from "next/dist/shared/lib/image-config";
+import nextConfig from "../next.config";
 import settingsRows from "../data/site-settings.json";
 import experienceRows from "../data/experiences.json";
 import { createDefaultAboutMoments } from "../lib/about-gallery";
@@ -42,14 +45,20 @@ function renderSavedContent(aboutPage: unknown) {
     ),
   );
   return renderToStaticMarkup(
-    createElement(AboutDetails, {
-      content: resolveAboutPageContent(settings.aboutPage),
-      builders: 3000,
-      location: "New Delhi, India",
-      moments: createDefaultAboutMoments(),
-      experiences: experienceRows.map((row) => experienceSchema.parse(row)),
-      hackathons: [],
-    }),
+    createElement(
+      ImageConfigContext.Provider,
+      {
+        value: { ...imageConfigDefault, ...nextConfig.images },
+      },
+      createElement(AboutDetails, {
+        content: resolveAboutPageContent(settings.aboutPage),
+        builders: 3000,
+        location: "New Delhi, India",
+        moments: createDefaultAboutMoments(),
+        experiences: experienceRows.map((row) => experienceSchema.parse(row)),
+        hackathons: [],
+      }),
+    ),
   );
 }
 

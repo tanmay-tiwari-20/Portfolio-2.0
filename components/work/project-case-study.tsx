@@ -8,7 +8,6 @@ import {
 } from "@/lib/work-content";
 import { MotionLayer } from "@/components/shell";
 import WorkMotion from "@/components/work/work-motion";
-import type { ReactNode } from "react";
 import {
   ProjectImage,
   ProjectLinks,
@@ -270,9 +269,9 @@ function ProjectOverview({ project }: { project: Project }) {
             id="project-overview"
             className={`${title} ${sectionHeading} m-0 max-w-[10ch] scroll-mt-28`}
           >
-            A closer{" "}
+            Project{" "}
             <em className="font-[Georgia,serif] font-normal text-[#a52e2b]">
-              look.
+              overview.
             </em>
           </h2>
         </div>
@@ -283,6 +282,17 @@ function ProjectOverview({ project }: { project: Project }) {
           <p className="m-0 max-w-[60ch] text-[clamp(1rem,1.3vw,1.2rem)] leading-[1.8] text-(--work-muted,#72554e)">
             {project.description}
           </p>
+          {project.slug === "hackshastra-website" && (
+            <p className="mt-4 mb-0 text-sm leading-relaxed text-(--work-muted,#72554e)">
+              <Link
+                href="/hackshastra"
+                className="underline underline-offset-4 transition-colors hover:text-[#a52e2b]"
+              >
+                Explore the HackShastra community and its events
+              </Link>{" "}
+              behind this platform.
+            </p>
+          )}
           <dl className="mt-6 grid grid-cols-[1fr_auto] gap-5 border-t border-dashed border-(--work-line,#72554e33) pt-5">
             <div>
               <dt className={label}>Discipline</dt>
@@ -400,9 +410,9 @@ function ProjectGallery({ project }: { project: Project }) {
           id="project-gallery-title"
           className={`${title} ${sectionHeading} m-0`}
         >
-          The contact{" "}
+          Project{" "}
           <em className="font-[Georgia,serif] font-normal text-[#a52e2b]">
-            sheet.
+            screenshots.
           </em>
         </h2>
       </div>
@@ -443,9 +453,9 @@ function ProjectStack({ art }: { art: Direction }) {
               id="project-stack"
               className={`${title} ${sectionHeading} m-0 max-w-[9ch]`}
             >
-              The building{" "}
+              Technologies{" "}
               <em className="font-[Georgia,serif] font-normal text-[#a52e2b]">
-                blocks.
+                & tools.
               </em>
             </h2>
             <span
@@ -599,13 +609,31 @@ export default function ProjectCaseStudy({
         <div
           className={`${shell} flex flex-wrap items-center justify-between gap-4 pt-24 lg:pt-22.5`}
         >
-          <Link
-            href="/projects"
-            className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
-            data-work-link
-          >
-            <ArrowLeft size={15} data-work-arrow aria-hidden="true" /> All work
-          </Link>
+          <nav aria-label="Breadcrumb">
+            <ol className="m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1 p-0 text-xs text-(--work-muted,#72554e)">
+              <li>
+                <Link
+                  href="/"
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
+                >
+                  Home
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li>
+                <Link
+                  href="/projects"
+                  className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
+                >
+                  Work
+                </Link>
+              </li>
+              <li aria-hidden="true">/</li>
+              <li aria-current="page" className="max-w-[32ch] break-words">
+                {project.title}
+              </li>
+            </ol>
+          </nav>
           <a
             href="#project-overview"
             className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"

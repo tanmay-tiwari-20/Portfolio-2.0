@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   useCallback,
   useEffect,
@@ -19,7 +20,7 @@ import {
 } from "framer-motion";
 import { ArrowUpRight, Images } from "lucide-react";
 import type { AboutPopOutConfig } from "@/lib/validators/schemas";
-import { getOptimizedUrl } from "@/lib/cloudinary/urls";
+import { cloudinaryLoader, getOptimizedUrl } from "@/lib/cloudinary/urls";
 import { createRadialPopLayout } from "@/lib/radial-pop-layout";
 
 export type RadialPopOutItem = {
@@ -96,30 +97,19 @@ export default function RadialPopOut({
     };
   }, [gallery, customHero, customItems]);
 
-  useEffect(() => {
-    // Warm the first orbit cards before hover so the motion never reveals a
-    // blank frame while the browser starts fetching an image.
-    items.slice(0, 6).forEach((item) => {
-      if (!item.src) return;
-      const image = new window.Image();
-      image.decoding = "async";
-      image.fetchPriority = "low";
-      image.src = item.src;
-    });
-  }, [items]);
-
   const effectiveRadius = radius ?? Math.round(1.2 * cardSize);
   const effectiveHeroSize = heroSize ?? Math.round(1.28 * cardSize);
 
   const layout = useMemo(
-    () => createRadialPopLayout({
-      count: items.length,
-      cardSize,
-      heroSize: effectiveHeroSize,
-      heroPadding: effectiveHeroSize * Math.abs(shift),
-      radius: effectiveRadius,
-      jitter,
-    }),
+    () =>
+      createRadialPopLayout({
+        count: items.length,
+        cardSize,
+        heroSize: effectiveHeroSize,
+        heroPadding: effectiveHeroSize * Math.abs(shift),
+        radius: effectiveRadius,
+        jitter,
+      }),
     [items.length, cardSize, effectiveHeroSize, effectiveRadius, jitter, shift],
   );
   const baseDimension = layout.dimension;
@@ -137,9 +127,8 @@ export default function RadialPopOut({
       // Leave ~80px vertical breathing room so the enlarged cards never exceed view height
       const viewportHeight = window.innerHeight;
       const maxAvailableHeight = Math.max(300, viewportHeight - 80);
-      const parentHeight = parent.clientHeight > 0
-        ? parent.clientHeight
-        : maxAvailableHeight;
+      const parentHeight =
+        parent.clientHeight > 0 ? parent.clientHeight : maxAvailableHeight;
       const effectiveHeight = Math.min(parentHeight, maxAvailableHeight);
 
       const availableDimension = Math.min(
@@ -187,8 +176,16 @@ export default function RadialPopOut({
   const smoothMouseY = useSpring(mouseY, springConfig);
 
   const shiftAmount = scaledHeroSize * shift;
-  const translateX = useTransform(smoothMouseX, [-1, 1], [-shiftAmount, shiftAmount]);
-  const translateY = useTransform(smoothMouseY, [-1, 1], [-shiftAmount, shiftAmount]);
+  const translateX = useTransform(
+    smoothMouseX,
+    [-1, 1],
+    [-shiftAmount, shiftAmount],
+  );
+  const translateY = useTransform(
+    smoothMouseY,
+    [-1, 1],
+    [-shiftAmount, shiftAmount],
+  );
   const rotateY = useTransform(smoothMouseX, [-1, 1], [-maxTilt, maxTilt]);
   const rotateX = useTransform(smoothMouseY, [-1, 1], [maxTilt, -maxTilt]);
 
@@ -259,9 +256,7 @@ export default function RadialPopOut({
         {/* Soft crimson core spotlight */}
         <div
           className={`absolute rounded-full transition-all duration-700 ease-out motion-reduce:transition-none ${
-            isOpen
-              ? "scale-110 opacity-100"
-              : "scale-90 opacity-60"
+            isOpen ? "scale-110 opacity-100" : "scale-90 opacity-60"
           }`}
           style={{
             width: scaledRadius * 2.15,
@@ -319,22 +314,31 @@ export default function RadialPopOut({
               scale: isOpen ? 1 : closedCardScale,
               opacity: isOpen ? 1 : 0,
             }}
-            transition={shouldReduceMotion ? { duration: 0 } : {
-              type: "spring",
-              stiffness: 220,
-              damping: 27,
-              mass: 0.8,
-              restDelta: 0.1,
-              restSpeed: 0.5,
-              delay: isOpen ? Math.min(index * stagger, 0.08) : 0,
-              opacity: {
-                duration: isOpen ? 0.12 : 0.16,
-                delay: isOpen ? 0 : 0.24,
-                ease: "easeOut",
-              },
-            }}
+            transition={
+              shouldReduceMotion
+                ? { duration: 0 }
+                : {
+                    type: "spring",
+                    stiffness: 220,
+                    damping: 27,
+                    mass: 0.8,
+                    restDelta: 0.1,
+                    restSpeed: 0.5,
+                    delay: isOpen ? Math.min(index * stagger, 0.08) : 0,
+                    opacity: {
+                      duration: isOpen ? 0.12 : 0.16,
+                      delay: isOpen ? 0 : 0.24,
+                      ease: "easeOut",
+                    },
+                  }
+            }
           >
-            <CardItem key={item.src} src={item.src} alt={item.alt || ""} />
+            <CardItem
+              key={item.src}
+              src={item.src}
+              alt=""
+              size={scaledCardSize}
+            />
           </motion.div>
         );
       })}
@@ -389,7 +393,13 @@ export default function RadialPopOut({
               }
             }}
           >
-            <CardItem key={hero.src} src={hero.src} alt={hero.alt || ""} isHero={true} />
+            <CardItem
+              key={hero.src}
+              src={hero.src}
+              alt={hero.alt || ""}
+              size={scaledHeroSize}
+              isHero={true}
+            />
 
             {/* A quiet corner cue keeps the portrait itself unobstructed. */}
             <span
@@ -399,7 +409,11 @@ export default function RadialPopOut({
                   : "scale-100 opacity-55 group-hover:opacity-75 group-hover:border-white/40"
               }`}
             >
-              <ArrowUpRight size={17} className="text-[#ffd1a0]" aria-hidden="true" />
+              <ArrowUpRight
+                size={17}
+                className="text-[#ffd1a0]"
+                aria-hidden="true"
+              />
             </span>
           </motion.div>
         </div>
@@ -418,10 +432,12 @@ export default function RadialPopOut({
 function CardItem({
   src,
   alt,
+  size,
   isHero = false,
 }: {
   src: string;
   alt: string;
+  size: number;
   isHero?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
@@ -440,11 +456,16 @@ function CardItem({
           <span>Archive</span>
         </div>
       ) : (
-        <img
+        <Image
           src={src}
+          loader={cloudinaryLoader}
           alt={alt}
+          fill
+          sizes={`${Math.ceil(size)}px`}
           draggable={false}
-          loading="lazy"
+          priority={isHero}
+          loading={isHero ? undefined : "lazy"}
+          fetchPriority={isHero ? "high" : "low"}
           decoding="async"
           onError={() => setFailed(true)}
           className="pointer-events-none h-full w-full select-none object-cover transition-transform duration-500 ease-out hover:scale-105"

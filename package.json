@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:auth": "tsx --test scripts/admin-auth.test.ts"
+    "test:auth": "tsx --test scripts/admin-auth.test.ts",
+    "audit:seo": "node scripts/seo-audit.mjs",
+    "test:seo": "tsx --test scripts/seo.test.ts scripts/image-delivery.test.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

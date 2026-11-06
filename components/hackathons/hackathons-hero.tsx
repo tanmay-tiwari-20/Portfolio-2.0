@@ -61,7 +61,11 @@ export default function HackathonsHero({
               <span aria-hidden="true">↳</span> A little chaos. A lot of
               possibility.
             </p>
-            <h1 className="hh-title" id="hk-title">
+            <h1
+              className="hh-title"
+              id="hk-title"
+              aria-label="Hackathons: Ideas in the making."
+            >
               <span className="hh-title-first">Ideas</span>{" "}
               <span className="hh-title-outline">in the</span>{" "}
               <span className="hh-title-last">
@@ -71,7 +75,7 @@ export default function HackathonsHero({
             </h1>
             <div className="hh-copy-bottom">
               <p className="hh-lede">
-                Building things. Sharing perspectives. Finding my people.
+                Mentoring builders. Judging projects. Sharing perspectives.
                 <span> This is my life at hackathons.</span>
               </p>
               <a href={journeyHref} className="hh-explore" data-hk-link>

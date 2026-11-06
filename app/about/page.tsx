@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { published, repos } from "@/lib/db";
@@ -16,20 +15,18 @@ import AboutMotion from "@/components/about/about-motion";
 import SignatureReveal from "@/components/about/signature-reveal";
 import { MotionLayer } from "@/components/shell";
 import styles from "./about-hero.module.css";
+import { pageMetadata, pageGraph } from "@/lib/seo";
+import SeoJsonLd from "@/components/seo-json-ld";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Meet Tanmay Tiwari, a creative developer and community builder in New Delhi. Explore the ideas, people, and practice behind his work.",
-};
+export const metadata = pageMetadata("about");
 
 export default async function AboutPage() {
   const [profiles, settingsRows, experiences, hackathons, projects] =
     await Promise.all([
-      repos.profile.getAll(),
-      repos.settings.getAll(),
+      published(repos.profile),
+      published(repos.settings),
       published(repos.experiences),
       published(repos.hackathons),
       published(repos.projects),
@@ -62,6 +59,7 @@ export default async function AboutPage() {
 
   return (
     <div className="about-page relative isolate overflow-hidden bg-[#090708] text-[#fffaf7]">
+      <SeoJsonLd data={pageGraph("about")} />
       <section className="hero about-hero" aria-labelledby="about-title">
         <div className={styles.texture} aria-hidden="true" />
         <div className="hero-grid about-hero-grid">
@@ -71,7 +69,7 @@ export default async function AboutPage() {
               data-about-kicker
             >
               <span className="h-px w-6 bg-[#edbd83]" aria-hidden="true" />
-              <span>Tanmay Tiwari</span>
+              <span>About Tanmay Tiwari</span>
               <span className="text-[#edbd83]/50" aria-hidden="true">
                 /
               </span>
@@ -80,10 +78,11 @@ export default async function AboutPage() {
 
             <h1
               id="about-title"
+              aria-label="About Tanmay Tiwari: From 3D games to hackathon halls."
               className="m-0 font-display text-[clamp(2.2rem,4.5vw,4.1rem)] leading-[1.08] font-semibold tracking-[-0.065em] text-(--theme-paper) max-[760px]:text-[clamp(2rem,9.5vw,3.9rem)] [@media(min-width:1061px)_and_(min-height:821px)]:text-[clamp(2.2rem,5vw,4.6rem)] [@media(min-width:761px)_and_(min-height:601px)_and_(max-height:740px)]:text-[clamp(2.2rem,4vw,3.5rem)] [@media(min-width:761px)_and_(max-height:600px)]:text-[clamp(1.875rem,3.6vw,2.2rem)]"
               data-about-intro
             >
-              <span className="block">From 3D games</span>
+              <span className="block">From 3D games</span>{" "}
               <em className="mt-1 block font-[Georgia,serif] text-[1.08em] leading-[1.05] font-normal tracking-[-0.055em] text-[#edbd83]">
                 to hackathon halls.
               </em>
@@ -91,8 +90,9 @@ export default async function AboutPage() {
 
             <div className={styles.bio} data-about-intro>
               <p className="m-0">
-                I’m Tanmay, a{" "}
-                <span className={styles.highlight}>full-stack developer</span> and{" "}
+                I’m Tanmay Tiwari, a{" "}
+                <span className={styles.highlight}>full-stack developer</span>{" "}
+                and{" "}
                 <span className="whitespace-nowrap">
                   co-founder of{" "}
                   <a
@@ -143,9 +143,7 @@ export default async function AboutPage() {
               </Link>
               <Link
                 className="group inline-flex min-h-11 items-center gap-2 text-[11px] font-medium text-(--theme-paper)/65 transition-colors duration-200 hover:text-(--theme-paper) focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83] [@media(min-width:1061px)_and_(min-height:821px)]:text-[12px]"
-                href="https://hackshastra.in"
-                target="_blank"
-                rel="noreferrer"
+                href="/hackshastra"
               >
                 Explore HackShastra
                 <ArrowUpRight
@@ -158,8 +156,14 @@ export default async function AboutPage() {
           </div>
 
           <div className="hero-art about-hero-art" data-about-visual>
-            <div className="about-art-orbit about-art-orbit-outer" aria-hidden="true" />
-            <div className="about-art-orbit about-art-orbit-inner" aria-hidden="true" />
+            <div
+              className="about-art-orbit about-art-orbit-outer"
+              aria-hidden="true"
+            />
+            <div
+              className="about-art-orbit about-art-orbit-inner"
+              aria-hidden="true"
+            />
             <RadialPopOut
               gallery={gallery}
               cardSize={245}

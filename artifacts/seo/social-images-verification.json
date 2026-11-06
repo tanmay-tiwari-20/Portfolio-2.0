@@ -1,0 +1,136 @@
+{
+  "checkedAt": "2026-11-06T09:09:38.597Z",
+  "passed": true,
+  "results": [
+    {
+      "url": "https://takneekitanmay.tech/social/home",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 28055,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/about",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 41816,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/projects",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 43050,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/hackathons",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 42556,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/hackshastra",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 46097,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/contact",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 40007,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "public, max-age=0, s-maxage=86400"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-unoverse",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 25038,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-spools",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 24538,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-hackshastra-website",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 33012,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-baithak",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 27297,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-3d-shirt-showcaser",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 30351,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-apple-iphone-15-pro-website",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 33175,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    },
+    {
+      "url": "https://takneekitanmay.tech/social/project-resumify",
+      "status": 200,
+      "type": "image/png",
+      "bytes": 26209,
+      "png": true,
+      "width": 1200,
+      "height": 630,
+      "cache": "no-store"
+    }
+  ]
+}

@@ -1,0 +1,588 @@
+{
+  "base": "http://localhost:3138",
+  "browser": "156.0.8078.81",
+  "auditedAt": "2026-11-06T09:06:49.197Z",
+  "localBuildId": "wV5Vw_A9EIRrT6dEqaLiA",
+  "environment": "Local production build, headless Chrome. CDN images replaced by SVG fixtures because live network access is unavailable. Functional checks only; no performance scores or field Core Web Vitals claims.",
+  "pages": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/",
+      "title": "Tanmay Tiwari | Full-Stack Developer & HackShastra Co-founder",
+      "h1": [
+        {
+          "text": "Tanmay Tiwari.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/",
+      "textLength": 6693,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 35
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/about",
+      "title": "About Tanmay Tiwari | Developer & Community Builder",
+      "h1": [
+        {
+          "text": "From 3D games to hackathon halls.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/about",
+      "textLength": 5705,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 17
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects",
+      "title": "Software & Interactive Web Projects | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Ideas, out in the open.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects",
+      "textLength": 11940,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 42
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/hackathons",
+      "title": "Hackathon Mentoring & Judging | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Ideas in the making.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/hackathons",
+      "textLength": 4819,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 27
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/hackshastra",
+      "title": "HackShastra Community & Events | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Big ideas. Built together.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/hackshastra",
+      "textLength": 10574,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 38
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/contact",
+      "title": "Contact Tanmay Tiwari | Projects & Collaborations",
+      "h1": [
+        {
+          "text": "Good things start with hello.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/contact",
+      "textLength": 1106,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 4
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/unoverse",
+      "title": "Unoverse | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Unoverse.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/unoverse",
+      "textLength": 3492,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/spools",
+      "title": "Spools | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Spools.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/spools",
+      "textLength": 3398,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/hackshastra-website",
+      "title": "HackShastra Website | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "HackShastra Website.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/hackshastra-website",
+      "textLength": 2925,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/baithak",
+      "title": "Baithak | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Baithak.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/baithak",
+      "textLength": 3427,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/3d-shirt-showcaser",
+      "title": "3D Shirt Showcaser | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "3D Shirt Showcaser.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/3d-shirt-showcaser",
+      "textLength": 3133,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/resumify",
+      "title": "Resumify | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Resumify.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/resumify",
+      "textLength": 3184,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "status": 200,
+      "path": "/projects/apple-iphone-15-pro-website",
+      "title": "Apple iPhone 15 Pro Website | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Apple iPhone 15 Pro Website.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/apple-iphone-15-pro-website",
+      "textLength": 3511,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/",
+      "title": "Tanmay Tiwari | Full-Stack Developer & HackShastra Co-founder",
+      "h1": [
+        {
+          "text": "Tanmay Tiwari.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/",
+      "textLength": 6693,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 35
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/about",
+      "title": "About Tanmay Tiwari | Developer & Community Builder",
+      "h1": [
+        {
+          "text": "From 3D games to hackathon halls.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/about",
+      "textLength": 5705,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 17
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects",
+      "title": "Software & Interactive Web Projects | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Ideas, out in the open.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects",
+      "textLength": 11940,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 42
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/hackathons",
+      "title": "Hackathon Mentoring & Judging | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Ideas in the making.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/hackathons",
+      "textLength": 4819,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 27
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/hackshastra",
+      "title": "HackShastra Community & Events | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Big ideas. Built together.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/hackshastra",
+      "textLength": 10574,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 38
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/contact",
+      "title": "Contact Tanmay Tiwari | Projects & Collaborations",
+      "h1": [
+        {
+          "text": "Good things start with hello.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/contact",
+      "textLength": 1106,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 4
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/unoverse",
+      "title": "Unoverse | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Unoverse.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/unoverse",
+      "textLength": 3492,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/spools",
+      "title": "Spools | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Spools.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/spools",
+      "textLength": 3398,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/hackshastra-website",
+      "title": "HackShastra Website | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "HackShastra Website.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/hackshastra-website",
+      "textLength": 2925,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/baithak",
+      "title": "Baithak | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Baithak.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/baithak",
+      "textLength": 3427,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/3d-shirt-showcaser",
+      "title": "3D Shirt Showcaser | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "3D Shirt Showcaser.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/3d-shirt-showcaser",
+      "textLength": 3133,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/resumify",
+      "title": "Resumify | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Resumify.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/resumify",
+      "textLength": 3184,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "status": 200,
+      "path": "/projects/apple-iphone-15-pro-website",
+      "title": "Apple iPhone 15 Pro Website | Tanmay Tiwari",
+      "h1": [
+        {
+          "text": "Apple iPhone 15 Pro Website.",
+          "visible": true
+        }
+      ],
+      "canonical": "https://takneekitanmay.tech/projects/apple-iphone-15-pro-website",
+      "textLength": 3511,
+      "width": 390,
+      "scrollWidth": 390,
+      "missingAlt": 0,
+      "links": 9
+    }
+  ],
+  "interactive": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "portrait": {
+        "alt": "Tanmay Tiwari — Creative Developer",
+        "sizes": "(max-width: 767px) 360px, 410px",
+        "currentSrc": "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/f_auto,q_auto,c_limit,w_640/v1792423733/hero_ppp8ke.png"
+      },
+      "initialTransitionContexts": 0,
+      "reducedMotionNavigation": "passed",
+      "fullSpiderTransition": "passed",
+      "focusAfterNavigation": "H1"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "portrait": {
+        "alt": "Tanmay Tiwari — Creative Developer",
+        "sizes": "(max-width: 767px) 360px, 410px",
+        "currentSrc": "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/f_auto,q_auto,c_limit,w_384/v1792423733/hero_ppp8ke.png"
+      },
+      "initialTransitionContexts": 0,
+      "reducedMotionNavigation": "passed",
+      "fullSpiderTransition": "passed",
+      "focusAfterNavigation": "H1"
+    }
+  ],
+  "errors": []
+}

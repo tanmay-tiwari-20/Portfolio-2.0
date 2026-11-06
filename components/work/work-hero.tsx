@@ -40,7 +40,7 @@ export default function WorkHero({ projects }: { projects: Project[] }) {
           className="font-display m-0 text-[clamp(2.5rem,min(5vw,8svh),5rem)] leading-[1.02] font-semibold tracking-[-0.065em] text-[#361e22]"
         >
           <span data-work-reveal="hero" className="block">
-            Ideas, out in
+            Ideas, out in{" "}
           </span>
           <em
             data-work-reveal="hero"
@@ -53,8 +53,8 @@ export default function WorkHero({ projects }: { projects: Project[] }) {
           data-work-reveal="hero"
           className="mx-auto mt-3 mb-0 max-w-[43ch] text-[13px] leading-[1.65] text-[#72554e] sm:text-sm"
         >
-          A few things I’ve built. Pick one up, move it around, see where it
-          takes you.
+          Games, social platforms and web applications I’ve built. Pick one up,
+          move it around, and explore the work.
         </p>
         <div
           data-work-reveal="hero"
@@ -118,7 +118,11 @@ export default function WorkHero({ projects }: { projects: Project[] }) {
                   <span className={styles.imageFrame}>
                     <Image
                       src={getOptimizedUrl(project.cover.url, 1000)}
-                      alt={project.cover.alt || `${project.title} preview`}
+                      alt={
+                        project.cover.alt && project.cover.alt !== project.title
+                          ? project.cover.alt
+                          : `Screenshot of ${project.title}`
+                      }
                       fill
                       sizes="(max-width: 639px) 43vw, (max-width: 1023px) 34vw, 300px"
                       priority={index < 2}

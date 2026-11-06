@@ -1,0 +1,1060 @@
+{
+  "checkedAt": "2026-11-06T08:33:28.555Z",
+  "origin": "http://localhost:3138",
+  "canonicalOrigin": "https://takneekitanmay.tech",
+  "method": "HTTP response HTML without JavaScript execution; not a browser, Lighthouse, full HTML conformance, or search-engine schema certification.",
+  "pages": [
+    {
+      "pathname": "/",
+      "status": 200,
+      "title": "Tanmay Tiwari | Full-Stack Developer & HackShastra Co-founder",
+      "description": "Tanmay Tiwari is a full-stack developer and HackShastra co-founder in New Delhi. Explore interactive web projects, hackathon mentoring and community work.",
+      "canonical": "https://takneekitanmay.tech",
+      "robots": "index, follow",
+      "h1s": [
+        "TanmayTiwari."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "TanmayTiwari."
+        },
+        {
+          "level": 2,
+          "text": "I build thoughtful products and bring people along."
+        },
+        {
+          "level": 3,
+          "text": "Projects Shipped"
+        },
+        {
+          "level": 3,
+          "text": "Builders Mentored"
+        },
+        {
+          "level": 3,
+          "text": "HackShastra Events"
+        },
+        {
+          "level": 3,
+          "text": "Years Creating"
+        },
+        {
+          "level": 2,
+          "text": "ENGINEEREDWITH DEPTH"
+        },
+        {
+          "level": 2,
+          "text": "CRAFTED FORHUMANS"
+        },
+        {
+          "level": 2,
+          "text": "BUILDING FORBUILDERS"
+        },
+        {
+          "level": 2,
+          "text": "Built to matter."
+        },
+        {
+          "level": 3,
+          "text": "Unoverse"
+        },
+        {
+          "level": 2,
+          "text": "Shipping software.Building community."
+        },
+        {
+          "level": 3,
+          "text": "HackShastra"
+        },
+        {
+          "level": 3,
+          "text": "DevNDez"
+        },
+        {
+          "level": 2,
+          "text": "Why aren’t webuilding more?"
+        },
+        {
+          "level": 2,
+          "text": "Different minds.New directions."
+        },
+        {
+          "level": 3,
+          "text": "Need a judge or mentor?"
+        },
+        {
+          "level": 3,
+          "text": "Different minds. Different routes."
+        },
+        {
+          "level": 2,
+          "text": "Bring theunfinishedidea."
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage"
+      ],
+      "htmlBytes": 132737
+    },
+    {
+      "pathname": "/about",
+      "status": 200,
+      "title": "About Tanmay Tiwari | Developer & Community Builder",
+      "description": "Meet Tanmay Tiwari, a full-stack developer in New Delhi and HackShastra co-founder. Read about his technical practice, experience and community involvement.",
+      "canonical": "https://takneekitanmay.tech/about",
+      "robots": "index, follow",
+      "h1s": [
+        "From 3D gamesto hackathon halls."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "From 3D gamesto hackathon halls."
+        },
+        {
+          "level": 2,
+          "text": "The work.And what goes into it."
+        },
+        {
+          "level": 3,
+          "text": "Build the whole thing."
+        },
+        {
+          "level": 3,
+          "text": "Sweat the small things."
+        },
+        {
+          "level": 3,
+          "text": "Share what you learn."
+        },
+        {
+          "level": 2,
+          "text": "Better,together."
+        },
+        {
+          "level": 3,
+          "text": "A few rooms I’ve been part of."
+        },
+        {
+          "level": 4,
+          "text": "Hack4Delhi"
+        },
+        {
+          "level": 4,
+          "text": "HackCBS 8.0"
+        },
+        {
+          "level": 4,
+          "text": "CodePunk v2.0"
+        },
+        {
+          "level": 4,
+          "text": "SRM Builds 7.0"
+        },
+        {
+          "level": 2,
+          "text": "Learningby building."
+        },
+        {
+          "level": 3,
+          "text": "HackShastra"
+        },
+        {
+          "level": 3,
+          "text": "DevNDez"
+        },
+        {
+          "level": 2,
+          "text": "Have somethingin mind?"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "ProfilePage",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 165695
+    },
+    {
+      "pathname": "/projects",
+      "status": 200,
+      "title": "Software & Interactive Web Projects | Tanmay Tiwari",
+      "description": "Explore Tanmay Tiwari’s projects: Unoverse, Spools, Baithak and more. Browse real-time apps, 3D web experiences, source code and technical case studies.",
+      "canonical": "https://takneekitanmay.tech/projects",
+      "robots": "index, follow",
+      "h1s": [
+        "Ideas, out inthe open."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Ideas, out inthe open."
+        },
+        {
+          "level": 2,
+          "text": "A year in commits."
+        },
+        {
+          "level": 2,
+          "text": "Explore the projects."
+        },
+        {
+          "level": 3,
+          "text": "Unoverse"
+        },
+        {
+          "level": 3,
+          "text": "Spools"
+        },
+        {
+          "level": 3,
+          "text": "HackShastra"
+        },
+        {
+          "level": 3,
+          "text": "Baithak"
+        },
+        {
+          "level": 3,
+          "text": "Shirt Showcaser"
+        },
+        {
+          "level": 3,
+          "text": "Resumify"
+        },
+        {
+          "level": 3,
+          "text": "iPhone 15 Pro"
+        },
+        {
+          "level": 2,
+          "text": "There’s room foryour idea, too."
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 891146
+    },
+    {
+      "pathname": "/hackathons",
+      "status": 200,
+      "title": "Hackathon Mentoring & Judging | Tanmay Tiwari",
+      "description": "Explore Tanmay Tiwari’s hackathon journal, with event-specific mentoring, judging and organizing roles, builder experiences and links to the events.",
+      "canonical": "https://takneekitanmay.tech/hackathons",
+      "robots": "index, follow",
+      "h1s": [
+        "Ideas in the making."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Ideas in the making."
+        },
+        {
+          "level": 2,
+          "text": "A good question.A better build."
+        },
+        {
+          "level": 2,
+          "text": "Beyondthe demo."
+        },
+        {
+          "level": 2,
+          "text": "Different rooms.Shared possibility."
+        },
+        {
+          "level": 3,
+          "text": "People. Perspectives. Possibility."
+        },
+        {
+          "level": 3,
+          "text": "MentorHack4Delhi"
+        },
+        {
+          "level": 3,
+          "text": "MentorHackCBS 8.0"
+        },
+        {
+          "level": 3,
+          "text": "JudgeCodePunk v2.0"
+        },
+        {
+          "level": 3,
+          "text": "MentorSRM Builds 7.0"
+        },
+        {
+          "level": 2,
+          "text": "Good ideas.Better together."
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "CollectionPage",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 102918
+    },
+    {
+      "pathname": "/hackshastra",
+      "status": 200,
+      "title": "HackShastra Community & Events | Tanmay Tiwari",
+      "description": "Discover HackShastra, the student builder community co-founded by Tanmay Tiwari. Explore its hackathons, campus chapters, community events and official links.",
+      "canonical": "https://takneekitanmay.tech/hackshastra",
+      "robots": "index, follow",
+      "h1s": [
+        "Big ideas.Built together."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Big ideas.Built together."
+        },
+        {
+          "level": 2,
+          "text": "What if learningdidn’t stop atknowing?"
+        },
+        {
+          "level": 3,
+          "text": "The first question"
+        },
+        {
+          "level": 3,
+          "text": "A room of possibilities"
+        },
+        {
+          "level": 3,
+          "text": "The first big build"
+        },
+        {
+          "level": 3,
+          "text": "Beyond one campus"
+        },
+        {
+          "level": 2,
+          "text": "Less someday.More let’s build."
+        },
+        {
+          "level": 3,
+          "text": "Gather. Make. Repeat."
+        },
+        {
+          "level": 3,
+          "text": "A little guidance. A big leap."
+        },
+        {
+          "level": 3,
+          "text": "Bring it to your campus."
+        },
+        {
+          "level": 2,
+          "text": "It starts withshowing up."
+        },
+        {
+          "level": 3,
+          "text": "01Meetup27 July 2025HackShastra Pre-Meetup"
+        },
+        {
+          "level": 3,
+          "text": "02HackathonSeptember 2025HackShastra 1.0"
+        },
+        {
+          "level": 3,
+          "text": "03Campus orientation30 October 2025HI-O"
+        },
+        {
+          "level": 3,
+          "text": "04Winter hackathon31 January – 1 February 2026SnowHackIPEC"
+        },
+        {
+          "level": 3,
+          "text": "05Technology expo26 February 2026TEXPO'26"
+        },
+        {
+          "level": 3,
+          "text": "06AI hackathon28–29 March 2026ShubhShastra"
+        },
+        {
+          "level": 3,
+          "text": "07National hackathon26–27 September 2026Grand Hack IPEC"
+        },
+        {
+          "level": 2,
+          "text": "Come for the build.Stay for the people."
+        },
+        {
+          "level": 2,
+          "text": "The founding collective."
+        },
+        {
+          "level": 2,
+          "text": "Find your people.Build what’s next."
+        },
+        {
+          "level": 3,
+          "text": "Have something in mind?"
+        },
+        {
+          "level": 3,
+          "text": "Follow along"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "BreadcrumbList",
+        "Organization"
+      ],
+      "htmlBytes": 161226
+    },
+    {
+      "pathname": "/contact",
+      "status": 200,
+      "title": "Contact Tanmay Tiwari | Projects & Collaborations",
+      "description": "Contact Tanmay Tiwari for software projects, creative collaborations or community conversations. Find his email and official professional profiles.",
+      "canonical": "https://takneekitanmay.tech/contact",
+      "robots": "index, follow",
+      "h1s": [
+        "Good thingsstart withhello."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Good thingsstart withhello."
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "ContactPage",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 31655
+    },
+    {
+      "pathname": "/projects/unoverse",
+      "status": 200,
+      "title": "Unoverse | Tanmay Tiwari",
+      "description": "Unoverse is a real-time 3D multiplayer UNO game built with Next.js, React Three Fiber, Express, Socket.IO, and TypeScript. It features a server-authoritative game…",
+      "canonical": "https://takneekitanmay.tech/projects/unoverse",
+      "robots": "index, follow",
+      "h1s": [
+        "Unoverse."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Unoverse."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "Play together. Your way."
+        },
+        {
+          "level": 3,
+          "text": "Around the table."
+        },
+        {
+          "level": 3,
+          "text": "Connected in real time."
+        },
+        {
+          "level": 3,
+          "text": "Play it your way."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "Spools"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "CreativeWork",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 77499
+    },
+    {
+      "pathname": "/projects/spools",
+      "status": 200,
+      "title": "Spools | Tanmay Tiwari",
+      "description": "Spools is a social space for sharing ideas, finding your people, and building things together. It is a full-stack social app built with the MERN stack. Share short…",
+      "canonical": "https://takneekitanmay.tech/projects/spools",
+      "robots": "index, follow",
+      "h1s": [
+        "Spools."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Spools."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "From a post to a circle."
+        },
+        {
+          "level": 3,
+          "text": "An idea starts here."
+        },
+        {
+          "level": 3,
+          "text": "Find your circle."
+        },
+        {
+          "level": 3,
+          "text": "Keep the thread going."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "HackShastra Website"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "SoftwareSourceCode",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 81397
+    },
+    {
+      "pathname": "/projects/hackshastra-website",
+      "status": 200,
+      "title": "HackShastra Website | Tanmay Tiwari",
+      "description": "This is an interactive, high-performance community platform and event management system built for the HackShastra community.",
+      "canonical": "https://takneekitanmay.tech/projects/hackshastra-website",
+      "robots": "index, follow",
+      "h1s": [
+        "HackShastra Website."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "HackShastra Website."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "Built around community."
+        },
+        {
+          "level": 3,
+          "text": "The community, online."
+        },
+        {
+          "level": 3,
+          "text": "Space for what’s next."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "Baithak"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "CreativeWork",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 74239
+    },
+    {
+      "pathname": "/projects/baithak",
+      "status": 200,
+      "title": "Baithak | Tanmay Tiwari",
+      "description": "Baithak is a video meeting and collaboration app built with Next.js. Its dashboard brings meeting creation, joining, scheduling, personal rooms, meeting history,…",
+      "canonical": "https://takneekitanmay.tech/projects/baithak",
+      "robots": "index, follow",
+      "h1s": [
+        "Baithak."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Baithak."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "Every meeting, in one place."
+        },
+        {
+          "level": 3,
+          "text": "Bring everyone together."
+        },
+        {
+          "level": 3,
+          "text": "A real-time conversation."
+        },
+        {
+          "level": 3,
+          "text": "Pick up where you left off."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "3D Shirt Showcaser"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "SoftwareSourceCode",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 79776
+    },
+    {
+      "pathname": "/projects/3d-shirt-showcaser",
+      "status": 200,
+      "title": "3D Shirt Showcaser | Tanmay Tiwari",
+      "description": "3D Shirt Showcaser is an interactive web app using React, Three.js, and Tailwind CSS that lets users customize 3D shirt models with various textures and colors in…",
+      "canonical": "https://takneekitanmay.tech/projects/3d-shirt-showcaser",
+      "robots": "index, follow",
+      "h1s": [
+        "3D Shirt Showcaser."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "3D Shirt Showcaser."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "Change the look. See it live."
+        },
+        {
+          "level": 3,
+          "text": "Choose a new look."
+        },
+        {
+          "level": 3,
+          "text": "See it in three dimensions."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "Resumify"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "SoftwareSourceCode",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 73889
+    },
+    {
+      "pathname": "/projects/resumify",
+      "status": 200,
+      "title": "Resumify | Tanmay Tiwari",
+      "description": "Resumify is a full-stack resume review web app that lets users upload resumes, preview them, get ATS-based scores, and receive detailed feedback with improvement…",
+      "canonical": "https://takneekitanmay.tech/projects/resumify",
+      "robots": "index, follow",
+      "h1s": [
+        "Resumify."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Resumify."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "From upload to insight."
+        },
+        {
+          "level": 3,
+          "text": "Start with your résumé."
+        },
+        {
+          "level": 3,
+          "text": "See the score."
+        },
+        {
+          "level": 3,
+          "text": "Find the next improvement."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "Apple iPhone 15 Pro Website"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "SoftwareSourceCode",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 77188
+    },
+    {
+      "pathname": "/projects/apple-iphone-15-pro-website",
+      "status": 200,
+      "title": "Apple iPhone 15 Pro Website | Tanmay Tiwari",
+      "description": "Apple iPhone 15 Pro Website is a React-based recreation of Apple's iPhone 15 Pro website. Featuring Tailwind CSS for responsive styling and Three.js for immersive…",
+      "canonical": "https://takneekitanmay.tech/projects/apple-iphone-15-pro-website",
+      "robots": "index, follow",
+      "h1s": [
+        "Apple iPhone 15 Pro Website."
+      ],
+      "headings": [
+        {
+          "level": 1,
+          "text": "Apple iPhone 15 Pro Website."
+        },
+        {
+          "level": 2,
+          "text": "Project overview."
+        },
+        {
+          "level": 2,
+          "text": "Exploring form and motion."
+        },
+        {
+          "level": 3,
+          "text": "Recreating the experience."
+        },
+        {
+          "level": 3,
+          "text": "Form, motion, detail."
+        },
+        {
+          "level": 2,
+          "text": "Technologies & tools."
+        },
+        {
+          "level": 2,
+          "text": "Unoverse"
+        }
+      ],
+      "schemaTypes": [
+        "Person",
+        "WebSite",
+        "WebPage",
+        "SoftwareSourceCode",
+        "BreadcrumbList"
+      ],
+      "htmlBytes": 75432
+    }
+  ],
+  "redirects": [
+    {
+      "pathname": "/__seo_missing_page__",
+      "status": 404
+    },
+    {
+      "pathname": "/projects/__seo_missing_project__",
+      "status": 404
+    },
+    {
+      "pathname": "/experience",
+      "status": 308,
+      "location": "/about"
+    },
+    {
+      "pathname": "/about/",
+      "status": 308,
+      "location": "/about"
+    }
+  ],
+  "assets": [],
+  "externalLinks": [
+    {
+      "url": "https://unoverse-3d.vercel.app/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.hackshastra.in/events",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.hackshastra.in/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DTX12l-E4Gq/?img_index=9",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DQw5esJk7px/?img_index=3",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DW3Nk5hidOx/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DVllJ9mE2jY/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DQOKGpiCAdH/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DWIhRPBk2wE/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DUzlLR0Eiam/?img_index=11",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DWk-AVEAJoI/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/DW7CBOKkvAW/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.instagram.com/p/Dcnhm6IBGN1/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.linkedin.com/in/tanmay-tiwari20/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://x.com/TakneekiTanmay",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://hackshastra.in/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://spools.onrender.com/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20/Spools",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://baithak-meet.vercel.app/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20/Baithak",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://shirt-showcaser.vercel.app/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20/shirt-showcaser",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://resumify-silk.vercel.app/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20/Resumify",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://apple-i-phone15-theta.vercel.app/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://github.com/tanmay-tiwari-20/Apple-iPhone15",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://events.vtools.ieee.org/m/527107",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://hackcbs-8.devfolio.co/",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/hackathons/codepunk-v20-gla-university-glau-uttar-pradesh-1649328/amp",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/hackathons/srm-builds-70-verge-2026-srm-university-delhi-ncr-sonepat-1648620/amp",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.hackshastra.in/about",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.hackshastra.in/contact",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://forms.gle/PjuZH5racue4aYwG9",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://luma.com/n17f71yg",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/hackathons/hackshastra-hackshastra-1544473",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://luma.com/6vc2jiem",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/hackathons/snowhackipec-hackshastra-1613746",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/competitions/texpo-2026-student-innovation-and-industry-technology-expo-srm-university-srmap-andhra-pradesh-1638340",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/hackathons/shubhshastra-subharti-university-meerut-uttar-pradesh-india-1663561",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://unstop.com/p/grand-hack-ipec-hackshastra-1704703",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://chat.whatsapp.com/IeO0TMZYkh7LdCK264UBp3",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://instagram.com/hackshastra",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://www.linkedin.com/company/hackshastraa",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "status": "not checked (use --external with network access)"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_2400/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "status": "not checked (use --external with network access)"
+    }
+  ],
+  "errors": [],
+  "warnings": [],
+  "sitemap": {
+    "status": 200,
+    "urls": [
+      "https://takneekitanmay.tech/",
+      "https://takneekitanmay.tech/about",
+      "https://takneekitanmay.tech/projects",
+      "https://takneekitanmay.tech/hackathons",
+      "https://takneekitanmay.tech/hackshastra",
+      "https://takneekitanmay.tech/contact",
+      "https://takneekitanmay.tech/projects/unoverse",
+      "https://takneekitanmay.tech/projects/spools",
+      "https://takneekitanmay.tech/projects/hackshastra-website",
+      "https://takneekitanmay.tech/projects/baithak",
+      "https://takneekitanmay.tech/projects/3d-shirt-showcaser",
+      "https://takneekitanmay.tech/projects/resumify",
+      "https://takneekitanmay.tech/projects/apple-iphone-15-pro-website"
+    ],
+    "lastmodCount": 0
+  },
+  "internalLinkCount": 161,
+  "robots": {
+    "status": 200,
+    "text": "User-Agent: *\nAllow: /\nDisallow: /secret-admin\nDisallow: /api/\nDisallow: /admin\nDisallow: /admin-dashboard\n\nSitemap: https://takneekitanmay.tech/sitemap.xml\n"
+  },
+  "llms": {
+    "status": 200
+  },
+  "passed": true
+}

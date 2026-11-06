@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { published, repos } from "@/lib/db";
+import { published, publicSocials, repos } from "@/lib/db";
 import { ArrowUpRight } from "lucide-react";
 import HeroPortrait from "@/components/hero-portrait";
 import { MotionLayer } from "@/components/shell";
@@ -11,22 +11,27 @@ import HomeHackShastraStory from "@/components/home-hackshastra-story";
 import HomeHackathonsJourney from "@/components/home-hackathons-journey";
 import CinematicFooter from "@/components/cinematic-footer";
 import { getPortfolioMetrics } from "@/lib/profile-metrics";
+import { pageMetadata, pageGraph } from "@/lib/seo";
+import SeoJsonLd from "@/components/seo-json-ld";
 
 export const dynamic = "force-dynamic";
+export const metadata = pageMetadata("home");
 
 export default async function Home() {
   const [profile, projects, experience, events, hackathons, socials] =
     await Promise.all([
-      repos.profile.getAll(),
+      published(repos.profile),
       published(repos.projects),
       published(repos.experiences),
       published(repos.events),
       published(repos.hackathons),
-      published(repos.socials),
+      publicSocials(),
     ]);
 
   const person = profile[0];
-  const portfolioMetrics = person?.stats?.length ? person.stats : getPortfolioMetrics(projects, experience);
+  const portfolioMetrics = person?.stats?.length
+    ? person.stats
+    : getPortfolioMetrics(projects, experience);
   const featured = projects.filter((p) => p.featured).slice(0, 4);
   const hackathonStoryEvents = hackathons
     .filter((event) => event.role === "Judge" || event.role === "Mentor")
@@ -50,26 +55,9 @@ export default async function Home() {
         "Open-source software",
       ];
 
-  const personJson = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    name: person?.name || "Tanmay Tiwari",
-    jobTitle: person?.role || "Creative Developer",
-    email: person?.email || "",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: person?.location || "New Delhi",
-    },
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(personJson).replace(/</g, "\\u003c"),
-        }}
-      />
+      <SeoJsonLd data={pageGraph("home")} />
 
       {/* HERO SECTION */}
       <section className="hero" data-home-hero>
@@ -84,7 +72,7 @@ export default async function Home() {
             </p>
 
             <h1 className="hero-name" aria-label={fullName}>
-              <span className="hero-name-line">{firstName}</span>
+              <span className="hero-name-line">{firstName}</span>{" "}
               {lastName && (
                 <span className="hero-name-line hero-name-accent">
                   {lastName}
@@ -114,7 +102,9 @@ export default async function Home() {
             <div className="hero-metrics-strip">
               {portfolioMetrics.map((st, i) => (
                 <div key={i} className="hero-metric-item">
-                  <span className="hero-metric-val">{st.value.toLocaleString()}+</span>
+                  <span className="hero-metric-val">
+                    {st.value.toLocaleString()}+
+                  </span>
                   <span className="hero-metric-lbl">{st.label}</span>
                 </div>
               ))}
@@ -141,6 +131,7 @@ export default async function Home() {
               01 <span>/</span> CREATIVE DEVELOPER
             </div>
             <HeroPortrait
+              imageAlt={person?.avatar?.alt || `Portrait of ${fullName}`}
               imageSrc={
                 person?.avatar?.url ||
                 "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/v1792423733/hero_ppp8ke.png"
@@ -161,7 +152,11 @@ export default async function Home() {
       >
         <div className="marquee-inner">
           {[...marqueeTechnologies, ...marqueeTechnologies].map((tech, idx) => (
-            <div className="marquee-item" key={idx}>
+            <div
+              className="marquee-item"
+              key={idx}
+              aria-hidden={idx >= marqueeTechnologies.length ? true : undefined}
+            >
               <span>{tech.toUpperCase()}</span>
               <span className="marquee-dot" />
             </div>

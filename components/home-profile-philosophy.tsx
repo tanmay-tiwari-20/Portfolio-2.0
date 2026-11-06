@@ -88,7 +88,7 @@ function TactileStatCard({
 
       {/* Top Header Row */}
       <div className="tactile-card-top">
-        <span className="tactile-card-index">{index} //</span>
+        <span className="tactile-card-index">{index}{" //"}</span>
         <div className="tactile-card-icon-stage">{children}</div>
       </div>
 
@@ -112,9 +112,6 @@ export default function HomeProfilePhilosophy({
   bio,
   stats,
   eventsCount,
-  hackathonsCount,
-  name,
-  role,
 }: Props) {
   const sectionRef = useRef<HTMLElement>(null);
   const projectsCount = stats?.[0]?.value ?? 0;

@@ -19,7 +19,7 @@ const navItems = [
     href: "/hackshastra",
     sublabel: "Tech Community",
   },
-  { label: "Hackathons", href: "/hackathons", sublabel: "Awards & Builds" },
+  { label: "Hackathons", href: "/hackathons", sublabel: "Mentoring & Judging" },
   { label: "Contact", href: "/contact", sublabel: "Direct Communication" },
 ];
 

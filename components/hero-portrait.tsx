@@ -1,7 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useState, useRef, useCallback, useEffect } from "react";
+import { cloudinaryLoader } from "@/lib/cloudinary/urls";
 
 // Dynamically import DitherVeil with ssr: false to prevent WebGL/canvas hydration issues
 const DitherVeil = dynamic(() => import("./animations/dither-veil"), {
@@ -11,15 +13,19 @@ const DitherVeil = dynamic(() => import("./animations/dither-veil"), {
 
 interface HeroPortraitProps {
   imageSrc?: string;
+  imageAlt?: string;
   className?: string;
 }
 
 export default function HeroPortrait({
   imageSrc = "https://res.cloudinary.com/dunacoujw/image/upload/b_rgb:07090e,f_auto,q_auto,w_1200/v1792423733/hero_ppp8ke.png",
+  imageAlt = "Portrait of Tanmay Tiwari",
   className = "",
 }: HeroPortraitProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [textureSrc, setTextureSrc] = useState<string>();
+  const enhancementFrame = useRef(0);
   const reducedMotion = useRef(false);
 
   useEffect(() => {
@@ -34,7 +40,10 @@ export default function HeroPortrait({
 
     updatePreference();
     media.addEventListener("change", updatePreference);
-    return () => media.removeEventListener("change", updatePreference);
+    return () => {
+      media.removeEventListener("change", updatePreference);
+      cancelAnimationFrame(enhancementFrame.current);
+    };
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -76,11 +85,29 @@ export default function HeroPortrait({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* The real portrait also covers the initial chunk/image preparation. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={imageSrc} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover" />
-        <DitherVeil
+        {/* A responsive, server-rendered portrait paints before WebGL loads. */}
+        <Image
+          loader={cloudinaryLoader}
           src={imageSrc}
+          alt={imageAlt}
+          fill
+          sizes="(max-width: 767px) 360px, 410px"
+          preload
+          crossOrigin="anonymous"
+          className="object-cover"
+          onLoad={(event) => {
+            const selectedSrc = event.currentTarget.currentSrc;
+            cancelAnimationFrame(enhancementFrame.current);
+            // Let the decoded portrait paint before importing the enhancement.
+            enhancementFrame.current = requestAnimationFrame(() => {
+              enhancementFrame.current = requestAnimationFrame(() => {
+                setTextureSrc(selectedSrc);
+              });
+            });
+          }}
+        />
+        {textureSrc && <DitherVeil
+          src={textureSrc}
           fit="cover"
           pattern="floyd"
           pixelSize={2.4}
@@ -98,7 +125,7 @@ export default function HeroPortrait({
           clickBurst={true}
           wander={false}
           className="w-full h-full"
-        />
+        />}
 
         {/* Minimalist interactive corner cue - fades away seamlessly on hover */}
         <div

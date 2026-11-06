@@ -33,7 +33,7 @@ export default function NotFound() {
         </h1>
 
         <p className="hero-lede" style={{ margin: "0 auto 36px" }}>
-          The requested coordinate doesn't exist or has been relocated. Let’s guide you back to the home index.
+          The requested coordinate doesn’t exist or has been relocated. Let’s guide you back to the home index.
         </p>
 
         <Link href="/" className="button button-primary">

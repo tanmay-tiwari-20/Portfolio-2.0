@@ -297,11 +297,10 @@ export default function HomeProjectShowcase({
 
           {/* Action & View Switcher Bar */}
           <div className="showcase-top-actions">
-            <div className="showcase-view-pills" role="tablist">
+            <div className="showcase-view-pills" role="group" aria-label="Project display mode">
               <button
                 type="button"
-                role="tab"
-                aria-selected={viewMode === "theater"}
+                aria-pressed={viewMode === "theater"}
                 onClick={() => setViewMode("theater")}
                 className={`showcase-view-btn ${
                   viewMode === "theater" ? "is-active" : ""
@@ -313,8 +312,7 @@ export default function HomeProjectShowcase({
               </button>
               <button
                 type="button"
-                role="tab"
-                aria-selected={viewMode === "grid"}
+                aria-pressed={viewMode === "grid"}
                 onClick={() => setViewMode("grid")}
                 className={`showcase-view-btn ${
                   viewMode === "grid" ? "is-active" : ""
@@ -447,9 +445,9 @@ export default function HomeProjectShowcase({
                       1440,
                       activeCoverFit === "cover" ? 920 : undefined,
                     )}
-                    alt={activeProject.cover.alt || activeProject.title}
+                    alt={activeProject.cover.alt && activeProject.cover.alt !== activeProject.title ? activeProject.cover.alt : `Screenshot of ${activeProject.title}`}
                     fill
-                    priority
+                    loading="lazy"
                     sizes="(max-width: 900px) 96vw, 55vw"
                     className={`showcase-image ${activeCoverFit === "contain" ? "showcase-image-contained" : ""}`}
                     style={{
@@ -540,7 +538,7 @@ export default function HomeProjectShowcase({
           </div>
 
           {/* Interactive Project Switcher Dock (Bottom Navigation) */}
-          <div className="showcase-dock" role="tablist">
+          <div className="showcase-dock" role="group" aria-label="Choose a featured project">
             <div className="showcase-dock-controls">
               <button
                 type="button"
@@ -558,8 +556,7 @@ export default function HomeProjectShowcase({
                     <button
                       key={p.id}
                       type="button"
-                      role="tab"
-                      aria-selected={isActive}
+                      aria-pressed={isActive}
                       onClick={() => setActiveIndex(idx)}
                       className={`showcase-dock-item ${
                         isActive ? "is-active" : ""
@@ -617,7 +614,7 @@ export default function HomeProjectShowcase({
                     960,
                     coverFit === "cover" ? 600 : undefined,
                   )}
-                  alt={p.cover.alt || p.title}
+                  alt={p.cover.alt && p.cover.alt !== p.title ? p.cover.alt : `Screenshot of ${p.title}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className={`grid-card-img ${coverFit === "contain" ? "grid-card-img-contained" : ""}`}
@@ -655,7 +652,7 @@ export default function HomeProjectShowcase({
                     href={`/projects/${p.slug}`}
                     className="grid-action-link"
                   >
-                    <span>Read Case Study</span>
+                    <span>Explore {p.title}</span>
                     <ArrowUpRight size={14} />
                   </Link>
 

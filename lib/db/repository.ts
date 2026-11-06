@@ -4,6 +4,7 @@ import { z } from "zod";
 import { nanoid } from "nanoid";
 import { getMongoDb, isMongoConfigured } from "@/lib/db/mongodb";
 import { prepareMongoPatch } from "@/lib/db/mongo-patch";
+import { cache } from "react";
 
 export interface Repository<T extends { id: string; sortOrder?: number }> {
   getAll(): Promise<T[]>;
@@ -231,10 +232,14 @@ export class UnifiedRepository<T extends { id: string; sortOrder?: number }> imp
     return this.jsonRepo;
   }
 
-  async getAll(): Promise<T[]> {
+  // Deduplicate layout, metadata and page reads within a React request only.
+  // Admin edits remain visible on the next request without cache invalidation.
+  private readAll = cache(async (): Promise<T[]> => {
     const repo = await this.getActiveRepo();
     return repo.getAll();
-  }
+  });
+
+  async getAll(): Promise<T[]> { return this.readAll(); }
 
   async getById(id: string): Promise<T | null> {
     const repo = await this.getActiveRepo();

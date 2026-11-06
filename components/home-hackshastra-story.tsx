@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { cloudinaryLoader } from "@/lib/cloudinary/urls";
 
 type Props = {
   founderName?: string;
@@ -307,7 +309,7 @@ export default function HomeHackShastraStory({
         <div className="hackshastra-story-intro">
           <div className="hackshastra-story-thesis">
             <h2 ref={titleRef} id="hackshastra-story-title">
-              <span data-hs-reveal>Why aren’t we</span>
+              <span data-hs-reveal>Why aren’t we</span>{" "}
               <span
                 className="hackshastra-story-headline-accent"
                 data-hs-reveal
@@ -355,10 +357,12 @@ export default function HomeHackShastraStory({
                   >
                     <Image
                       src={photo.src}
+                      loader={cloudinaryLoader}
                       alt={photo.alt}
                       width={1200}
                       height={675}
-                      unoptimized
+                      sizes="(max-width: 767px) 90vw, (max-width: 1400px) 55vw, 720px"
+                      loading="lazy"
                     />
                   </figure>
                 ))}
@@ -507,15 +511,13 @@ export default function HomeHackShastraStory({
             BUILDERS, PARTNERS &amp; INDUSTRY MOVING FORWARD TOGETHER
           </span>
           <div className="hackshastra-story-actions" data-hs-reveal>
-            <a
+            <Link
               className="hackshastra-story-link hackshastra-story-link-secondary"
-              href="https://www.hackshastra.in/events"
-              target="_blank"
-              rel="noreferrer"
+              href="/hackshastra#hs-events"
             >
-              Explore events
+              Explore HackShastra events
               <ArrowUpRight size={18} aria-hidden="true" />
-            </a>
+            </Link>
             <a
               className="hackshastra-story-link"
               href="https://www.hackshastra.in/"
