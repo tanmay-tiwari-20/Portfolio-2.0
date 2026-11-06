@@ -262,6 +262,11 @@ interaction latency and animation cost still need production measurement.
    then click Verify. Keep the record. A URL-prefix property for
    `https://takneekitanmay.tech/` is an alternative when DNS access is unavailable;
    it covers only that prefix and needs its own supported verification method.
+   On 6 November 2026 the authoritative nameservers were `ns1.vercel-dns.com`
+   and `ns2.vercel-dns.com`, and the Google TXT token was absent from both.
+   Add the TXT record in Vercel's domain DNS settings with root name `@` and
+   Google's exact supplied value. A registrar-only record is inactive while
+   the domain delegates DNS to Vercel. No nameserver change is needed.
 3. Under Sitemaps, submit **https://takneekitanmay.tech/sitemap.xml**. Confirm
    successful fetch and inspect discovered URL counts; discovery is not indexing.
 4. Use URL Inspection on Home, About, Projects, all seven project pages,
@@ -283,6 +288,12 @@ interaction latency and animation cost still need production measurement.
    `https://takneekitanmay.tech/` manually.
 2. Complete the offered ownership method (DNS, verification file or meta tag).
    Copy the account's real verification value; none was invented in source.
+   The supplied `BingSiteAuth.xml` has now been moved from the repository root
+   to `public/BingSiteAuth.xml`. Next.js serves it at `/BingSiteAuth.xml`.
+   Local production HTTP verification returned 200 and `application/xml`, with
+   the original bytes unchanged and no redirect. Deploy this file relocation,
+   open `https://takneekitanmay.tech/BingSiteAuth.xml`, then retry Bing verification.
+   Keep the file deployed after verification.
 3. Submit **https://takneekitanmay.tech/sitemap.xml** under Sitemaps and confirm
    Bing can fetch it. Inspect the same primary/project URLs with URL Inspection.
 4. Review Site Explorer, crawl/indexing reports and available Site Scan results;
