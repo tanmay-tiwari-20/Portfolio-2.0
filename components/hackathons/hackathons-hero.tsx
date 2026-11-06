@@ -1,6 +1,23 @@
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown, ArrowUpRight, MapPin } from "lucide-react";
 import { hackathonMoments } from "@/data/hackathon-moments";
 import HackathonsImage from "./hackathons-image";
+
+function Spark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M50 3v94M3 50h94M17 17l66 66M17 83l66-66"
+        stroke="currentColor"
+        strokeWidth="10"
+      />
+    </svg>
+  );
+}
 
 export default function HackathonsHero({
   name,
@@ -13,6 +30,8 @@ export default function HackathonsHero({
   hasMentors: boolean;
   hasJudges: boolean;
 }) {
+  const journeyHref = hasMentors ? "#hk-journey" : "#hk-archive";
+
   return (
     <section
       id="hk-top"
@@ -20,127 +39,134 @@ export default function HackathonsHero({
       aria-labelledby="hk-title"
     >
       <div className="hh-atmosphere" aria-hidden="true">
-        <div className="hh-flow hh-flow-back" data-hk-hero-flow>
-          <svg viewBox="0 0 1000 900" preserveAspectRatio="none">
-            <path
-              d="M1050 -90C565 -80 315 210 405 485C520 836 161 781 -160 1040L1050 1040Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-        <div className="hh-flow hh-flow-middle" data-hk-hero-flow>
-          <svg viewBox="0 0 1000 900" preserveAspectRatio="none">
-            <path
-              d="M1120 -50C695 60 400 271 531 528C694 848 300 871 10 1030L1120 1030Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-        <div className="hh-flow hh-flow-front" data-hk-hero-flow>
-          <svg viewBox="0 0 1000 900" preserveAspectRatio="none">
-            <path
-              d="M1100 150C841 213 620 379 686 580C754 794 494 849 235 1000L1100 1000Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
+        <div className="hh-grid" />
+        <span className="hh-background-word">HACK</span>
       </div>
       <div className="hk-container hh-inner">
-        <div className="hh-topline" data-hk-intro>
+        <div className="hh-topline">
           <span className="hh-kicker">
             <i aria-hidden="true" />
-            Hackathons / In good company
+            The hackathon journal
           </span>
-          <span className="hh-location">{location || "New Delhi, India"}</span>
+          <span className="hh-location">
+            <MapPin size={13} aria-hidden="true" />
+            {location || "New Delhi, India"}
+          </span>
+          <span className="hh-edition">People / Ideas / Possibility</span>
         </div>
 
         <div className="hh-layout">
           <div className="hh-copy">
-            <p className="hh-overline" data-hk-intro>
-              A little curiosity. A shared spark.
+            <p className="hh-overline">
+              <span aria-hidden="true">↳</span> A little chaos. A lot of
+              possibility.
             </p>
             <h1 className="hh-title" id="hk-title">
-              <span data-hk-intro>Where ideas</span>
-              <span data-hk-intro>
-                come <em>alive.</em>
+              <span className="hh-title-first">Ideas</span>{" "}
+              <span className="hh-title-outline">in the</span>{" "}
+              <span className="hh-title-last">
+                making<span className="hh-title-stop">.</span>
+                <Spark />
               </span>
             </h1>
-            <p className="hh-lede" data-hk-intro>
-              The ideas, conversations, and people that keep me coming back to
-              hackathons.
-            </p>
-            <div className="hh-actions" data-hk-intro>
-              <a
-                href={hasMentors ? "#hk-journey" : "#hk-archive"}
-                className="hh-explore"
-                data-hk-link
-              >
+            <div className="hh-copy-bottom">
+              <p className="hh-lede">
+                Building things. Sharing perspectives. Finding my people.
+                <span> This is my life at hackathons.</span>
+              </p>
+              <a href={journeyHref} className="hh-explore" data-hk-link>
                 <span>Explore the journey</span>
                 <span className="hh-action-icon">
-                  <ArrowDown size={18} data-hk-arrow aria-hidden="true" />
+                  <ArrowDown size={19} data-hk-arrow aria-hidden="true" />
                 </span>
-              </a>
-              <a href="#hk-archive" className="hh-journal-link" data-hk-link>
-                Inside the journal{" "}
-                <ArrowUpRight size={17} data-hk-arrow aria-hidden="true" />
               </a>
             </div>
           </div>
 
-          <div className="hk-hero-visual hh-visual" data-hk-intro>
-            <div className="hh-photo-outline" aria-hidden="true" />
+          <div className="hk-hero-visual hh-visual">
+            <div className="hh-visual-ring hh-ring-outer" aria-hidden="true" />
+            <div className="hh-visual-ring hh-ring-inner" aria-hidden="true" />
+            <svg
+              className="hh-orbit-path"
+              viewBox="0 0 600 600"
+              fill="none"
+              aria-hidden="true"
+            >
+              <ellipse
+                cx="300"
+                cy="300"
+                rx="294"
+                ry="125"
+                transform="rotate(-35 300 300)"
+              />
+            </svg>
+            <div className="hh-photo-label">
+              <span aria-hidden="true">●</span> In the room. In our element.
+            </div>
             <div className="hk-hero-photo" data-hk-parallax>
               <div className="hk-parallax-inner" data-hk-parallax-inner>
                 <HackathonsImage
                   src={hackathonMoments[1].src}
                   alt={hackathonMoments[1].alt}
                   priority
-                  sizes="(max-width: 767px) 88vw, (max-width: 1023px) 46vw, 43vw"
+                  sizes="(max-width: 767px) 52vw, 40vw"
                 />
               </div>
-              <span className="hh-photo-caption">
-                Different minds.
+            </div>
+            <div className="hh-sticker">
+              <Spark />
+              <span>
+                Good people.
                 <br />
-                Something new.
+                <strong>Great energy.</strong>
               </span>
             </div>
             <div className="hk-hero-small">
               <HackathonsImage
                 src={hackathonMoments[4].src}
                 alt={hackathonMoments[4].alt}
-                sizes="(max-width: 767px) 35vw, 19vw"
+                sizes="(max-width: 767px) 18vw, 14vw"
               />
             </div>
-            <div className="hh-photo-note" aria-hidden="true">
-              <span className="hh-note-line" />
-              Good things start
+            <span className="hh-photo-tag">
+              Less solo.
               <br />
-              with a conversation.
-            </div>
+              <strong>More together.</strong>
+            </span>
+            <span className="hh-visual-caption">
+              REAL MOMENTS. SHARED POSSIBILITIES.
+            </span>
+            <Spark className="hh-visual-spark" />
           </div>
         </div>
 
-        <div className="hh-bottom" data-hk-intro>
+        <div className="hh-bottom">
           <span className="hh-signoff">
-            A personal field journal<span>by {name}</span>
+            <Spark />
+            <span>
+              Field notes by<strong>{name}</strong>
+            </span>
           </span>
           <nav className="hh-chapters" aria-label="Hackathon chapters">
             {hasMentors && (
               <a href="#hk-journey">
                 <span>01</span>Mentoring
+                <ArrowUpRight aria-hidden="true" />
               </a>
             )}
             {hasJudges && (
               <a href="#hk-judging">
                 <span>02</span>Judging
+                <ArrowUpRight aria-hidden="true" />
               </a>
             )}
             <a href="#hk-archive">
               <span>03</span>Event journal
+              <ArrowUpRight aria-hidden="true" />
             </a>
           </nav>
           <a
-            href={hasMentors ? "#hk-journey" : "#hk-archive"}
+            href={journeyHref}
             className="hh-scroll"
             aria-label="Scroll to the hackathon journey"
             data-hk-link
