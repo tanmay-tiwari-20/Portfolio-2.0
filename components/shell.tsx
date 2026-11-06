@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { SocialLink } from "@/lib/validators/schemas";
 
 import StaggeredMenu from "@/components/animations/staggered-menu";
+import { useInitialPageEntrance } from "@/components/animations/page-entrance";
 
 const navItems = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
@@ -66,6 +67,7 @@ export function Footer(_props: { name?: string; email?: string }) {
 
 export function MotionLayer() {
   const pathname = usePathname();
+  const initialPageEntrance = useInitialPageEntrance();
 
   useEffect(() => {
     // Disable smooth scrolling on admin dashboard & login to prevent interference with forms & modals
@@ -166,7 +168,7 @@ export function MotionLayer() {
         gsapCtx = gsap.context(() => {
           const homeHero =
             document.querySelector<HTMLElement>("[data-home-hero]");
-          if (homeHero) {
+          if (homeHero && initialPageEntrance) {
             const intro = createTimeline({ defaults: { ease: "out(3)" } });
             const kicker = homeHero.querySelector<HTMLElement>(".hero-kicker");
             const names =
@@ -532,7 +534,7 @@ export function MotionLayer() {
       disposed = true;
       cleanupMotion();
     };
-  }, [pathname]);
+  }, [pathname, initialPageEntrance]);
 
   return null;
 }

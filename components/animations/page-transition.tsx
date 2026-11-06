@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { PageEntranceProvider } from "./page-entrance";
 import { freezeViewport, warmCaptureAssets } from "./spider-transition/capture";
 import { getNavigationTarget, routeKey } from "./spider-transition/navigation";
 import type { TransitionScene } from "./spider-transition/scene";
@@ -437,7 +438,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   }, [router, startRouteTransition]);
 
   return (
-    <>
+    <PageEntranceProvider routeKey={committedKey}>
       <div ref={page} data-transition-page>
         {children}
       </div>
@@ -452,6 +453,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
         <div ref={preview} className="spider-transition__freeze" />
         <canvas ref={canvas} className="spider-transition__canvas" />
       </div>
-    </>
+    </PageEntranceProvider>
   );
 }

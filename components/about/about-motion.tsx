@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { useInitialPageEntrance } from "@/components/animations/page-entrance";
 
 export default function AboutMotion() {
+  const initialPageEntrance = useInitialPageEntrance();
+
   useEffect(() => {
     let disposed = false;
     let initialized = false;
@@ -190,6 +193,9 @@ export default function AboutMotion() {
           try {
             nextContext.add(() => {
               detailElements("[data-about-heading]").forEach((heading) => {
+                // A transition can reveal a restored scroll position or hash
+                // destination. Only prepare entrances below the visible page.
+                if (heading.getBoundingClientRect().top < innerHeight) return;
                 gsap.fromTo(
                   heading,
                   { y: 24, autoAlpha: 0.35 },
@@ -210,6 +216,7 @@ export default function AboutMotion() {
               detailElements(
                 "[data-about-reveal]:not([data-about-heading])",
               ).forEach((element, index) => {
+                if (element.getBoundingClientRect().top < innerHeight) return;
                 gsap.fromTo(
                   element,
                   { y: 18, autoAlpha: 0 },
@@ -230,6 +237,7 @@ export default function AboutMotion() {
 
               detailElements("[data-about-experience]").forEach(
                 (entry, index) => {
+                  if (entry.getBoundingClientRect().top < innerHeight) return;
                   gsap.fromTo(
                     entry,
                     { y: 22, autoAlpha: 0 },
@@ -252,6 +260,7 @@ export default function AboutMotion() {
               detailElements(
                 "[data-about-image]:not([data-about-parallax])",
               ).forEach((frame) => {
+                if (frame.getBoundingClientRect().top < innerHeight) return;
                 gsap.fromTo(
                   frame,
                   { clipPath: "inset(8% 0 0 0)" },
@@ -306,6 +315,7 @@ export default function AboutMotion() {
               });
 
               detailElements("[data-about-line]").forEach((line) => {
+                if (line.getBoundingClientRect().top < innerHeight) return;
                 gsap.fromTo(
                   line,
                   { scaleX: 0, transformOrigin: "0% 50%" },
@@ -369,7 +379,10 @@ export default function AboutMotion() {
           initialized = true;
 
           context = gsap.context(() => {
-            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            if (
+              !initialPageEntrance ||
+              window.matchMedia("(prefers-reduced-motion: reduce)").matches
+            ) {
               markEntranceComplete();
               return;
             }
@@ -389,23 +402,23 @@ export default function AboutMotion() {
             if (kickers.length) {
               entrance.fromTo(
                 kickers,
-                { y: 14, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.42 },
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 0.42 },
               );
             }
             if (intro.length) {
               entrance.fromTo(
                 intro,
-                { y: 14, autoAlpha: 0 },
-                { y: 0, autoAlpha: 1, duration: 0.48, stagger: 0.075 },
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 0.48, stagger: 0.075 },
                 "-=0.2",
               );
             }
             if (visuals.length) {
               entrance.fromTo(
                 visuals,
-                { y: 18, scale: 0.975, autoAlpha: 0 },
-                { y: 0, scale: 1, autoAlpha: 1, duration: 0.62 },
+                { autoAlpha: 0 },
+                { autoAlpha: 1, duration: 0.62 },
                 "-=0.44",
               );
             }
@@ -442,7 +455,7 @@ export default function AboutMotion() {
       window.cancelAnimationFrame(refreshFrame);
       if (aboutRoot) delete aboutRoot.dataset.aboutEntranceComplete;
     };
-  }, []);
+  }, [initialPageEntrance]);
 
   return null;
 }

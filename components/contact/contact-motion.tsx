@@ -20,7 +20,6 @@ export default function ContactMotion({
     const select = (selector: string) =>
       Array.from(root.querySelectorAll<HTMLElement>(selector));
     let disposed = false,
-      entered = false,
       initialized = false;
     let frame = 0,
       refreshFrame = 0;
@@ -79,8 +78,6 @@ export default function ContactMotion({
           if (initialized || disposed || covered()) return;
           initialized = true;
           root.dataset.contactMotion = reduced.matches ? "reduced" : "ready";
-          const firstEntry = !entered;
-          entered = true;
           if (reduced.matches) return;
           const context = gsap.context(() => {}, root);
           const animations: gsap.core.Animation[] = [];
@@ -135,47 +132,6 @@ export default function ContactMotion({
           };
           try {
             context.add(() => {
-              const navigation = performance.getEntriesByType(
-                "navigation",
-              )[0] as PerformanceNavigationTiming | undefined;
-              if (
-                firstEntry &&
-                scrollY < 2 &&
-                !location.hash &&
-                navigation?.type !== "back_forward"
-              ) {
-                // Keep server-rendered text readable while motion imports arrive.
-                const lines = select("[data-contact-line]");
-                const intro = select(
-                  "[data-contact-intro]:not([data-contact-line])",
-                );
-                if (lines.length)
-                  animations.push(
-                    gsap.fromTo(
-                      lines,
-                      { y: 26 },
-                      {
-                        y: 0,
-                        duration: 0.85,
-                        stagger: 0.09,
-                        ease: "power3.out",
-                      },
-                    ),
-                  );
-                if (intro.length)
-                  animations.push(
-                    gsap.fromTo(
-                      intro,
-                      { y: 12 },
-                      {
-                        y: 0,
-                        duration: 0.7,
-                        stagger: 0.055,
-                        ease: "power3.out",
-                      },
-                    ),
-                  );
-              }
               select("[data-contact-reveal]").forEach((element) => {
                 if (
                   element.getBoundingClientRect().top < innerHeight ||

@@ -26,7 +26,6 @@ export default function HackShastraMotion({
     const hover = matchMedia("(hover: hover) and (pointer: fine)");
     let disposed = false;
     let initialized = false;
-    let entered = false;
     let startFrame = 0;
     let refreshFrame = 0;
     let resizeObserver: ResizeObserver | undefined;
@@ -96,8 +95,6 @@ export default function HackShastraMotion({
           root.dataset.hackshastraMotion = reduced.matches
             ? "reduced"
             : "ready";
-          const firstEntry = !entered;
-          entered = true;
           if (reduced.matches) return;
 
           const context = gsap.context(() => {}, root);
@@ -158,33 +155,6 @@ export default function HackShastraMotion({
 
           try {
             context.add(() => {
-              const navigation = performance.getEntriesByType(
-                "navigation",
-              )[0] as PerformanceNavigationTiming | undefined;
-              if (
-                firstEntry &&
-                scrollY < 2 &&
-                !location.hash &&
-                navigation?.type !== "back_forward"
-              ) {
-                // Never hide the already-readable hero while imports load.
-                const intro = select("[data-hackshastra-intro]");
-                if (intro.length) {
-                  animations.push(
-                    gsap.fromTo(
-                      intro,
-                      { y: compact.matches ? 12 : 24 },
-                      {
-                        y: 0,
-                        duration: 0.85,
-                        stagger: 0.075,
-                        ease: "power3.out",
-                      },
-                    ),
-                  );
-                }
-              }
-
               select("[data-hackshastra-line]").forEach((line) => {
                 // Restored scroll positions and visible content stay intact.
                 if (line.getBoundingClientRect().top < innerHeight) return;

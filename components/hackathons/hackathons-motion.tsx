@@ -28,7 +28,6 @@ export default function HackathonsMotion({
     const hover = matchMedia("(hover: hover) and (pointer: fine)");
     let disposed = false;
     let initialized = false;
-    let entered = false;
     let startFrame = 0;
     let refreshFrame = 0;
     let observer: ResizeObserver | undefined;
@@ -97,8 +96,6 @@ export default function HackathonsMotion({
           if (disposed || initialized || covered()) return;
           initialized = true;
           root.dataset.hackathonsMotion = reduced.matches ? "reduced" : "ready";
-          const firstEntry = !entered;
-          entered = true;
           if (reduced.matches) return;
 
           const context = gsap.context(() => {}, root);
@@ -187,57 +184,6 @@ export default function HackathonsMotion({
 
           try {
             context.add(() => {
-              const navigation = performance.getEntriesByType(
-                "navigation",
-              )[0] as PerformanceNavigationTiming | undefined;
-              if (
-                firstEntry &&
-                scrollY < 2 &&
-                !location.hash &&
-                navigation?.type !== "back_forward"
-              ) {
-                const flows = select("[data-hk-hero-flow]");
-                const intro = select("[data-hk-intro]");
-                if (flows.length || intro.length) {
-                  // Curves settle first, followed by the editorial content. Keep
-                  // SSR copy readable: the entrance never hides text or waits
-                  // for imagery before allowing the page to be used.
-                  const entrance = gsap.timeline();
-                  if (flows.length) {
-                    entrance.fromTo(
-                      flows,
-                      {
-                        y: compact.matches ? 24 : 64,
-                        scaleY: 0.86,
-                        transformOrigin: "50% 100%",
-                      },
-                      {
-                        y: 0,
-                        scaleY: 1,
-                        duration: 1.35,
-                        stagger: 0.09,
-                        ease: "power3.out",
-                      },
-                      0,
-                    );
-                  }
-                  if (intro.length) {
-                    entrance.fromTo(
-                      intro,
-                      { y: compact.matches ? 12 : 24 },
-                      {
-                        y: 0,
-                        duration: 1.1,
-                        stagger: 0.055,
-                        ease: "power3.out",
-                      },
-                      flows.length ? 0.22 : 0,
-                    );
-                  }
-                  animations.push(entrance);
-                }
-              }
-
               select("[data-hk-line]").forEach((line) => {
                 if (line.getBoundingClientRect().top < innerHeight) return;
                 const animation = gsap.fromTo(
