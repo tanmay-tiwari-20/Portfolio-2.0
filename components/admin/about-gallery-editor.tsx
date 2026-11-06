@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import {
   ArrowDown,
@@ -37,6 +37,8 @@ type Props = {
   practiceImage2?: ImageAsset | null;
   aboutPage?: AboutPageContent;
   projects?: Project[];
+  onDirtyChange?: (dirty: boolean) => void;
+  onBusyChange?: (busy: boolean) => void;
   onSave: (
     value: AboutPopOutConfig,
     moments: AboutMoment[],
@@ -62,6 +64,8 @@ export default function AboutGalleryEditor({
   practiceImage2: initialPracticeImage2,
   aboutPage: initialAboutPage,
   projects = [],
+  onDirtyChange,
+  onBusyChange,
   onSave,
 }: Props) {
   const [gallery, setGallery] = useState<AboutPopOutConfig>(() =>
@@ -82,7 +86,38 @@ export default function AboutGalleryEditor({
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState("");
   const [dirty, setDirty] = useState(false);
+  const saveInProgress = useRef(false);
+  const libraryInProgress = useRef(false);
+  const savedDraft = useRef({ gallery, moments, aboutPage });
+  const [draftRevision, setDraftRevision] = useState(0);
+  const [statusIsError, setStatusIsError] = useState(false);
   const hasUpload = Object.values(uploading).some(Boolean);
+
+  useEffect(() => {
+    onDirtyChange?.(dirty);
+  }, [dirty, onDirtyChange]);
+
+  useEffect(() => {
+    onBusyChange?.(saving || hasUpload);
+  }, [saving, hasUpload, onBusyChange]);
+
+  useEffect(
+    () => () => {
+      onDirtyChange?.(false);
+      onBusyChange?.(false);
+    },
+    [onDirtyChange, onBusyChange],
+  );
+
+  useEffect(() => {
+    if (!dirty && !saving && !hasUpload) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
+  }, [dirty, saving, hasUpload]);
   const publishedProjects = projects.filter((project) => project.isPublished);
   const workProject =
     publishedProjects.find((project) => project.slug === "unoverse") ??
@@ -180,6 +215,8 @@ export default function AboutGalleryEditor({
   );
 
   const loadLibrary = useCallback(async () => {
+    if (libraryInProgress.current) return;
+    libraryInProgress.current = true;
     setLibraryLoading(true);
     setLibraryError("");
     try {
@@ -197,6 +234,7 @@ export default function AboutGalleryEditor({
           : "Could not load the media library.",
       );
     } finally {
+      libraryInProgress.current = false;
       setLibraryLoading(false);
     }
   }, []);
@@ -266,9 +304,11 @@ export default function AboutGalleryEditor({
   }
 
   async function save() {
-    if (saving || hasUpload) return;
+    if (saveInProgress.current || hasUpload) return;
+    saveInProgress.current = true;
     setSaving(true);
     setStatus("");
+    setStatusIsError(false);
     try {
       if (!gallery.images.some((image) => image.id === gallery.centerId)) {
         throw new Error(
@@ -315,21 +355,40 @@ export default function AboutGalleryEditor({
         initialPracticeImage2,
         parsed.data,
       );
-      if (saved) setDirty(false);
+      if (saved) {
+        savedDraft.current = { gallery, moments, aboutPage: parsed.data };
+        setDirty(false);
+      }
+      setStatusIsError(!saved);
       setStatus(
         saved
           ? "About page saved. The published page is ready to preview."
           : "Your draft is still here. Review the admin message and try again.",
       );
     } catch (error) {
+      setStatusIsError(true);
       setStatus(
         error instanceof Error
           ? error.message
           : "The About page could not be saved. Your draft is still here.",
       );
     } finally {
+      saveInProgress.current = false;
       setSaving(false);
     }
+  }
+
+  function discardChanges() {
+    if (saveInProgress.current || hasUpload || !dirty) return;
+    if (!window.confirm("Discard your unsaved About page changes?")) return;
+    setGallery(savedDraft.current.gallery);
+    setMoments(savedDraft.current.moments);
+    setAboutPage(savedDraft.current.aboutPage);
+    setCloudinaryUrl("");
+    setUrlError("");
+    setDirty(false);
+    setStatus("");
+    setDraftRevision((revision) => revision + 1);
   }
 
   return (
@@ -416,6 +475,7 @@ export default function AboutGalleryEditor({
         </aside>
 
         <fieldset
+          key={draftRevision}
           className={styles.controls}
           disabled={saving || hasUpload}
           onChangeCapture={markChanged}
@@ -440,6 +500,10 @@ export default function AboutGalleryEditor({
                 Cloudinary image URL
                 <input
                   className="form-input"
+                  aria-invalid={Boolean(urlError)}
+                  aria-describedby={
+                    urlError ? "about-gallery-url-error" : undefined
+                  }
                   type="url"
                   value={cloudinaryUrl}
                   onChange={(event) => {
@@ -466,6 +530,7 @@ export default function AboutGalleryEditor({
             </div>
             {urlError && (
               <p
+                id="about-gallery-url-error"
                 className="form-note"
                 role="alert"
                 style={{ color: "#ffaaa2" }}
@@ -981,16 +1046,31 @@ export default function AboutGalleryEditor({
                   : "Save publishes the copy and images together."}
               </span>
             </div>
-            <button
-              type="button"
-              className="button button-primary"
-              onClick={() => void save()}
-              disabled={saving || hasUpload || gallery.images.length === 0}
-            >
-              {saving ? "Saving…" : "Save About page"}
-            </button>
+            <div className={styles.saveActions}>
+              {dirty && (
+                <button
+                  type="button"
+                  className="button button-secondary"
+                  onClick={discardChanges}
+                  disabled={saving || hasUpload}
+                >
+                  Discard changes
+                </button>
+              )}
+              <button
+                type="button"
+                className="button button-primary"
+                onClick={() => void save()}
+                disabled={saving || hasUpload || gallery.images.length === 0}
+              >
+                {saving ? "Saving…" : "Save About page"}
+              </button>
+            </div>
             {status && (
-              <span className="form-note" role="status">
+              <span
+                className="form-note"
+                role={statusIsError ? "alert" : "status"}
+              >
                 {status}
               </span>
             )}
@@ -1017,7 +1097,9 @@ function CopyField({
   return (
     <label className={styles.field}>
       <span className={styles.fieldLabel}>
-        {label}
+        <span>
+          {label} <span aria-hidden="true">*</span>
+        </span>
         <small>
           {value.length}/{maxLength}
         </small>
@@ -1026,6 +1108,8 @@ function CopyField({
         <textarea
           className="form-input"
           value={value}
+          aria-required="true"
+          aria-invalid={!value.trim()}
           maxLength={maxLength}
           rows={4}
           onChange={(event) => onChange(event.target.value)}
@@ -1034,9 +1118,14 @@ function CopyField({
         <input
           className="form-input"
           value={value}
+          aria-required="true"
+          aria-invalid={!value.trim()}
           maxLength={maxLength}
           onChange={(event) => onChange(event.target.value)}
         />
+      )}
+      {!value.trim() && (
+        <span className="form-error-text">This field is required.</span>
       )}
     </label>
   );
@@ -1064,6 +1153,8 @@ function ImageField({
   onUploadingChange: (active: boolean) => void;
 }) {
   const validOverride = value && isCloudinaryImageUrl(value.url) ? value : null;
+  const errorId = useId();
+  const invalidUrl = Boolean(value?.url && !isCloudinaryImageUrl(value.url));
   const preview = validOverride ?? fallback;
   const [uploadSession, setUploadSession] = useState(() => ({
     version: 0,
@@ -1141,6 +1232,8 @@ function ImageField({
               className="form-input"
               type="url"
               value={value?.url ?? ""}
+              aria-invalid={invalidUrl}
+              aria-describedby={invalidUrl ? errorId : undefined}
               disabled={uploadActive}
               onChange={(event) => {
                 const url = event.target.value;
@@ -1156,6 +1249,11 @@ function ImageField({
                   : "https://res.cloudinary.com/your-cloud/image/upload/..."
               }
             />
+            {invalidUrl && (
+              <span id={errorId} className="form-error-text" role="alert">
+                Enter a valid HTTPS Cloudinary image URL.
+              </span>
+            )}
           </label>
           <label className={styles.field}>
             Image description / alt text

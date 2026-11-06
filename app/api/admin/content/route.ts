@@ -1,3 +1,4 @@
+import { allowedAdminOrigin } from "@/lib/auth/origin";
 import { revalidatePath } from "next/cache";
 import { cleanupOrphanedImages } from "@/lib/cloudinary/cleanup";
 import { NextResponse } from "next/server";
@@ -58,10 +59,7 @@ function refresh() {
   revalidatePath("/projects/[slug]", "page");
 }
 
-function allowedOrigin(req: Request) {
-  const origin = req.headers.get("origin");
-  return !origin || origin === new URL(req.url).origin;
-}
+
 function hasSafeAboutPopOutUrls(value: unknown) {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const images = (value as Record<string, unknown>).images;
@@ -101,7 +99,7 @@ export async function GET(req: Request) {
 }
 export async function POST(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!allowedOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
 
   const body = await req.json().catch(() => null);
   if (
@@ -158,7 +156,7 @@ export async function POST(req: Request) {
 }
 export async function PATCH(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!allowedOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   const body = await req.json().catch(() => null);
   if (!body || typeof body !== "object" || Array.isArray(body) || !isKey(body.collection) || typeof body.id !== "string") {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -191,9 +189,9 @@ export async function PATCH(req: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid content", details: parsed.error.flatten() }, { status: 400 });
   }
-  const validatedPatch = collection === "settings" || collection === "events"
-    ? pickSubmittedPatchFields(parsed.data, parsedPatch)
-    : parsed.data;
+  // Zod defaults apply even to partial schemas. A visibility/featured toggle must
+  // never reset omitted order, artwork, or unrelated fields in any collection.
+  const validatedPatch = pickSubmittedPatchFields(parsed.data, parsedPatch);
   const merged = entry.schema.safeParse({ ...before, ...validatedPatch, ...Object.fromEntries(removalFields.map((field) => [field, undefined])) });
   if (!merged.success) return NextResponse.json({ error: "The updated record is incomplete or invalid", details: merged.error.flatten() }, { status: 400 });
   if (collection === "projects" && "slug" in merged.data) {
@@ -212,7 +210,7 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!allowedOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   const body = await req.json().catch(() => null);
   if (!body || typeof body !== "object" || Array.isArray(body) || !isKey(body.collection) || typeof body.id !== "string") {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
@@ -230,7 +228,7 @@ export async function DELETE(req: Request) {
 
 export async function PUT(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  if (!allowedOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   const body = await req.json().catch(() => null);
   if (
     !body ||

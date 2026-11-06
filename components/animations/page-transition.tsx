@@ -36,6 +36,12 @@ type Flight = {
 
 /** One global flight. Next retains ownership of routing, redirects and history. */
 export default function PageTransition({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/secret-admin")) return <>{children}</>;
+  return <PublicPageTransition>{children}</PublicPageTransition>;
+}
+
+function PublicPageTransition({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [routePending, startRouteTransition] = useTransition();
   const pathname = usePathname();

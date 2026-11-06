@@ -16,18 +16,8 @@
   margin-bottom: 18px;
   padding: 19px 21px;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background:
-    radial-gradient(
-      ellipse at 0% 0%,
-      rgba(239, 70, 62, 0.13),
-      transparent 24rem
-    ),
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.045),
-      rgba(255, 255, 255, 0.015)
-    );
+  border-radius: 12px;
+  background: var(--spidey-dark-850);
 }
 
 .editorHeader :global(.eyebrow) {
@@ -36,7 +26,7 @@
 
 .editorHeader h2 {
   margin: 0;
-  font-size: clamp(22px, 2.2vw, 28px);
+  font-size: clamp(19px, 2vw, 24px);
 }
 
 .editorHeader p:last-child {
@@ -54,21 +44,21 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.035);
   color: var(--spidey-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(250px, 0.6fr) minmax(0, 1.4fr);
+  grid-template-columns: minmax(230px, 0.55fr) minmax(0, 1.45fr);
   gap: 18px;
   align-items: start;
 }
 
 .previewColumn {
   position: sticky;
-  top: 16px;
+  top: 92px;
   min-width: 0;
 }
 
@@ -77,12 +67,8 @@
   min-width: 0;
   padding: 17px;
   border: 1px solid var(--line);
-  border-radius: 16px;
-  background: linear-gradient(
-    150deg,
-    rgba(255, 255, 255, 0.035),
-    rgba(255, 255, 255, 0.012)
-  );
+  border-radius: 12px;
+  background: var(--spidey-dark-850);
 }
 
 .previewHeading {
@@ -95,7 +81,7 @@
 
 .sectionEyebrow {
   color: var(--theme-red-hover);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.13em;
 }
@@ -135,7 +121,7 @@
   margin-bottom: 14px;
   padding: 18px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--spidey-dark-850);
 }
 
@@ -147,14 +133,14 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  min-height: 40px;
+  min-height: 44px;
   color: var(--spidey-paper);
   font-size: 12px;
 }
 
 .pageOrder a span {
   color: var(--theme-red-hover);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .pageOrder a:hover {
@@ -171,7 +157,7 @@
 }
 
 .controlSection h3 {
-  scroll-margin-top: 30px;
+  scroll-margin-top: 96px;
 }
 
 .copyGrid {
@@ -194,7 +180,7 @@
 .fieldLabel small {
   flex-shrink: 0;
   color: var(--spidey-muted);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 400;
 }
 
@@ -293,13 +279,13 @@
 
 .field select {
   min-width: 0;
-  min-height: 40px;
-  font-size: 12px;
+  min-height: 44px;
+  font-size: 14px;
 }
 
 .imageEditor > button {
   margin-top: 10px;
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .uploadDisclosure {
@@ -307,7 +293,7 @@
 }
 
 .uploadDisclosure summary {
-  min-height: 40px;
+  min-height: 44px;
   padding-block: 11px;
   color: var(--spidey-paper);
   font-size: 11px;
@@ -380,7 +366,7 @@
   min-width: 0;
   gap: 6px;
   color: var(--spidey-muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -388,15 +374,15 @@
 .addImageRow > label :global(input),
 .field :global(input) {
   min-width: 0;
-  min-height: 40px;
+  min-height: 44px;
   margin: 0;
   padding-inline: 11px;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0;
 }
 
 .addImageRow > button {
-  min-height: 40px;
+  min-height: 44px;
   padding-inline: 14px;
   white-space: nowrap;
 }
@@ -425,7 +411,7 @@
 }
 
 .libraryHeader > span {
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .libraryGrid {
@@ -468,7 +454,7 @@
 
 .libraryAsset span {
   overflow: hidden;
-  font-size: 9px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -489,7 +475,7 @@
 
 .collectionHeader span {
   color: var(--spidey-muted);
-  font-size: 10px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -543,7 +529,7 @@
 .galleryTitleRow > strong {
   overflow: hidden;
   color: var(--spidey-paper);
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -554,7 +540,7 @@
   align-items: center;
   gap: 4px;
   color: #e8c391;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -566,9 +552,10 @@
 }
 
 .galleryActions :global(.filter-chip) {
-  min-height: 32px;
+  min-height: 44px;
+  min-width: 44px;
   padding: 5px 7px;
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .removeIcon {
@@ -580,7 +567,7 @@
 .helperNote {
   margin: 9px 0 0;
   color: var(--spidey-muted);
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.5;
 }
 
@@ -605,12 +592,12 @@
 
 .practiceAssetHeader strong {
   color: var(--spidey-paper);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .practiceAssetHeader span {
   color: #e8c391;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -669,7 +656,7 @@
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.58);
   color: #fff;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.09em;
 }
@@ -689,9 +676,8 @@
   padding: 12px 14px;
   border: 1px solid rgba(239, 70, 62, 0.28);
   border-radius: 13px;
-  background: rgba(18, 16, 18, 0.94);
+  background: var(--spidey-dark-850);
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(14px);
 }
 
 .saveBar > div {
@@ -706,23 +692,38 @@
 
 .saveBar > div > span {
   color: var(--spidey-muted);
-  font-size: 9px;
+  font-size: 11px;
 }
 
-.saveBar > button {
-  min-height: 40px;
+.saveActions > button {
+  min-height: 44px;
   padding-inline: 16px;
   white-space: nowrap;
 }
 
-.saveBar > [role="status"] {
+.saveBar > [role="status"],
+.saveBar > [role="alert"] {
   grid-column: 1 / -1;
   margin: 0;
 }
 
+.saveBar .saveActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: end;
+}
+
+.editor summary:focus-visible,
+.editor a:focus-visible,
+.editor button:focus-visible {
+  outline: 2px solid var(--theme-red-hover);
+  outline-offset: 3px;
+}
+
 @media (max-width: 1050px) {
   .layout {
-    grid-template-columns: 250px minmax(0, 1fr);
+    grid-template-columns: 230px minmax(0, 1fr);
     gap: 12px;
   }
 
@@ -773,7 +774,9 @@
   }
 
   .field input,
-  .field textarea {
+  .field textarea,
+  .field select,
+  .addImageRow input {
     font-size: 16px;
   }
 
@@ -846,7 +849,16 @@
     bottom: 6px;
   }
 
-  .saveBar > button {
+  .saveActions > button {
     width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editor *,
+  .editor *::before,
+  .editor *::after {
+    transition: none !important;
+    animation: none !important;
   }
 }

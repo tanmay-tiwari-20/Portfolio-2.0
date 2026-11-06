@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "build": "production",
+  "storage": "local JSON; build-time MongoDB disabled for verification",
+  "durationSeconds": 44,
+  "clientAssetsScanned": 57,
+  "serverSecretsInClientAssets": false,
+  "lintChangedFiles": "passed",
+  "typecheck": "passed",
+  "repositoryLint": "3 pre-existing errors in untouched files"
+}

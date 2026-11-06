@@ -1,10 +1,10 @@
+import { allowedAdminOrigin } from "@/lib/auth/origin";
 import { NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 import { currentAdmin } from "@/lib/auth/session";
 
 export async function POST(req: Request) {
-  const origin = req.headers.get("origin");
-  if (origin && origin !== new URL(req.url).origin) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json().catch(() => ({}));
   const section = String(body.section || "portfolio").replace(/[^a-z0-9-]/gi, "").slice(0, 48) || "portfolio";

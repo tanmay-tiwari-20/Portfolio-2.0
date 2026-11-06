@@ -8,5 +8,18 @@ export async function GET() {
   }
 
   const status = await testMongoConnection();
-  return NextResponse.json(status);
+  return NextResponse.json({
+    success: status.success,
+    message: status.success
+      ? "Connected to MongoDB."
+      : process.env.MONGODB_URI?.trim()
+        ? "Database connection unavailable. Check the server configuration."
+        : "Using local JSON storage.",
+    dbName: status.dbName,
+    // Never send connection strings, even partially masked, to the browser.
+    uriMasked: process.env.MONGODB_URI?.trim()
+      ? "Configured on server"
+      : "Not configured",
+    collections: status.collections,
+  });
 }

@@ -11,18 +11,29 @@ export default function SortableList<T extends SortableItem>({
   onChange,
   onNotify,
   renderItem,
+  disabled = false,
 }: {
   collection: string;
   items: T[];
   onChange: (items: T[]) => void;
   onNotify: (message: string, type: "success" | "error") => void;
   renderItem: (item: T, index: number) => ReactNode;
+  disabled?: boolean;
 }) {
   const [saving, setSaving] = useState(false);
   const busy = useRef(false);
 
   async function move(from: number, to: number) {
-    if (busy.current || from === to || to < 0 || to >= items.length) return;
+    if (
+      disabled ||
+      busy.current ||
+      from === to ||
+      from < 0 ||
+      from >= items.length ||
+      to < 0 ||
+      to >= items.length
+    )
+      return;
     const previous = items;
     const next = [...items];
     const [item] = next.splice(from, 1);
@@ -41,13 +52,19 @@ export default function SortableList<T extends SortableItem>({
           expectedIds: previous.map((row) => row.id),
         }),
       });
-      if (!response.ok) throw new Error("The new order could not be saved.");
-      const saved = await response.json() as T[];
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.error || "The new order could not be saved.");
+      }
+      const saved = (await response.json()) as T[];
       onChange(saved);
       onNotify("Content order saved.", "success");
-    } catch {
+    } catch (error) {
       onChange(previous);
-      onNotify("Could not save the new order. Your previous order was restored.", "error");
+      onNotify(
+        `${error instanceof Error ? error.message : "Could not save the new order."} Your previous order was restored.`,
+        "error",
+      );
     } finally {
       busy.current = false;
       setSaving(false);
@@ -55,26 +72,60 @@ export default function SortableList<T extends SortableItem>({
   }
 
   return (
-    <div className="admin-sortable-list" aria-busy={saving}>
-      {items.length === 0 && <p className="admin-empty-state">No content yet. Use the button above to add the first item.</p>}
+    <div
+      className="admin-sortable-list"
+      role="list"
+      aria-label={`${collection} content`}
+      aria-busy={saving}
+    >
+      {items.length === 0 && (
+        <p className="admin-empty-state">
+          No content yet. Use the button above to add the first item.
+        </p>
+      )}
       {items.map((item, index) => (
         <div
           className="admin-sortable-row"
+          role="listitem"
           key={item.id}
-          onDragOver={(event) => event.preventDefault()}
+          onDragOver={(event) => {
+            if (
+              !disabled &&
+              !saving &&
+              event.dataTransfer.types.includes("application/x-portfolio-order")
+            ) {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
+            }
+          }}
           onDrop={(event) => {
             event.preventDefault();
-            const from = Number(event.dataTransfer.getData("text/plain"));
-            if (Number.isInteger(from)) void move(from, index);
+            try {
+              const dragged = JSON.parse(
+                event.dataTransfer.getData("application/x-portfolio-order"),
+              );
+              if (
+                dragged.collection === collection &&
+                typeof dragged.id === "string"
+              ) {
+                const from = items.findIndex((row) => row.id === dragged.id);
+                if (from !== -1) void move(from, index);
+              }
+            } catch {
+              // Ignore unrelated files, links and text dropped onto this list.
+            }
           }}
         >
-          <div className="admin-sort-controls" aria-label={`Reorder item ${index + 1}`}>
+          <div
+            className="admin-sort-controls"
+            aria-label={`Reorder item ${index + 1}`}
+          >
             <button
               type="button"
               className="admin-order-button"
               aria-label={`Move item ${index + 1} up`}
               title="Move up"
-              disabled={saving || index === 0}
+              disabled={disabled || saving || index === 0}
               onClick={() => void move(index, index - 1)}
             >
               <ArrowUp size={15} />
@@ -84,10 +135,15 @@ export default function SortableList<T extends SortableItem>({
               className="admin-order-button admin-drag-handle"
               aria-label={`Drag item ${index + 1} to reorder`}
               title="Drag to reorder"
-              draggable={!saving}
+              disabled={disabled || saving}
+              tabIndex={-1}
+              draggable={!disabled && !saving}
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("text/plain", String(index));
+                event.dataTransfer.setData(
+                  "application/x-portfolio-order",
+                  JSON.stringify({ collection, id: item.id }),
+                );
               }}
             >
               <GripVertical size={16} />
@@ -97,7 +153,7 @@ export default function SortableList<T extends SortableItem>({
               className="admin-order-button"
               aria-label={`Move item ${index + 1} down`}
               title="Move down"
-              disabled={saving || index === items.length - 1}
+              disabled={disabled || saving || index === items.length - 1}
               onClick={() => void move(index, index + 1)}
             >
               <ArrowDown size={15} />

@@ -1,80 +1,115 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import bcrypt from "bcryptjs";
-import { createSession } from "@/lib/auth/session";
+import { authConfigurationError, passwordMatches } from "@/lib/auth/config";
+import { allowedAdminOrigin } from "@/lib/auth/origin";
+import { clearSession, createSession } from "@/lib/auth/session";
+import { clearClientAttempts, consumeLoginAttempt } from "@/lib/auth/store";
 
-const attempts = new Map<string, { count: number; until: number }>();
-const limit = 6;
-const lockMs = 15 * 60_000;
+export const runtime = "nodejs";
+const unavailable = () =>
+  NextResponse.json(
+    { error: "Sign-in is temporarily unavailable. Please try again later." },
+    { status: 503 },
+  );
+
+async function boundedBody(req: Request): Promise<string | null> {
+  if (!req.body || Number(req.headers.get("content-length")) > 8192)
+    return null;
+  const reader = req.body.getReader();
+  const decoder = new TextDecoder();
+  let bytes = 0;
+  let text = "";
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (done) return text + decoder.decode();
+      bytes += value.byteLength;
+      if (bytes > 8192) {
+        await reader.cancel();
+        return null;
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
 
 export async function POST(req: Request) {
-  try {
-    const origin = req.headers.get("origin");
-    if (origin && origin !== new URL(req.url).origin) {
-      return NextResponse.json({ error: "Invalid origin." }, { status: 403 });
-    }
-
-    const h = await headers();
-    const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const now = Date.now();
-
-    for (const [key, value] of attempts) {
-      if (value.until < now - lockMs) attempts.delete(key);
-    }
-
-    const state = attempts.get(ip);
-    if (state && state.until > now && state.count >= limit) {
-      return NextResponse.json(
-        { error: "Too many failed attempts. Try again in 15 minutes." },
-        { status: 429 }
-      );
-    }
-
-    let body: { password?: string };
-    try {
-      body = await req.json();
-    } catch {
-      return NextResponse.json({ error: "Invalid request payload." }, { status: 400 });
-    }
-
-    const password = body.password || "";
-    const rawHash = process.env.ADMIN_PASSWORD_HASH;
-    if (!rawHash || !/^\$2[aby]\$\d\d\$/.test(rawHash)) {
-      return NextResponse.json({ error: "Admin password hash is not configured." }, { status: 503 });
-    }
-    const hash = rawHash.replace(/\\(\$)/g, "$1");
-
-    const passwordOk = await bcrypt.compare(password, hash).catch(() => false);
-
-    if (!passwordOk) {
-      const count = state?.until && state.until > now ? state.count + 1 : 1;
-      attempts.set(ip, { count, until: count >= limit ? now + lockMs : now + lockMs });
-      return NextResponse.json(
-        { error: "Incorrect passphrase. Access denied." },
-        { status: 401 }
-      );
-    }
-
-    attempts.delete(ip);
-
-    const adminEmail = process.env.ADMIN_EMAIL || "tanmay@portfolio";
-    await createSession(adminEmail);
-    return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    console.error("[Login Handler Error]:", err);
+  if (!allowedAdminOrigin(req))
     return NextResponse.json(
-      { error: err?.message || "Internal authentication error" },
-      { status: 500 }
+      { error: "Request not allowed." },
+      { status: 403 },
     );
+  const configurationError = authConfigurationError();
+  if (configurationError) {
+    console.error(`[Admin auth] ${configurationError}`);
+    return unavailable();
+  }
+  try {
+    // A global cap also applies, so spoofed client forwarding headers cannot bypass throttling.
+    const client = (
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+    ).slice(0, 128);
+    const retryAfter = await consumeLoginAttempt(client);
+    if (retryAfter)
+      return NextResponse.json(
+        { error: "Too many sign-in attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } },
+      );
+    if (
+      !req.headers
+        .get("content-type")
+        ?.toLowerCase()
+        .startsWith("application/json")
+    ) {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
+    // Bound parsing work before accepting any submitted field.
+    const raw = await boundedBody(req);
+    if (raw === null)
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    let body: unknown;
+    try {
+      body = JSON.parse(raw);
+    } catch {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
+    const password =
+      body && typeof body === "object" && !Array.isArray(body)
+        ? (body as { password?: unknown }).password
+        : undefined;
+    if (!passwordMatches(password))
+      return NextResponse.json(
+        { error: "The password is incorrect. Please try again." },
+        { status: 401 },
+      );
+    await clearClientAttempts(client);
+    await createSession(process.env.ADMIN_EMAIL?.trim() || "admin");
+    return NextResponse.json({ ok: true });
+  } catch {
+    console.error(
+      "[Admin auth] Sign-in could not complete. Check authentication storage availability.",
+    );
+    return unavailable();
   }
 }
 
 export async function DELETE(req: Request) {
-  const origin = req.headers.get("origin");
-  if (origin && origin !== new URL(req.url).origin) {
-    return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req))
+    return NextResponse.json(
+      { error: "Request not allowed." },
+      { status: 403 },
+    );
+  try {
+    await clearSession();
+    return NextResponse.json({ ok: true });
+  } catch {
+    console.error(
+      "[Admin auth] Sign-out could not complete. Check authentication storage availability.",
+    );
+    return NextResponse.json(
+      { error: "Unable to sign out. Please try again." },
+      { status: 503 },
+    );
   }
-  const { cookies } = await import("next/headers");
-  (await cookies()).delete("spider-session");
-  return NextResponse.json({ ok: true });
 }

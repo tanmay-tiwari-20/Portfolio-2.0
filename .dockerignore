@@ -1,7 +1,9 @@
 node_modules
 .next
+.next-admin-test
 .git
 .env
 .env.*
 !.env.example
 npm-debug.log*
+**/.admin-auth.json*

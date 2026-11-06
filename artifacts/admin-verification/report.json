@@ -1,0 +1,2008 @@
+{
+  "startedAt": "2026-11-06T05:48:18.865Z",
+  "base": "http://localhost:3137",
+  "widths": [
+    320,
+    375,
+    430,
+    768,
+    1024,
+    1440,
+    1920,
+    2560
+  ],
+  "checks": [
+    {
+      "name": "unauthenticated direct routes are protected",
+      "passed": true,
+      "elapsedMs": 3951
+    },
+    {
+      "name": "login layouts at all requested widths",
+      "passed": true,
+      "elapsedMs": 2394
+    },
+    {
+      "name": "invalid login, password visibility, keyboard login",
+      "passed": true,
+      "elapsedMs": 2899
+    },
+    {
+      "name": "refresh and direct section navigation preserve session",
+      "passed": true,
+      "elapsedMs": 2146
+    },
+    {
+      "name": "CRUD for projects, experience, hackathons, events, and social links",
+      "passed": true,
+      "elapsedMs": 15104
+    },
+    {
+      "name": "publishing, featuring, and keyboard ordering persist",
+      "passed": true,
+      "elapsedMs": 1811
+    },
+    {
+      "name": "About draft discard, failed save preservation, and successful save",
+      "passed": true,
+      "elapsedMs": 10190
+    },
+    {
+      "name": "all six sections and all five editor dialogs at every width",
+      "passed": true,
+      "elapsedMs": 45683
+    },
+    {
+      "name": "mobile drawer keyboard navigation and browser back",
+      "passed": true,
+      "elapsedMs": 1897
+    },
+    {
+      "name": "logout blocks cookie replay and protected routes",
+      "passed": true,
+      "elapsedMs": 1449
+    }
+  ],
+  "runtimeErrors": [],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+      "url": "http://localhost:3137/api/admin/login"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1790609326/P1010480_sox5pn.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681467/SAVE_20260411_010130.jpg_uug3v0.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681502/IMG-20260114-WA0034.jpg_ncnk9i.jpg"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "url": "http://localhost:3137/api/admin/content"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1790609326/P1010480_sox5pn.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681467/SAVE_20260411_010130.jpg_uug3v0.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681502/IMG-20260114-WA0034.jpg_ncnk9i.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png"
+    },
+    {
+      "text": "Failed to load resource: net::ERR_NETWORK_ACCESS_DENIED",
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png"
+    }
+  ],
+  "networkErrors": [
+    {
+      "url": "http://localhost:3137/secret-admin",
+      "resource": "fetch",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3137/secret-admin",
+      "resource": "fetch",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1790609326/P1010480_sox5pn.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681467/SAVE_20260411_010130.jpg_uug3v0.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681502/IMG-20260114-WA0034.jpg_ncnk9i.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1790609326/P1010480_sox5pn.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681467/SAVE_20260411_010130.jpg_uug3v0.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792681502/IMG-20260114-WA0034.jpg_ncnk9i.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848879/portfolio/about/iaunufoqabnr1cfwcfai.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_1200/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/f_auto,q_auto,c_limit,w_960/v1792848876/portfolio/about/knj0xsyxznfhob6iukko.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848878/portfolio/about/kuylnce9wchqy5mnatri.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848880/portfolio/about/dgzfrl0j9pt0q3av1qrk.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848881/portfolio/about/lwwyc3rir4mrky5hc0ib.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792848984/portfolio/about/owqu2yu17n2sv7tqxu95.jpg",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667510/Screenshot_2026-10-22_164101_a10cyf.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792667831/Screenshot_2026-10-22_164656_z1ayaa.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668779/Screenshot_2026-10-22_170240_abl8ly.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792668175/Screenshot_2026-10-22_165242_l44bll.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679734/Screenshot_2026-10-22_200510_tdbjjm.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792679414/Screenshot_2026-10-22_195945_joy6im.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "https://res.cloudinary.com/dunacoujw/image/upload/v1792680120/Screenshot_2026-10-22_201142_l6sjph.png",
+      "resource": "image",
+      "failure": "net::ERR_NETWORK_ACCESS_DENIED"
+    },
+    {
+      "url": "http://localhost:3137/secret-admin/login",
+      "resource": "fetch",
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3137/secret-admin/login",
+      "resource": "fetch",
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "screenshots": [
+    "login-320.png",
+    "login-375.png",
+    "login-430.png",
+    "login-768.png",
+    "login-1024.png",
+    "login-1440.png",
+    "login-1920.png",
+    "login-2560.png",
+    "projects-320.png",
+    "projects-editor-320.png",
+    "experience-320.png",
+    "experience-editor-320.png",
+    "hackathons-320.png",
+    "hackathons-editor-320.png",
+    "events-320.png",
+    "events-editor-320.png",
+    "socials-320.png",
+    "socials-editor-320.png",
+    "about-320.png",
+    "projects-375.png",
+    "projects-editor-375.png",
+    "experience-375.png",
+    "experience-editor-375.png",
+    "hackathons-375.png",
+    "hackathons-editor-375.png",
+    "events-375.png",
+    "events-editor-375.png",
+    "socials-375.png",
+    "socials-editor-375.png",
+    "about-375.png",
+    "projects-430.png",
+    "projects-editor-430.png",
+    "experience-430.png",
+    "experience-editor-430.png",
+    "hackathons-430.png",
+    "hackathons-editor-430.png",
+    "events-430.png",
+    "events-editor-430.png",
+    "socials-430.png",
+    "socials-editor-430.png",
+    "about-430.png",
+    "projects-768.png",
+    "projects-editor-768.png",
+    "experience-768.png",
+    "experience-editor-768.png",
+    "hackathons-768.png",
+    "hackathons-editor-768.png",
+    "events-768.png",
+    "events-editor-768.png",
+    "socials-768.png",
+    "socials-editor-768.png",
+    "about-768.png",
+    "projects-1024.png",
+    "projects-editor-1024.png",
+    "experience-1024.png",
+    "experience-editor-1024.png",
+    "hackathons-1024.png",
+    "hackathons-editor-1024.png",
+    "events-1024.png",
+    "events-editor-1024.png",
+    "socials-1024.png",
+    "socials-editor-1024.png",
+    "about-1024.png",
+    "projects-1440.png",
+    "projects-editor-1440.png",
+    "experience-1440.png",
+    "experience-editor-1440.png",
+    "hackathons-1440.png",
+    "hackathons-editor-1440.png",
+    "events-1440.png",
+    "events-editor-1440.png",
+    "socials-1440.png",
+    "socials-editor-1440.png",
+    "about-1440.png",
+    "projects-1920.png",
+    "projects-editor-1920.png",
+    "experience-1920.png",
+    "experience-editor-1920.png",
+    "hackathons-1920.png",
+    "hackathons-editor-1920.png",
+    "events-1920.png",
+    "events-editor-1920.png",
+    "socials-1920.png",
+    "socials-editor-1920.png",
+    "about-1920.png",
+    "projects-2560.png",
+    "projects-editor-2560.png",
+    "experience-2560.png",
+    "experience-editor-2560.png",
+    "hackathons-2560.png",
+    "hackathons-editor-2560.png",
+    "events-2560.png",
+    "events-editor-2560.png",
+    "socials-2560.png",
+    "socials-editor-2560.png",
+    "about-2560.png"
+  ],
+  "limitations": [
+    "Cloudinary uploads are not sent. Production domain/cookies and deployed login are not tested by this local harness."
+  ],
+  "finishedAt": "2026-11-06T05:49:46.398Z",
+  "passed": true,
+  "createdRecordCount": 5
+}

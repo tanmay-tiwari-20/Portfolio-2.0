@@ -1,0 +1,38 @@
+{
+  "development": {
+    "passed": true,
+    "checks": [
+      "protected routes",
+      "incorrect password",
+      "CSRF",
+      "login cookie",
+      "refresh",
+      "session renewal",
+      "logout replay rejection",
+      "login throttling"
+    ]
+  },
+  "productionLocal": {
+    "passed": true,
+    "checks": [
+      "route protection",
+      "incorrect password",
+      "CSRF rejection",
+      "login cookie",
+      "production Secure cookie behind HTTPS origin",
+      "refresh",
+      "session renewal",
+      "logout replay rejection",
+      "login throttling"
+    ],
+    "limitation": "Local production runtime with simulated HTTPS Origin; not live deployment or browser TLS verification."
+  },
+  "missingConfiguration": {
+    "passed": true,
+    "checks": [
+      "missing password fails closed",
+      "configuration details stay server-side",
+      "protected routes reject access"
+    ]
+  }
+}

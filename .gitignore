@@ -6,6 +6,7 @@
 
 # Next.js build output
 /.next/
+/.next-admin-test/
 /out/
 /build
 /dist
@@ -57,3 +58,6 @@ Thumbs.db
 *.tmp
 *.bak
 /data/*.tmp
+# Private session IDs and login throttles (also when DATA_DIR is relocated).
+.admin-auth.json
+.admin-auth.json.*.tmp

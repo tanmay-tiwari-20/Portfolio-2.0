@@ -25,6 +25,8 @@ const navItems = [
 
 export function SiteNav({ socials }: { socials: SocialLink[] }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  if (pathname?.startsWith("/secret-admin")) return null;
 
   return (
     <header className={`site-header-clean ${menuOpen ? "menu-is-open" : ""}`}>

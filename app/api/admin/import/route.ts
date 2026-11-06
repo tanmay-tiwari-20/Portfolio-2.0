@@ -1,3 +1,4 @@
+import { allowedAdminOrigin } from "@/lib/auth/origin";
 import { revalidatePath } from "next/cache";
 import { cleanupOrphanedImages } from "@/lib/cloudinary/cleanup";
 import { NextResponse } from "next/server";
@@ -8,8 +9,7 @@ import { experienceSchema, eventSchema, hackathonSchema, projectSchema, profileS
 const map = { profile: [repos.profile, profileSchema], experiences: [repos.experiences, experienceSchema], projects: [repos.projects, projectSchema], events: [repos.events, eventSchema], hackathons: [repos.hackathons, hackathonSchema], socials: [repos.socials, socialSchema], settings: [repos.settings, settingsSchema] } as const;
 export async function POST(req: Request) {
   if (!await currentAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const origin = req.headers.get("origin");
-  if (origin && origin !== new URL(req.url).origin) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!allowedAdminOrigin(req)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
   const data = await req.json().catch(() => null);
   if (!data || typeof data !== "object" || Array.isArray(data)) return NextResponse.json({ error: "Invalid backup" }, { status: 400 });
   const replacements = new Map<keyof typeof map, unknown[]>();

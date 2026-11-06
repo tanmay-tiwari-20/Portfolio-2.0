@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Check, X } from "lucide-react";
+import { Check, LoaderCircle, X } from "lucide-react";
 import { isCloudinaryImageUrl } from "@/lib/cloudinary/image-url";
 import { resolveHackShastraEvents } from "@/lib/hackshastra-content";
 import type { CommunityEvent } from "@/lib/validators/schemas";
@@ -21,6 +21,8 @@ export default function EventEditor({
 }) {
   const dialog = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLInputElement>(null);
+  const submitting = useRef(false);
+  const [saveError, setSaveError] = useState("");
   const [posterError, setPosterError] = useState<string | null>(null);
   const preview = resolveHackShastraEvents([
     {
@@ -66,6 +68,8 @@ export default function EventEditor({
         role="dialog"
         aria-modal="true"
         aria-labelledby="event-editor-title"
+        aria-describedby="event-editor-description"
+        aria-busy={saving}
         onKeyDown={(event) => {
           if (event.key !== "Tab") return;
           const controls = Array.from(
@@ -90,7 +94,7 @@ export default function EventEditor({
             <h2 id="event-editor-title" className="display text-[22px]">
               {value.id ? "Edit HackShastra Event" : "Add HackShastra Event"}
             </h2>
-            <p className="form-help-text">
+            <p id="event-editor-description" className="form-help-text">
               Control the event details, artwork and visibility on your
               HackShastra page.
             </p>
@@ -110,13 +114,24 @@ export default function EventEditor({
           className="grid gap-4"
           onSubmit={async (event) => {
             event.preventDefault();
-            await onSave();
+            if (submitting.current || saving || invalidImage) return;
+            submitting.current = true;
+            setSaveError("");
+            try {
+              await onSave();
+            } catch {
+              setSaveError(
+                "The event could not be saved. Your changes are still here; try again.",
+              );
+            } finally {
+              submitting.current = false;
+            }
           }}
         >
           <fieldset disabled={saving} className="contents">
             <div>
               <label className="form-label" htmlFor="event-title">
-                Event title
+                Event title <span aria-hidden="true">*</span>
               </label>
               <input
                 ref={title}
@@ -127,13 +142,14 @@ export default function EventEditor({
                 }
                 className="form-input"
                 required
+                pattern=".*\S.*"
                 maxLength={180}
               />
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="form-label" htmlFor="event-date">
-                  Event date
+                  Event date <span aria-hidden="true">*</span>
                 </label>
                 <input
                   id="event-date"
@@ -193,7 +209,7 @@ export default function EventEditor({
                 </p>
                 <button
                   type="button"
-                  className="text-xs underline underline-offset-4"
+                  className="min-h-11 px-1 text-xs underline underline-offset-4"
                   onClick={() => onChange({ ...value, displayDate: undefined })}
                 >
                   Use default date
@@ -217,7 +233,7 @@ export default function EventEditor({
                 />
                 <button
                   type="button"
-                  className="mt-2 text-xs underline underline-offset-4"
+                  className="mt-2 min-h-11 px-1 text-xs underline underline-offset-4"
                   onClick={() => onChange({ ...value, category: undefined })}
                 >
                   Use default type
@@ -239,7 +255,7 @@ export default function EventEditor({
                 />
                 <button
                   type="button"
-                  className="mt-2 text-xs underline underline-offset-4"
+                  className="mt-2 min-h-11 px-1 text-xs underline underline-offset-4"
                   onClick={() => onChange({ ...value, role: undefined })}
                 >
                   Use default involvement
@@ -318,14 +334,23 @@ export default function EventEditor({
                 }}
                 placeholder="https://res.cloudinary.com/your-cloud/image/upload/..."
                 className="form-input"
-                aria-describedby="event-poster-help"
+                aria-invalid={invalidImage}
+                aria-describedby={
+                  invalidImage
+                    ? "event-poster-help event-poster-error"
+                    : "event-poster-help"
+                }
               />
               <p id="event-poster-help" className="form-help-text">
                 Paste a public HTTPS Cloudinary image URL. Clear it to remove
                 the artwork.
               </p>
               {invalidImage && (
-                <p className="form-error-text" role="alert">
+                <p
+                  id="event-poster-error"
+                  className="form-error-text"
+                  role="alert"
+                >
                   Enter a valid HTTPS Cloudinary image URL.
                 </p>
               )}
@@ -363,6 +388,8 @@ export default function EventEditor({
                           `${value.title || "Event"} artwork preview`
                         }
                         onError={() => setPosterError(value.image!.url)}
+                        loading="lazy"
+                        decoding="async"
                       />
                     )}
                   </div>
@@ -399,7 +426,12 @@ export default function EventEditor({
               />
               Published on the HackShastra page
             </label>
-            <div className="mt-3 flex flex-wrap justify-end gap-3">
+            {saveError && (
+              <p className="form-error-text" role="alert">
+                {saveError}
+              </p>
+            )}
+            <div className="admin-modal-actions mt-3 flex flex-wrap justify-end gap-3">
               <button
                 type="button"
                 onClick={onClose}
@@ -413,7 +445,16 @@ export default function EventEditor({
                 disabled={saving || invalidImage}
                 className="button button-primary"
               >
-                {saving ? "Saving…" : "Save event"} <Check size={16} />
+                {saving ? (
+                  <LoaderCircle
+                    size={16}
+                    className="animate-spin motion-reduce:animate-none"
+                    aria-hidden="true"
+                  />
+                ) : (
+                  <Check size={16} aria-hidden="true" />
+                )}
+                {saving ? "Saving…" : "Save event"}
               </button>
             </div>
           </fieldset>
