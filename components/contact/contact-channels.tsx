@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Check, Copy } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Mail } from "lucide-react";
 import {
   FaGithub,
   FaInstagram,
@@ -77,25 +77,19 @@ export default function ContactChannels({
     <>
       {email && (
         <div className="contact-email-block">
-          <p className="contact-small-label">EMAIL ME DIRECTLY</p>
-          <a
-            className="contact-email"
-            href={`mailto:${email}`}
-            data-contact-action
-          >
-            <span>
-              {email.split("@")[0]}
-              <wbr />@{email.split("@").slice(1).join("@")}
-            </span>
-            <ArrowUpRight size={20} data-contact-arrow aria-hidden="true" />
-          </a>
+          <p className="contact-small-label">DROP ME A LINE</p>
+          <p className="contact-email-address">
+            {email.split("@")[0]}
+            <wbr />@{email.split("@").slice(1).join("@")}
+          </p>
           <div className="contact-email-actions">
             <a
               className="contact-email-button"
               href={`mailto:${email}`}
               data-contact-action
             >
-              Write an email{" "}
+              <Mail size={18} aria-hidden="true" />
+              <span>Say hello</span>
               <ArrowUpRight size={19} data-contact-arrow aria-hidden="true" />
             </a>
             <button
@@ -107,13 +101,17 @@ export default function ContactChannels({
                   ? "Email address copied"
                   : "Copy email address"
               }
+              title={
+                copyState === "copied"
+                  ? "Email address copied"
+                  : "Copy email address"
+              }
             >
               {copyState === "copied" ? (
-                <Check size={14} aria-hidden="true" />
+                <Check size={18} aria-hidden="true" />
               ) : (
-                <Copy size={14} aria-hidden="true" />
+                <Copy size={18} aria-hidden="true" />
               )}
-              {copyState === "copied" ? "Copied" : "Copy address"}
             </button>
           </div>
           <p className="contact-copy-status" role="status">
@@ -130,38 +128,42 @@ export default function ContactChannels({
           className="contact-socials"
           aria-label="Connect with me on social platforms"
         >
-          <p className="contact-small-label">FIND ME ONLINE</p>
-          {socials.map(({ platform, label, href, detail }) => {
-            const Icon = icons[platform];
-            return (
-              <a
-                key={href}
-                className={`contact-social contact-social-${platform}`}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-contact-action
-                aria-label={`${label} — opens in a new tab`}
-              >
-                <Icon
-                  className="contact-brand-icon"
-                  size={21}
-                  aria-hidden="true"
-                />
-                <span className="contact-social-name">
-                  {label}
-                  <span>{detail}</span>
-                </span>
-                <ArrowUpRight
-                  className="contact-social-arrow"
-                  size={18}
-                  data-contact-arrow
-                  aria-hidden="true"
-                />
-              </a>
-            );
-          })}
+          <p className="contact-small-label">ELSEWHERE</p>
+          <div className="contact-social-list">
+            {socials.map(({ platform, label, href }) => {
+              const Icon = icons[platform];
+              return (
+                <a
+                  key={href}
+                  className={`contact-social contact-social-${platform}`}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-contact-action
+                  aria-label={`${label} — opens in a new tab`}
+                >
+                  <Icon
+                    className="contact-brand-icon"
+                    size={17}
+                    aria-hidden="true"
+                  />
+                  <span className="contact-social-name">{label}</span>
+                  <ArrowUpRight
+                    className="contact-social-arrow"
+                    size={14}
+                    data-contact-arrow
+                    aria-hidden="true"
+                  />
+                </a>
+              );
+            })}
+          </div>
         </nav>
+      )}
+      {!email && socials.length === 0 && (
+        <p className="contact-empty">
+          Contact details are being updated. Please check back soon.
+        </p>
       )}
     </>
   );

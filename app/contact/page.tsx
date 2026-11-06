@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowDownRight, ArrowUpRight, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import ContactMotion from "@/components/contact/contact-motion";
 import ContactChannels from "@/components/contact/contact-channels";
 import { published, repos } from "@/lib/db";
@@ -8,9 +8,9 @@ import "./contact.css";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "Contact — Let’s make something matter",
+  title: "Contact — Let's talk",
   description:
-    "A project, a collaboration, or a conversation. Contact Tanmay Tiwari to build something thoughtful together.",
+    "Have a project in mind or an idea to share? Get in touch with Tanmay Tiwari by email or connect online.",
 };
 
 export default async function Contact() {
@@ -26,62 +26,32 @@ export default async function Contact() {
         <div className="contact-layout">
           <section className="contact-hero" aria-labelledby="contact-title">
             <p className="contact-eyebrow" data-contact-intro>
-              <span aria-hidden="true" /> A GOOD PLACE TO BEGIN
+              <span aria-hidden="true" /> LET’S CONNECT
             </p>
             <h1
               id="contact-title"
               className="contact-title"
-              aria-label="Let’s make something matter."
+              aria-label="Good things start with hello."
             >
-              <span className="contact-line-mask">
-                <span data-contact-line>Let’s make</span>
-              </span>
-              <span className="contact-line-mask">
-                <span data-contact-line>something</span>
-              </span>
-              <span className="contact-line-mask">
-                <span data-contact-line>
-                  <em>matter.</em>
-                </span>
-              </span>
+              <span data-contact-line>Good things</span>
+              <span data-contact-line>start with</span>
+              <em data-contact-line>hello.</em>
             </h1>
             <p className="contact-hero-copy" data-contact-intro>
-              A new project, a collaboration, or a simple hello. I’d love to
-              hear what you’re thinking.
+              A project, a collaboration, or an idea to share.
+              <br />
+              I’d love to hear from you.
             </p>
-            <a
-              className="contact-hero-link"
-              href={
-                person?.email ? `mailto:${person.email}` : "#contact-channels"
-              }
-              data-contact-action
-              data-contact-intro
-            >
-              {person?.email ? "Send me an email" : "Find me online"}{" "}
-              <ArrowDownRight size={20} data-contact-arrow aria-hidden="true" />
-            </a>
-            {person?.location && (
-              <p className="contact-location" data-contact-intro>
-                <MapPin size={15} strokeWidth={1.7} aria-hidden="true" />
-                {person.location}
-                <span>Connected everywhere.</span>
-              </p>
-            )}
           </section>
 
-          <section
-            id="contact-channels"
-            className="contact-panel"
-            aria-labelledby="contact-channels-title"
-            data-contact-reveal
-          >
-            <div className="contact-panel-heading">
-              <div className="contact-panel-overline">
-                <span className="contact-kicker">LET’S CONNECT</span>
-                <ArrowUpRight size={22} strokeWidth={1.5} aria-hidden="true" />
-              </div>
-              <h2 id="contact-channels-title">Say hello.</h2>
-              <p>Email me directly or connect with me below.</p>
+          <section className="contact-panel" aria-label="Get in touch">
+            <div className="contact-spark" aria-hidden="true">
+              <svg viewBox="0 0 120 120" fill="none">
+                <path
+                  d="M60 0C60 39 81 60 120 60C81 60 60 81 60 120C60 81 39 60 0 60C39 60 60 39 60 0Z"
+                  fill="currentColor"
+                />
+              </svg>
             </div>
             <ContactChannels
               email={person?.email}
@@ -91,14 +61,13 @@ export default async function Contact() {
         </div>
 
         <footer className="contact-colophon">
-          <p>
-            {person?.name || "Tanmay Tiwari"}
-            <span>Good conversations make good beginnings.</span>
-          </p>
-          <a href="#top" data-contact-action>
-            Back to top{" "}
-            <ArrowUpRight size={16} data-contact-arrow aria-hidden="true" />
-          </a>
+          <p>{person?.name || "Tanmay Tiwari"}</p>
+          {person?.location && (
+            <p className="contact-location">
+              <MapPin size={14} strokeWidth={1.6} aria-hidden="true" />
+              {person.location}
+            </p>
+          )}
         </footer>
       </div>
     </ContactMotion>
