@@ -10,6 +10,7 @@
     "seed": "tsx scripts/seed.ts",
     "fetch:github": "node scripts/fetch-github.mjs",
     "test:github": "tsx --test scripts/github-contributions.test.ts",
+    "test:preloader": "tsx --test scripts/preloader-ready.test.ts scripts/preloader-capture-warm.test.ts",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -28,12 +28,21 @@ export default function AboutMotion() {
     const aboutRoot = document.querySelector<HTMLElement>(".about-page");
     if (aboutRoot) aboutRoot.dataset.aboutEntranceComplete = "false";
 
-    const covered = () => {
+    const covered = (allowPreloaderReveal = false) => {
       const html = document.documentElement;
+      const loading = html.classList.contains("portfolio-loading");
+      // The document intro uses the Spider scene too. Once its snapshot
+      // covers the source, only the hero may start beneath that scene.
+      if (
+        allowPreloaderReveal &&
+        loading &&
+        html.dataset.preloaderState === "revealing"
+      )
+        return false;
       return (
         Boolean(html.dataset.spiderTransition) ||
         html.classList.contains("portfolio-transitioning") ||
-        html.classList.contains("portfolio-loading")
+        loading
       );
     };
     const pause = () => {
@@ -72,9 +81,10 @@ export default function AboutMotion() {
       readyFrame = window.requestAnimationFrame(() => {
         readyFrame = 0;
         // transition-end can immediately start a queued navigation.
-        if (disposed || covered() || !aboutRoot?.isConnected) return;
+        if (disposed || covered(true) || !aboutRoot?.isConnected) return;
         if (!initialized) initialize?.();
         else {
+          if (covered()) return;
           suspended.forEach((trigger) => trigger.enable(false, false));
           suspended.clear();
           paused.forEach((animation) => animation.resume());
@@ -88,6 +98,7 @@ export default function AboutMotion() {
       window.removeEventListener("portfolio:capture-frame", pause);
       window.removeEventListener("portfolio:transition-start", pause);
       window.removeEventListener("portfolio:transition-end", ready);
+      window.removeEventListener("portfolio:preloader-reveal", ready);
       window.removeEventListener("portfolio:preloader-complete", ready);
       window.cancelAnimationFrame(readyFrame);
       paused.clear();
@@ -96,6 +107,7 @@ export default function AboutMotion() {
     window.addEventListener("portfolio:capture-frame", pause);
     window.addEventListener("portfolio:transition-start", pause);
     window.addEventListener("portfolio:transition-end", ready);
+    window.addEventListener("portfolio:preloader-reveal", ready);
     window.addEventListener("portfolio:preloader-complete", ready);
 
     const markEntranceComplete = () => {
@@ -375,7 +387,7 @@ export default function AboutMotion() {
           );
 
         initialize = () => {
-          if (disposed || initialized || covered()) return;
+          if (disposed || initialized || covered(true)) return;
           initialized = true;
 
           context = gsap.context(() => {
@@ -424,8 +436,13 @@ export default function AboutMotion() {
             }
           });
 
-          initializeDetails();
-          ScrollTrigger.refresh();
+          // The hero appears with the lifting cover; scroll-driven details
+          // stay untouched until it has completely released the page.
+          if (covered()) detailsDirty = true;
+          else {
+            initializeDetails();
+            ScrollTrigger.refresh();
+          }
         };
 
         ready();

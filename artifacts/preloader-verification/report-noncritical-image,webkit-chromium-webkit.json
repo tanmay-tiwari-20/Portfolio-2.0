@@ -1,0 +1,170 @@
+{
+  "base": "http://127.0.0.1:3002",
+  "cases": [
+    {
+      "name": "noncritical-image-phase-diagnostic",
+      "state": {
+        "documentToken": "0.yqv1sh94cvr",
+        "phases": [
+          {
+            "state": "none",
+            "at": 577.1000000014901
+          },
+          {
+            "state": "preparing",
+            "at": 652.1000000014901
+          },
+          {
+            "state": "complete",
+            "at": 2005
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 578
+          }
+        ],
+        "transitionResults": [
+          {
+            "state": "reduced-motion",
+            "at": 2005
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 2004.199999999255
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 2004.800000000745
+          }
+        ],
+        "lockedAt": 1895.300000000745,
+        "unlockedAt": 2005,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 671.6000000014901
+          },
+          {
+            "value": "90",
+            "at": 1909.199999999255
+          },
+          {
+            "value": "100",
+            "at": 1946.3999999985099
+          }
+        ],
+        "ditherReadyAt": null,
+        "bootstrapAt": 648.3000000007451,
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false,
+        "transitionResult": "reduced-motion"
+      },
+      "warnings": []
+    },
+    {
+      "name": "noncritical-image",
+      "duration": 109.5,
+      "state": {
+        "documentToken": "0.yqv1sh94cvr",
+        "phases": [
+          {
+            "state": "none",
+            "at": 577.1000000014901
+          },
+          {
+            "state": "preparing",
+            "at": 652.1000000014901
+          },
+          {
+            "state": "complete",
+            "at": 2005
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 578
+          }
+        ],
+        "transitionResults": [
+          {
+            "state": "reduced-motion",
+            "at": 2005
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 2004.199999999255
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 2004.800000000745
+          }
+        ],
+        "lockedAt": 1895.300000000745,
+        "unlockedAt": 2005,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 671.6000000014901
+          },
+          {
+            "value": "90",
+            "at": 1909.199999999255
+          },
+          {
+            "value": "100",
+            "at": 1946.3999999985099
+          }
+        ],
+        "ditherReadyAt": null,
+        "bootstrapAt": 648.3000000007451,
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false,
+        "transitionResult": "reduced-motion"
+      }
+    }
+  ],
+  "errors": [
+    "AssertionError [ERR_ASSERTION]: webkit: percentage finishes at100\n\n52 !== 100\n\n    at assertSmoothProgress (file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:219:10)\n    at screenshotCase (file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:398:5)\n    at async file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:722:11"
+  ],
+  "consoleErrors": [
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Refused to execute script from 'http://127.0.0.1:3002/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled."
+    },
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Refused to execute http://127.0.0.1:3002/_vercel/insights/script.js as script because \"X-Content-Type-Options: nosniff\" was given and its Content-Type is not a script MIME type."
+    }
+  ]
+}

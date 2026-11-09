@@ -1,0 +1,97 @@
+{
+  "base": "http://127.0.0.1:3000",
+  "cases": [
+    {
+      "name": "fast-phase-diagnostic",
+      "state": {
+        "documentToken": "0.pqnsdn2bjja",
+        "phases": [
+          {
+            "state": "none",
+            "at": 1844.5
+          },
+          {
+            "state": "preparing",
+            "at": 1995.5
+          },
+          {
+            "state": "complete",
+            "at": 7720.39999999851
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 1844.8999999985099
+          },
+          {
+            "state": "capturing",
+            "at": 6356.39999999851
+          },
+          {
+            "state": "idle",
+            "at": 7720.5
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 7719.60000000149
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 7720.199999999255
+          }
+        ],
+        "lockedAt": 5880.5,
+        "unlockedAt": 7720.5,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 2126.39999999851
+          },
+          {
+            "value": "02",
+            "at": 5897.89999999851
+          },
+          {
+            "value": "14",
+            "at": 5913.800000000745
+          },
+          {
+            "value": "15",
+            "at": 5914.699999999255
+          },
+          {
+            "value": "25",
+            "at": 5930.699999999255
+          },
+          {
+            "value": "75",
+            "at": 6026.800000000745
+          },
+          {
+            "value": "78",
+            "at": 6034.300000000745
+          },
+          {
+            "value": "100",
+            "at": 6144.89999999851
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      },
+      "warnings": []
+    }
+  ],
+  "errors": [
+    "AssertionError [ERR_ASSERTION]: fast: actual Spidey cloth handoff required; [{\"state\":\"idle\",\"at\":1844.8999999985099},{\"state\":\"capturing\",\"at\":6356.39999999851},{\"state\":\"idle\",\"at\":7720.5}]\n    at lifecycleCases (file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:326:14)\n    at async file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:528:9"
+  ]
+}

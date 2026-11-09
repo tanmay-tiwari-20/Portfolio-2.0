@@ -24,8 +24,8 @@ export default function HeroPortrait({
 }: HeroPortraitProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [loadedImage, setLoadedImage] = useState<{ source: string; url: string }>();
   const [textureSrc, setTextureSrc] = useState<string>();
-  const enhancementFrame = useRef(0);
   const reducedMotion = useRef(false);
 
   useEffect(() => {
@@ -42,9 +42,47 @@ export default function HeroPortrait({
     media.addEventListener("change", updatePreference);
     return () => {
       media.removeEventListener("change", updatePreference);
-      cancelAnimationFrame(enhancementFrame.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (!loadedImage || loadedImage.source !== imageSrc) return;
+    let frame = 0;
+    let disposed = false;
+    const covered = () => {
+      const root = document.documentElement;
+      return (
+        document.hidden ||
+        root.classList.contains("portfolio-loading") ||
+        root.classList.contains("portfolio-transitioning") ||
+        Boolean(root.dataset.spiderTransition)
+      );
+    };
+    const enhance = () => {
+      cancelAnimationFrame(frame);
+      if (disposed || covered()) return;
+      // Keep the decoded portrait available throughout the shared Spider
+      // flight, then initialize its separate renderer after two clear paints.
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => {
+          if (!disposed && !covered()) setTextureSrc(loadedImage.url);
+        });
+      });
+    };
+    window.addEventListener("portfolio:preloader-complete", enhance);
+    window.addEventListener("portfolio:transition-end", enhance);
+    window.addEventListener("pageshow", enhance);
+    document.addEventListener("visibilitychange", enhance);
+    enhance();
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      window.removeEventListener("portfolio:preloader-complete", enhance);
+      window.removeEventListener("portfolio:transition-end", enhance);
+      window.removeEventListener("pageshow", enhance);
+      document.removeEventListener("visibilitychange", enhance);
+    };
+  }, [loadedImage, imageSrc]);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -96,36 +134,36 @@ export default function HeroPortrait({
           crossOrigin="anonymous"
           className="object-cover"
           onLoad={(event) => {
-            const selectedSrc = event.currentTarget.currentSrc;
-            cancelAnimationFrame(enhancementFrame.current);
-            // Let the decoded portrait paint before importing the enhancement.
-            enhancementFrame.current = requestAnimationFrame(() => {
-              enhancementFrame.current = requestAnimationFrame(() => {
-                setTextureSrc(selectedSrc);
-              });
+            setLoadedImage({
+              source: imageSrc,
+              url: event.currentTarget.currentSrc || event.currentTarget.src,
             });
           }}
         />
-        {textureSrc && <DitherVeil
-          src={textureSrc}
-          fit="cover"
-          pattern="floyd"
-          pixelSize={2.4}
-          levels={2}
-          palette="duotone"
-          inkColor="#07090e"
-          paperColor="#ebebef"
-          contrast={1.22}
-          brightness={0.03}
-          revealRadius={190}
-          softness={0.65}
-          linger={1.1}
-          rimColor="#ff003c"
-          rim={0.12}
-          clickBurst={true}
-          wander={false}
-          className="w-full h-full"
-        />}
+        {textureSrc &&
+          loadedImage?.source === imageSrc &&
+          textureSrc === loadedImage.url && (
+            <DitherVeil
+              src={textureSrc}
+              fit="cover"
+              pattern="floyd"
+              pixelSize={2.4}
+              levels={2}
+              palette="duotone"
+              inkColor="#07090e"
+              paperColor="#ebebef"
+              contrast={1.22}
+              brightness={0.03}
+              revealRadius={190}
+              softness={0.65}
+              linger={1.1}
+              rimColor="#ff003c"
+              rim={0.12}
+              clickBurst={true}
+              wander={false}
+              className="w-full h-full"
+            />
+          )}
 
         {/* Minimalist interactive corner cue - fades away seamlessly on hover */}
         <div

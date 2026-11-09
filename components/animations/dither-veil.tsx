@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { Renderer, Program, Mesh, Triangle, Texture, RenderTarget } from "ogl";
 
@@ -417,7 +417,8 @@ void main() {
   vec2 aspect = vec2(uResolution.x / uResolution.y, 1.0);
   float spread = length((cellUv - 0.5) * aspect) / length(aspect * 0.5);
   float appear = step(spread * 0.72 + bayer(cell + vec2(3.0, 5.0)) * 0.28, uIntro * 1.001);
-  fragColor = vec4(mix(uInk, color, appear), 1.0);
+  // Preserve the server-rendered portrait beneath areas not yet revealed.
+  fragColor = vec4(color, appear);
 }
 `;
 
@@ -446,6 +447,7 @@ export default function DitherVeil({
   const containerRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<Settings | null>(null);
   const wakeRef = useRef<() => void>(() => {});
+  const [contextRevision, setContextRevision] = useState(0);
 
   useEffect(() => {
     settingsRef.current = {
@@ -473,6 +475,7 @@ export default function DitherVeil({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    container.dataset.ditherState = "preparing";
 
     const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reducedMotion = motionPreference.matches;
@@ -480,14 +483,21 @@ export default function DitherVeil({
     try {
       renderer = new Renderer({
         dpr: Math.min(window.devicePixelRatio || 1, 2),
-        alpha: false,
+        alpha: true,
         antialias: false,
       });
     } catch {
       // The real portrait remains useful when WebGL is unavailable.
+      container.dataset.ditherState = "fallback";
       return;
     }
     const gl = renderer.gl;
+    // These shaders use GLSL 3. A WebGL 1 fallback cannot render them.
+    if (!renderer.isWebgl2) {
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      container.dataset.ditherState = "fallback";
+      return;
+    }
     const canvas = gl.canvas;
     canvas.style.display = "block";
     canvas.style.visibility = "hidden";
@@ -599,6 +609,15 @@ export default function DitherVeil({
       geometry,
       program: program(viewFragment, viewUniforms),
     });
+    if (
+      !gl.getProgramParameter(maskMesh.program.program, gl.LINK_STATUS) ||
+      !gl.getProgramParameter(viewMesh.program.program, gl.LINK_STATUS)
+    ) {
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
+      canvas.remove();
+      container.dataset.ditherState = "fallback";
+      return;
+    }
 
     const sampler = document.createElement("canvas");
     const samplerContext = sampler.getContext("2d", { willReadFrequently: true });
@@ -607,14 +626,19 @@ export default function DitherVeil({
     let introStart = 0;
     let diffusedKey = "";
     let diffusionBlocked = false;
-    let width = 1;
-    let height = 1;
+    let width = 0;
+    let height = 0;
     let visible = true;
+    let disposed = false;
+    let lost = false;
+    let failed = false;
+    let painted = false;
     let raf = 0;
     let last = performance.now();
     const covered = () =>
       Boolean(document.documentElement.dataset.spiderTransition) ||
-      document.documentElement.classList.contains("portfolio-transitioning");
+      document.documentElement.classList.contains("portfolio-transitioning") ||
+      document.documentElement.classList.contains("portfolio-loading");
     let pausedAt = covered() || document.hidden ? last : 0;
     let trailUntil = 0;
     let presence = 0;
@@ -623,9 +647,30 @@ export default function DitherVeil({
     const brush = { x: 0, y: 0, px: 0, py: 0 };
     const bursts: { x: number; y: number; start: number }[] = [];
 
+    const render = (scene: Mesh, target?: RenderTarget) => {
+      if (disposed || failed || lost || gl.isContextLost()) return false;
+      try {
+        renderer.render({ scene, target });
+        return !gl.isContextLost();
+      } catch {
+        failed = true;
+        canvas.style.visibility = "hidden";
+        container.dataset.ditherState = "fallback";
+        return false;
+      }
+    };
+
     const layout = () => {
-      width = Math.max(1, container.clientWidth);
-      height = Math.max(1, container.clientHeight);
+      if (disposed || failed || lost) return;
+      const nextWidth = container.clientWidth;
+      const nextHeight = container.clientHeight;
+      if (
+        !nextWidth ||
+        !nextHeight ||
+        (nextWidth === width && nextHeight === height)
+      ) return;
+      width = nextWidth;
+      height = nextHeight;
       renderer.setSize(width, height);
       viewUniforms.uResolution.value = [canvas.width, canvas.height];
       maskUniforms.uSize.value = [width, height];
@@ -713,7 +758,10 @@ export default function DitherVeil({
 
     const frame = (now: number) => {
       raf = 0;
-      if (!visible || document.hidden || covered()) return;
+      if (
+        disposed || failed || lost || !image || !width || !height ||
+        !visible || document.hidden || covered()
+      ) return;
       const s = settingsRef.current;
       if (!s) return;
       const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
@@ -774,7 +822,7 @@ export default function DitherVeil({
       maskUniforms.uStrength.value = presence;
       maskUniforms.uFade.value = reducedMotion ? 1 : Math.max(fade, minFade);
       viewUniforms.uBurstWidth.value = Math.max(60, s.revealRadius * 0.9);
-      renderer.render({ scene: maskMesh, target: masks[1] });
+      if (!render(maskMesh, masks[1])) return;
       masks.reverse();
       brush.px = brush.x;
       brush.py = brush.y;
@@ -828,8 +876,17 @@ export default function DitherVeil({
         ? reducedMotion ? 1 : Math.min(1, (now - introStart) / INTRO_MS)
         : 0;
       viewUniforms.uIntro.value = 1 - Math.pow(1 - intro, 2);
-      renderer.render({ scene: viewMesh });
-      if (image) canvas.style.visibility = "visible";
+      if (!render(viewMesh)) return;
+      if (!painted) {
+        if (gl.getError() !== gl.NO_ERROR) {
+          failed = true;
+          container.dataset.ditherState = "fallback";
+          return;
+        }
+        painted = true;
+        canvas.style.visibility = "visible";
+        container.dataset.ditherState = "ready";
+      }
 
       const busy =
         pointer.inside ||
@@ -842,7 +899,10 @@ export default function DitherVeil({
     };
 
     const wake = () => {
-      if (raf || !visible || document.hidden || covered()) return;
+      if (
+        disposed || failed || lost || raf ||
+        !visible || document.hidden || covered()
+      ) return;
       last = performance.now();
       if (pausedAt) {
         // Resume the same appearance after a canceled flight or hidden tab.
@@ -879,18 +939,36 @@ export default function DitherVeil({
     // costs during normal browsing. The capture listener reads it synchronously.
     const captureFrame = () => {
       pause();
-      if (visible && !document.hidden) renderer.render({ scene: viewMesh });
+      if (painted && visible && !document.hidden) render(viewMesh);
+    };
+    const contextLost = (event: Event) => {
+      event.preventDefault();
+      lost = true;
+      pause();
+      canvas.style.visibility = "hidden";
+      container.dataset.ditherState = "lost";
+    };
+    const contextRestored = () => {
+      // OGL caches programs, textures and bindings that no longer exist after
+      // context loss. Rebuild the renderer instead of waking those stale handles.
+      if (!disposed) setContextRevision((revision) => revision + 1);
     };
     window.addEventListener("portfolio:capture-frame", captureFrame);
     window.addEventListener("portfolio:transition-start", pause);
     window.addEventListener("portfolio:transition-end", wake);
+    window.addEventListener("portfolio:preloader-complete", wake);
+    window.addEventListener("pageshow", wake);
+    window.addEventListener("pagehide", pause);
     document.addEventListener("visibilitychange", visibilityChanged);
     motionPreference.addEventListener("change", motionChanged);
+    canvas.addEventListener("webglcontextlost", contextLost);
+    canvas.addEventListener("webglcontextrestored", contextRestored);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.decoding = "async";
     img.onload = () => {
+      if (disposed) return;
       image = img;
       imageTexture.image = img;
       try {
@@ -903,7 +981,12 @@ export default function DitherVeil({
       introStart = performance.now();
       wake();
     };
-    img.onerror = () => { canvas.style.display = "none"; };
+    img.onerror = () => {
+      failed = true;
+      pause();
+      canvas.style.visibility = "hidden";
+      container.dataset.ditherState = "fallback";
+    };
     img.src = src;
 
     const locate = (e: PointerEvent) => {
@@ -951,7 +1034,8 @@ export default function DitherVeil({
 
     const intersectionObserver = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
-      wake();
+      if (visible) wake();
+      else pause();
     });
     intersectionObserver.observe(container);
 
@@ -959,12 +1043,18 @@ export default function DitherVeil({
     wake();
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(raf);
       window.removeEventListener("portfolio:capture-frame", captureFrame);
       window.removeEventListener("portfolio:transition-start", pause);
       window.removeEventListener("portfolio:transition-end", wake);
+      window.removeEventListener("portfolio:preloader-complete", wake);
+      window.removeEventListener("pageshow", wake);
+      window.removeEventListener("pagehide", pause);
       document.removeEventListener("visibilitychange", visibilityChanged);
       motionPreference.removeEventListener("change", motionChanged);
+      canvas.removeEventListener("webglcontextlost", contextLost);
+      canvas.removeEventListener("webglcontextrestored", contextRestored);
       wakeRef.current = () => {};
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
@@ -978,7 +1068,7 @@ export default function DitherVeil({
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     };
-  }, [src]);
+  }, [src, contextRevision]);
 
   return (
     <div

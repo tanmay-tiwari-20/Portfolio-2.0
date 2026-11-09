@@ -1,0 +1,697 @@
+.preloader {
+  --intro-rule: rgba(255, 250, 247, 0.12);
+  position: fixed;
+  inset: 0;
+  z-index: 2147482900;
+  display: none;
+  grid-template-rows: minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  padding: max(26px, env(safe-area-inset-top)) clamp(22px, 4.5vw, 88px)
+    max(24px, env(safe-area-inset-bottom));
+  color: var(--theme-paper);
+  background: var(--theme-dark-900);
+  touch-action: none;
+  isolation: isolate;
+}
+:global(html.portfolio-loading) .preloader {
+  display: grid;
+}
+:global(html.portfolio-loading) {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+:global(html.portfolio-loading [data-preloader-page]) {
+  pointer-events: none;
+}
+:global(html.portfolio-loading .skip-link) {
+  visibility: hidden;
+}
+:global(
+  html.portfolio-loading:not([data-preloader-state="revealing"])
+    [data-preloader-page]
+) {
+  visibility: hidden;
+}
+:global(html.portfolio-loading [data-preloader-page] *) {
+  animation-play-state: paused !important;
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--intro-rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--intro-rule) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.14;
+}
+.environment {
+  position: relative;
+  width: min(100%, 1420px);
+  height: 100%;
+  min-height: 0;
+  margin-inline: auto;
+}
+.screenReaderOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.orbit,
+.orbitInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(43vw, 560px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--intro-rule);
+  border-radius: 50%;
+  opacity: 0.65;
+}
+.orbitInner {
+  width: min(36vw, 460px);
+  border-style: dashed;
+  opacity: 0.3;
+}
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42%;
+  text-align: center;
+  z-index: 2;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0 0 16px;
+  font: 500 9px/1.4 var(--font-body);
+  letter-spacing: 0.16em;
+  animation: fade-in 550ms both;
+}
+.eyebrow > span {
+  width: 5px;
+  height: 5px;
+  background: var(--theme-red);
+}
+.counter {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-left: 0.08em;
+  font-family: var(--font-display);
+  font-size: clamp(110px, 13.7vw, 220px);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.095em;
+  line-height: 0.98;
+  animation: counter-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.percent {
+  margin-left: 0.18em;
+  color: var(--theme-red);
+  font-size: 0.23em;
+  font-weight: 500;
+  letter-spacing: -0.08em;
+}
+.tagline {
+  margin: 20px 0 23px;
+  font: 500 clamp(13px, 1.3vw, 18px)/1.5 var(--font-display);
+  letter-spacing: -0.035em;
+  animation: fade-in 650ms 100ms both;
+}
+.tagline > span {
+  color: var(--theme-text-dim);
+}
+.centerRule {
+  width: 54px;
+  height: 2px;
+  background: var(--theme-dark-600);
+  margin: auto;
+}
+.centerRule > div {
+  height: 100%;
+  background: var(--theme-red);
+  transform-origin: left;
+}
+.cards {
+  position: absolute;
+  inset: 0;
+}
+.card {
+  --tilt: 0deg;
+  position: absolute;
+  width: clamp(180px, 19.2vw, 262px);
+  z-index: 1;
+  transform: rotate(var(--tilt));
+  animation: card-in 700ms calc(100ms + var(--order) * 155ms)
+    cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.cardBody {
+  position: relative;
+  overflow: hidden;
+  padding: 18px 20px 17px;
+  background: var(--theme-dark-850);
+  border: 1px solid var(--intro-rule);
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  animation: card-float 5.5s calc(var(--order) * -0.8s) ease-in-out infinite;
+}
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  font: 500 8px/1.3 var(--font-body);
+  letter-spacing: 0.12em;
+  color: var(--theme-text-dim);
+}
+.cardIndex {
+  color: var(--theme-muted);
+  font-variant-numeric: tabular-nums;
+}
+.cardGlyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 12px;
+  color: var(--theme-red);
+  border: 1px solid var(--intro-rule);
+  border-radius: 5px;
+  font: 600 15px/1 var(--font-display);
+  letter-spacing: -0.06em;
+}
+.personGlyph {
+  background: transparent;
+  border-color: transparent;
+}
+.communityGlyph {
+  border-color: transparent;
+}
+.cardLogo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.approachGlyph {
+  font-size: 43px;
+  border: 0;
+  align-items: flex-start;
+}
+.locationGlyph {
+  font-size: 24px;
+}
+.workGlyph {
+  letter-spacing: 3px;
+  padding-left: 3px;
+}
+.cardTitle {
+  margin: 0;
+  font: 500 clamp(14px, 1.35vw, 20px)/1.24 var(--font-display);
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.cardNote {
+  margin: 7px 0 0;
+  font: 400 10px/1.5 var(--font-body);
+  color: var(--theme-text-dim);
+}
+.person {
+  --tilt: -7deg;
+  left: 5%;
+  top: 6%;
+}
+.craft {
+  --tilt: 7deg;
+  right: 4%;
+  top: 5%;
+}
+.community {
+  --tilt: 4deg;
+  left: 0;
+  top: 40%;
+}
+.approach {
+  --tilt: -5deg;
+  right: 0;
+  top: 40%;
+}
+.approach .cardBody {
+  background: var(--theme-red);
+  border-color: var(--theme-red-hover);
+  color: var(--theme-dark-950);
+}
+.approach .cardTop,
+.approach .cardIndex,
+.approach .cardGlyph,
+.approach .cardNote {
+  color: var(--theme-dark-950);
+}
+.location {
+  --tilt: -4deg;
+  left: 11%;
+  bottom: 4%;
+}
+.work {
+  --tilt: 5deg;
+  right: 10%;
+  bottom: 3%;
+}
+.location .cardGlyph,
+.work .cardGlyph {
+  position: absolute;
+  right: 18px;
+  bottom: 16px;
+  opacity: 0.5;
+  margin: 0;
+}
+.location .cardTitle,
+.work .cardTitle {
+  max-width: 84%;
+}
+.location .cardNote,
+.work .cardNote {
+  max-width: 82%;
+}
+.particleOne,
+.particleTwo {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--theme-red);
+  transform: rotate(-20deg);
+  opacity: 0.65;
+  animation: particle-float 5s ease-in-out infinite;
+}
+.particleOne {
+  left: 36%;
+  top: 13%;
+}
+.particleTwo {
+  right: 34%;
+  bottom: 16%;
+  width: 5px;
+  height: 5px;
+  animation-delay: -2s;
+}
+.particleThree,
+.particleFour {
+  position: absolute;
+  font: 300 21px/1 var(--font-body);
+  color: var(--theme-muted);
+}
+.particleThree {
+  top: 12%;
+  right: 32%;
+}
+.particleFour {
+  bottom: 12%;
+  left: 35%;
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes counter-in {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotate(calc(var(--tilt) * 1.8)) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--tilt)) scale(1);
+  }
+}
+@keyframes card-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes particle-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .card {
+    width: 265px;
+  }
+  .counter {
+    font-size: 215px;
+  }
+  .environment {
+    max-height: 1000px;
+    align-self: center;
+  }
+}
+@media (max-width: 1100px) {
+  .card {
+    width: 190px;
+  }
+  .cardBody {
+    padding: 14px 15px;
+  }
+  .cardTop {
+    margin-bottom: 10px;
+    font-size: 7px;
+  }
+  .cardGlyph {
+    width: 29px;
+    height: 29px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .approachGlyph {
+    font-size: 35px;
+  }
+  .cardNote {
+    font-size: 9px;
+  }
+  .person {
+    left: 3%;
+    top: 8%;
+  }
+  .craft {
+    right: 3%;
+    top: 8%;
+  }
+  .location {
+    left: 7%;
+    bottom: 6%;
+  }
+  .work {
+    right: 7%;
+    bottom: 6%;
+  }
+}
+@media (max-width: 850px) {
+  .card {
+    width: 170px;
+  }
+  .center {
+    width: 43%;
+  }
+  .counter {
+    font-size: 120px;
+  }
+  .eyebrow {
+    font-size: 7px;
+    letter-spacing: 0.12em;
+  }
+  .tagline {
+    font-size: 13px;
+  }
+  .person,
+  .craft {
+    top: 7%;
+  }
+  .community,
+  .approach {
+    top: 44%;
+  }
+  .location,
+  .work {
+    bottom: 7%;
+  }
+  .cardTitle {
+    font-size: 14px;
+  }
+  .orbit {
+    width: 57vw;
+  }
+  .orbitInner {
+    width: 46vw;
+  }
+}
+@media (max-width: 600px) {
+  .preloader {
+    padding: max(21px, env(safe-area-inset-top)) 22px
+      max(20px, env(safe-area-inset-bottom));
+  }
+  .environment {
+    max-height: 780px;
+    align-self: center;
+  }
+  .card {
+    width: 44%;
+    max-width: 190px;
+  }
+  .cardBody {
+    padding: 13px;
+    border-radius: 8px;
+  }
+  .cardTop {
+    font-size: 6px;
+    margin-bottom: 10px;
+  }
+  .cardGlyph {
+    width: 25px;
+    height: 25px;
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .cardTitle {
+    font-size: clamp(12px, 3.6vw, 16px);
+  }
+  .cardNote {
+    font-size: 8px;
+    line-height: 1.45;
+    margin-top: 6px;
+  }
+  .person {
+    left: 2%;
+    top: 7%;
+    --tilt: -6deg;
+  }
+  .craft {
+    right: 1%;
+    top: 8%;
+    --tilt: 6deg;
+  }
+  .community {
+    left: 0;
+    top: auto;
+    bottom: 7%;
+    --tilt: 4deg;
+  }
+  .approach {
+    right: 0;
+    top: auto;
+    bottom: 6%;
+    --tilt: -5deg;
+  }
+  .location,
+  .work {
+    display: none;
+  }
+  .approachGlyph {
+    font-size: 31px;
+  }
+  .center {
+    top: 51%;
+    width: 100%;
+  }
+  .counter {
+    font-size: clamp(108px, 31vw, 155px);
+  }
+  .eyebrow {
+    font-size: 7px;
+    margin-bottom: 10px;
+  }
+  .tagline {
+    font-size: 12px;
+    margin: 13px 0 16px;
+  }
+  .orbit {
+    width: 74vw;
+    max-width: 325px;
+    opacity: 0.45;
+  }
+  .orbitInner {
+    display: none;
+  }
+  .particleOne {
+    left: 7%;
+    top: 44%;
+    width: 5px;
+    height: 5px;
+  }
+  .particleTwo {
+    right: 3%;
+    bottom: 41%;
+  }
+  .particleThree,
+  .particleFour {
+    display: none;
+  }
+  .cardBody {
+    animation-duration: 6s;
+  }
+}
+@media (max-height: 680px) and (max-width: 600px) and (orientation: portrait) {
+  .preloader {
+    padding-block: 17px;
+  }
+  .cardBody {
+    padding: 10px 11px;
+  }
+  .cardTop {
+    margin-bottom: 9px;
+  }
+  .cardGlyph {
+    display: none;
+  }
+  .person .cardGlyph,
+  .community .cardGlyph {
+    display: flex;
+    position: absolute;
+    right: 11px;
+    top: 28px;
+    width: 25px;
+    height: 25px;
+    margin: 0;
+  }
+  .person .cardTitle,
+  .community .cardTitle {
+    padding-right: 29px;
+  }
+  .cardNote {
+    font-size: 7px;
+  }
+  .person,
+  .craft {
+    top: 6%;
+  }
+  .community,
+  .approach {
+    bottom: 6%;
+  }
+  .counter {
+    font-size: 108px;
+  }
+  .tagline {
+    font-size: 11px;
+    margin: 11px 0 14px;
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .preloader {
+    padding: max(15px, env(safe-area-inset-top))
+      max(25px, env(safe-area-inset-left))
+      max(14px, env(safe-area-inset-bottom));
+  }
+  .card {
+    width: 25%;
+    max-width: 205px;
+  }
+  .cardBody {
+    padding: 11px 13px;
+  }
+  .cardGlyph,
+  .cardNote,
+  .location,
+  .work {
+    display: none;
+  }
+  .person .cardGlyph,
+  .community .cardGlyph {
+    display: flex;
+    position: absolute;
+    right: 12px;
+    bottom: 11px;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+  }
+  .person .cardTitle,
+  .community .cardTitle {
+    padding-right: 25px;
+  }
+  .cardTop {
+    font-size: 6px;
+    margin-bottom: 9px;
+  }
+  .cardTitle {
+    font-size: 12px;
+  }
+  .person,
+  .craft {
+    top: 10%;
+  }
+  .community,
+  .approach {
+    top: auto;
+    bottom: 10%;
+  }
+  .center {
+    width: 42%;
+    top: 51%;
+  }
+  .counter {
+    font-size: clamp(75px, 13vw, 126px);
+  }
+  .eyebrow {
+    font-size: 6px;
+    margin-bottom: 9px;
+  }
+  .tagline {
+    font-size: 10px;
+    margin: 10px 0;
+  }
+  .orbit {
+    width: 32vw;
+  }
+  .orbitInner,
+  .particleThree,
+  .particleFour {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preloader *,
+  .preloader *::before,
+  .preloader *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

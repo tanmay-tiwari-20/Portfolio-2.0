@@ -9,6 +9,7 @@ import type { SocialLink } from "@/lib/validators/schemas";
 
 import StaggeredMenu from "@/components/animations/staggered-menu";
 import { useInitialPageEntrance } from "@/components/animations/page-entrance";
+import { waitForPreloaderReveal } from "@/lib/preloader-ready";
 
 const navItems = [
   { label: "Home", href: "/", sublabel: "Overview & Index" },
@@ -82,6 +83,7 @@ export function MotionLayer() {
       };
     }
 
+    const lifetime = new AbortController();
     let lenis:
       | {
           raf: (t: number) => void;
@@ -111,15 +113,25 @@ export function MotionLayer() {
     let gsapMedia: { revert: () => void } | undefined;
     let cleanedUp = false;
     const pauseForTransition = () => lenis?.stop();
-    const resumeAfterTransition = () => lenis?.start();
+    const resumeAfterCover = () => {
+      const classes = document.documentElement.classList;
+      if (
+        !classes.contains("portfolio-loading") &&
+        !classes.contains("portfolio-transitioning")
+      )
+        lenis?.start();
+    };
     window.addEventListener("portfolio:transition-start", pauseForTransition);
-    window.addEventListener("portfolio:transition-end", resumeAfterTransition);
+    window.addEventListener("portfolio:transition-end", resumeAfterCover);
+    window.addEventListener("portfolio:preloader-complete", resumeAfterCover);
 
     const cleanupMotion = () => {
       if (cleanedUp) return;
       cleanedUp = true;
+      lifetime.abort();
       window.removeEventListener("portfolio:transition-start", pauseForTransition);
-      window.removeEventListener("portfolio:transition-end", resumeAfterTransition);
+      window.removeEventListener("portfolio:transition-end", resumeAfterCover);
+      window.removeEventListener("portfolio:preloader-complete", resumeAfterCover);
       cancelAnimationFrame(frame);
       cancelAnimationFrame(refreshFrame);
       interactionListeners.forEach(({ element, event, listener }) =>
@@ -149,6 +161,11 @@ export function MotionLayer() {
         ]);
         if (disposed) return;
 
+        // Warm the existing libraries behind the cover, then let the home
+        // entrance begin as it lifts. Scrolling remains locked until completion.
+        await waitForPreloaderReveal(lifetime.signal);
+        if (disposed || lifetime.signal.aborted) return;
+
         gsap.registerPlugin(ScrollTrigger);
 
         lenis = new Lenis({
@@ -159,7 +176,11 @@ export function MotionLayer() {
         });
 
         lenis.on("scroll", ScrollTrigger.update);
-        if (document.documentElement.classList.contains("portfolio-transitioning")) lenis.stop();
+        if (
+          document.documentElement.classList.contains("portfolio-transitioning") ||
+          document.documentElement.classList.contains("portfolio-loading")
+        )
+          lenis.stop();
 
         const tick = (time: number) => {
           lenis?.raf(time);

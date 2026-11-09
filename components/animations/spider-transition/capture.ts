@@ -164,13 +164,20 @@ function fonts() {
   return embeddedFonts;
 }
 
-export function warmCaptureAssets(root?: HTMLElement) {
+export function warmCaptureAssets(
+  root?: HTMLElement,
+  { includePendingImages = false }: { includePendingImages?: boolean } = {},
+) {
   void fonts().catch(() => {});
   if (!root || performance.now() - lastAssetWarm < 1500) return;
   lastAssetWarm = performance.now();
   let warmed = 0;
   for (const image of Array.from(root.querySelectorAll("img"))) {
-    if (!image.complete || !image.naturalWidth) continue;
+    if (
+      (!includePendingImages && (!image.complete || !image.naturalWidth)) ||
+      (includePendingImages && image.loading === "lazy")
+    )
+      continue;
     const rect = image.getBoundingClientRect();
     if (
       rect.width <= 0 ||
@@ -480,7 +487,7 @@ export function freezeViewport(
     return target;
   };
 
-  const content = clone(root) as HTMLElement;
+  const content = clone(root) as HTMLElement | null;
   // Move an independent crop layer, not the copied document. Its recorded
   // viewport offset already includes native/Lenis scroll and remains unchanged
   // when Next resets the live page's scroll. The same layer is serialized into
@@ -489,8 +496,12 @@ export function freezeViewport(
   // Keep z-index:auto and avoid a transform, which would flatten the document
   // into a new stacking context beneath its extracted fixed/sticky elements.
   documentLayer.style.cssText = `position:absolute;left:${offset.left}px;top:${offset.top}px;width:${offset.width}px;`;
-  content.style.margin = "0";
-  documentLayer.append(content);
+  // A fixed root (the intro cover) was already extracted into viewport above.
+  // Ordinary page roots retain their independent, scroll-offset crop layer.
+  if (content) {
+    content.style.margin = "0";
+    documentLayer.append(content);
+  }
   viewport.prepend(documentLayer);
   const bodyGrid = getComputedStyle(document.body, "::before");
   if (bodyGrid.content !== "none" && bodyGrid.content !== "normal") {

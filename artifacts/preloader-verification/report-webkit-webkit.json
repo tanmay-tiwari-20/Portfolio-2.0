@@ -1,0 +1,457 @@
+{
+  "base": "http://127.0.0.1:3002",
+  "cases": [
+    {
+      "name": "webkit-completion-diagnostic",
+      "state": {
+        "documentToken": "0.bpvvnue22si",
+        "phases": [
+          {
+            "state": "none",
+            "at": 463
+          },
+          {
+            "state": "preparing",
+            "at": 747
+          },
+          {
+            "state": "complete",
+            "at": 10626
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 464
+          }
+        ],
+        "transitionResults": [],
+        "events": [
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 10625
+          }
+        ],
+        "lockedAt": 2803,
+        "unlockedAt": 10626,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 758
+          },
+          {
+            "value": "01",
+            "at": 2843
+          },
+          {
+            "value": "02",
+            "at": 4389
+          },
+          {
+            "value": "03",
+            "at": 5081
+          },
+          {
+            "value": "04",
+            "at": 5284
+          },
+          {
+            "value": "05",
+            "at": 5416
+          },
+          {
+            "value": "06",
+            "at": 5538
+          },
+          {
+            "value": "07",
+            "at": 5672
+          },
+          {
+            "value": "08",
+            "at": 5807
+          },
+          {
+            "value": "09",
+            "at": 5930
+          },
+          {
+            "value": "10",
+            "at": 6060
+          },
+          {
+            "value": "11",
+            "at": 6176
+          },
+          {
+            "value": "12",
+            "at": 6299
+          },
+          {
+            "value": "13",
+            "at": 6419
+          },
+          {
+            "value": "14",
+            "at": 6539
+          },
+          {
+            "value": "15",
+            "at": 6661
+          },
+          {
+            "value": "16",
+            "at": 6783
+          },
+          {
+            "value": "17",
+            "at": 6904
+          },
+          {
+            "value": "18",
+            "at": 7026
+          },
+          {
+            "value": "19",
+            "at": 7147
+          },
+          {
+            "value": "20",
+            "at": 7269
+          },
+          {
+            "value": "21",
+            "at": 7387
+          },
+          {
+            "value": "22",
+            "at": 7497
+          },
+          {
+            "value": "23",
+            "at": 7611
+          },
+          {
+            "value": "24",
+            "at": 7728
+          },
+          {
+            "value": "25",
+            "at": 7880
+          },
+          {
+            "value": "26",
+            "at": 8002
+          },
+          {
+            "value": "27",
+            "at": 8119
+          },
+          {
+            "value": "28",
+            "at": 8232
+          },
+          {
+            "value": "29",
+            "at": 8346
+          },
+          {
+            "value": "30",
+            "at": 8459
+          },
+          {
+            "value": "31",
+            "at": 8574
+          },
+          {
+            "value": "32",
+            "at": 8695
+          },
+          {
+            "value": "33",
+            "at": 8813
+          },
+          {
+            "value": "34",
+            "at": 8945
+          },
+          {
+            "value": "35",
+            "at": 9064
+          },
+          {
+            "value": "36",
+            "at": 9174
+          },
+          {
+            "value": "37",
+            "at": 9287
+          },
+          {
+            "value": "38",
+            "at": 9404
+          },
+          {
+            "value": "39",
+            "at": 9518
+          },
+          {
+            "value": "40",
+            "at": 9639
+          },
+          {
+            "value": "41",
+            "at": 9750
+          },
+          {
+            "value": "42",
+            "at": 9860
+          },
+          {
+            "value": "43",
+            "at": 9970
+          },
+          {
+            "value": "44",
+            "at": 10080
+          },
+          {
+            "value": "45",
+            "at": 10189
+          },
+          {
+            "value": "46",
+            "at": 10303
+          },
+          {
+            "value": "47",
+            "at": 10413
+          },
+          {
+            "value": "48",
+            "at": 10523
+          }
+        ],
+        "ditherReadyAt": null,
+        "bootstrapAt": 745,
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      },
+      "geometry": {
+        "state": "preparing",
+        "layer": {
+          "x": 0,
+          "y": 0,
+          "right": 1440,
+          "bottom": 900,
+          "width": 1440,
+          "height": 900
+        },
+        "title": {
+          "x": 627.09375,
+          "y": 319.09375,
+          "right": 788.484375,
+          "bottom": 512.40625,
+          "width": 161.390625,
+          "height": 193.3125
+        },
+        "details": [
+          {
+            "x": 121.96595001220703,
+            "y": 61.6053352355957,
+            "right": 400.7180862426758,
+            "bottom": 245.87543106079102,
+            "width": 278.75213623046875,
+            "height": 184.2700958251953
+          },
+          {
+            "x": 1050.9783935546875,
+            "y": 53.198509216308594,
+            "right": 1332.666748046875,
+            "bottom": 261.3827438354492,
+            "width": 281.6883544921875,
+            "height": 208.18423461914062
+          },
+          {
+            "x": 59.745826721191406,
+            "y": 357.0482482910156,
+            "right": 331.8141555786133,
+            "bottom": 528.4349365234375,
+            "width": 272.0683288574219,
+            "height": 171.38668823242188
+          },
+          {
+            "x": 1107.0341796875,
+            "y": 354.87371826171875,
+            "right": 1381.414306640625,
+            "bottom": 530.6088256835938,
+            "width": 274.380126953125,
+            "height": 175.735107421875
+          },
+          {
+            "x": 205.52464294433594,
+            "y": 725.5078735351562,
+            "right": 474.38414001464844,
+            "bottom": 851.006591796875,
+            "width": 268.8594970703125,
+            "height": 125.49871826171875
+          },
+          {
+            "x": 977.96533203125,
+            "y": 731.8018188476562,
+            "right": 1248.336181640625,
+            "bottom": 861.7119750976562,
+            "width": 270.370849609375,
+            "height": 129.91015625
+          }
+        ],
+        "paragraphs": [
+          {
+            "x": 152.97108459472656,
+            "y": 146.92474365234375,
+            "right": 374.26751708984375,
+            "bottom": 197.65016174316406,
+            "width": 221.2964324951172,
+            "height": 50.72541809082031
+          },
+          {
+            "x": 156.76046752929688,
+            "y": 177.78672790527344,
+            "right": 376.94866943359375,
+            "bottom": 219.48617553710938,
+            "width": 220.18820190429688,
+            "height": 41.69944763183594
+          },
+          {
+            "x": 1077.54833984375,
+            "y": 137.54580688476562,
+            "right": 1301.781005859375,
+            "bottom": 212.1853790283203,
+            "width": 224.232666015625,
+            "height": 74.63957214355469
+          },
+          {
+            "x": 1074.8671875,
+            "y": 192.3219451904297,
+            "right": 1295.0552978515625,
+            "bottom": 234.02139282226562,
+            "width": 220.1881103515625,
+            "height": 41.69944763183594
+          },
+          {
+            "x": 83.86872863769531,
+            "y": 442.1974792480469,
+            "right": 305.0135192871094,
+            "bottom": 481.5789489746094,
+            "width": 221.14479064941406,
+            "height": 39.3814697265625
+          },
+          {
+            "x": 82.3340835571289,
+            "y": 473.2154846191406,
+            "right": 302.84452056884766,
+            "bottom": 503.5253601074219,
+            "width": 220.51043701171875,
+            "height": 30.30987548828125
+          },
+          {
+            "x": 1135.5535888671875,
+            "y": 443.56451416015625,
+            "right": 1356.81640625,
+            "bottom": 486.7408447265625,
+            "width": 221.2628173828125,
+            "height": 43.17633056640625
+          },
+          {
+            "x": 1138.2635498046875,
+            "y": 474.5399475097656,
+            "right": 1358.7337646484375,
+            "bottom": 508.6571350097656,
+            "width": 220.47021484375,
+            "height": 34.1171875
+          },
+          {
+            "x": 229.49105834960938,
+            "y": 772.5816650390625,
+            "right": 415.5184631347656,
+            "bottom": 809.5075073242188,
+            "width": 186.02740478515625,
+            "height": 36.92584228515625
+          },
+          {
+            "x": 231.66004943847656,
+            "y": 803.9070434570312,
+            "right": 412.6575927734375,
+            "bottom": 831.4539184570312,
+            "width": 180.99754333496094,
+            "height": 27.546875
+          },
+          {
+            "x": 1002.41796875,
+            "y": 776.327880859375,
+            "right": 1188.611572265625,
+            "bottom": 816.43603515625,
+            "width": 186.193603515625,
+            "height": 40.108154296875
+          },
+          {
+            "x": 1000.5005493164062,
+            "y": 807.3032836914062,
+            "right": 1181.5120849609375,
+            "bottom": 837.9683227539062,
+            "width": 181.01153564453125,
+            "height": 30.6650390625
+          },
+          {
+            "x": 445,
+            "y": 290.5,
+            "right": 995.359375,
+            "bottom": 303.09375,
+            "width": 550.359375,
+            "height": 12.59375
+          },
+          {
+            "x": 445,
+            "y": 532.40625,
+            "right": 995.359375,
+            "bottom": 586.40625,
+            "width": 550.359375,
+            "height": 54
+          }
+        ],
+        "overflow": false,
+        "heroComplete": false,
+        "logoSources": [
+          "/icon.svg",
+          "https://res.cloudinary.com/dunacoujw/image/upload/v1792601186/logo1_y3d5u2.svg"
+        ],
+        "headers": 0
+      }
+    }
+  ],
+  "errors": [
+    "AssertionError [ERR_ASSERTION]: webkit: percentage finishes at100\n\n48 !== 100\n\n    at assertSmoothProgress (file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:223:10)\n    at screenshotCase (file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:403:5)\n    at async file:///C:/Users/hp/portfolio/scripts/preloader-browser.mjs:727:11"
+  ],
+  "consoleErrors": [
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    },
+    {
+      "url": "http://127.0.0.1:3002/",
+      "message": "Refused to execute http://127.0.0.1:3002/_vercel/insights/script.js as script because \"X-Content-Type-Options: nosniff\" was given and its Content-Type is not a script MIME type."
+    }
+  ],
+  "httpErrors": [
+    {
+      "url": "http://127.0.0.1:3002/_vercel/insights/script.js",
+      "status": 404
+    }
+  ]
+}

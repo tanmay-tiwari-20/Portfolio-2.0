@@ -1,0 +1,842 @@
+{
+  "base": "http://127.0.0.1:3002",
+  "cases": [
+    {
+      "name": "large",
+      "viewport": {
+        "width": 2560,
+        "height": 1440
+      },
+      "geometry": {
+        "state": "preparing",
+        "layer": {
+          "x": 0,
+          "y": 0,
+          "right": 2560,
+          "bottom": 1440,
+          "width": 2560,
+          "height": 1440
+        },
+        "title": {
+          "x": 1148.3359375,
+          "y": 585,
+          "right": 1384.6328125,
+          "bottom": 795.6875,
+          "width": 236.296875,
+          "height": 210.6875
+        },
+        "details": [
+          {
+            "x": 632.59228515625,
+            "y": 269.97381591796875,
+            "right": 914.40771484375,
+            "bottom": 455.30743408203125,
+            "width": 281.8154296875,
+            "height": 185.3336181640625
+          },
+          {
+            "x": 1658.284423828125,
+            "y": 260.0662536621094,
+            "right": 1943.121826171875,
+            "bottom": 470.0118713378906,
+            "width": 284.83740234375,
+            "height": 209.94561767578125
+          },
+          {
+            "x": 564.9449462890625,
+            "y": 616.491943359375,
+            "right": 840.0550537109375,
+            "bottom": 788.789306640625,
+            "width": 275.110107421875,
+            "height": 172.29736328125
+          },
+          {
+            "x": 1718.7850341796875,
+            "y": 614.2921142578125,
+            "right": 1996.2149658203125,
+            "bottom": 790.9891357421875,
+            "width": 277.429931640625,
+            "height": 176.697021484375
+          },
+          {
+            "x": 722.7369384765625,
+            "y": 1068.24853515625,
+            "right": 994.6380615234375,
+            "bottom": 1194.657958984375,
+            "width": 271.901123046875,
+            "height": 126.409423828125
+          },
+          {
+            "x": 1578.827392578125,
+            "y": 1076.087646484375,
+            "right": 1852.1727294921875,
+            "bottom": 1206.9583740234375,
+            "width": 273.3453369140625,
+            "height": 130.8707275390625
+          }
+        ],
+        "paragraphs": [
+          {
+            "x": 88,
+            "y": 26,
+            "right": 198.6875,
+            "bottom": 45.5,
+            "width": 110.6875,
+            "height": 19.5
+          },
+          {
+            "x": 2278.390625,
+            "y": 28.546875,
+            "right": 2472,
+            "bottom": 42.9375,
+            "width": 193.609375,
+            "height": 14.390625
+          },
+          {
+            "x": 663.889892578125,
+            "y": 357.67510986328125,
+            "right": 888.2496337890625,
+            "bottom": 409.4639892578125,
+            "width": 224.3597412109375,
+            "height": 51.78887939453125
+          },
+          {
+            "x": 667.7649536132812,
+            "y": 389.2349853515625,
+            "right": 890.9307861328125,
+            "bottom": 431.300048828125,
+            "width": 223.16583251953125,
+            "height": 42.0650634765625
+          },
+          {
+            "x": 1684.7860107421875,
+            "y": 344.9696044921875,
+            "right": 1912.1678466796875,
+            "bottom": 421.37054443359375,
+            "width": 227.3818359375,
+            "height": 76.40093994140625
+          },
+          {
+            "x": 1682.1048583984375,
+            "y": 401.1414794921875,
+            "right": 1905.270751953125,
+            "bottom": 443.20654296875,
+            "width": 223.1658935546875,
+            "height": 42.0650634765625
+          },
+          {
+            "x": 589.1644287109375,
+            "y": 700.260009765625,
+            "right": 813.3509521484375,
+            "bottom": 740.55224609375,
+            "width": 224.1865234375,
+            "height": 40.292236328125
+          },
+          {
+            "x": 587.6298217773438,
+            "y": 731.9794921875,
+            "right": 811.1329345703125,
+            "bottom": 762.4986572265625,
+            "width": 223.50311279296875,
+            "height": 30.5191650390625
+          },
+          {
+            "x": 1747.0709228515625,
+            "y": 700.3138427734375,
+            "right": 1971.383544921875,
+            "bottom": 744.4520874023438,
+            "width": 224.3126220703125,
+            "height": 44.13824462890625
+          },
+          {
+            "x": 1749.8421630859375,
+            "y": 731.98974609375,
+            "right": 1973.3009033203125,
+            "bottom": 766.368408203125,
+            "width": 223.458740234375,
+            "height": 34.378662109375
+          },
+          {
+            "x": 746.6033935546875,
+            "y": 1113.9273681640625,
+            "right": 935.1893310546875,
+            "bottom": 1151.730224609375,
+            "width": 188.5859375,
+            "height": 37.8028564453125
+          },
+          {
+            "x": 748.8214721679688,
+            "y": 1145.95751953125,
+            "right": 932.2816772460938,
+            "bottom": 1173.676513671875,
+            "width": 183.460205078125,
+            "height": 27.718994140625
+          },
+          {
+            "x": 1603.2333984375,
+            "y": 1121.11376953125,
+            "right": 1791.9342041015625,
+            "bottom": 1162.158203125,
+            "width": 188.7008056640625,
+            "height": 41.04443359375
+          },
+          {
+            "x": 1601.31298828125,
+            "y": 1152.77880859375,
+            "right": 1784.7239990234375,
+            "bottom": 1183.67822265625,
+            "width": 183.4110107421875,
+            "height": 30.8994140625
+          },
+          {
+            "x": 981.8046875,
+            "y": 556.40625,
+            "right": 1578.1953125,
+            "bottom": 569,
+            "width": 596.390625,
+            "height": 12.59375
+          },
+          {
+            "x": 981.8046875,
+            "y": 815.6875,
+            "right": 1578.1953125,
+            "bottom": 869.6875,
+            "width": 596.390625,
+            "height": 54
+          },
+          {
+            "x": 2249.5625,
+            "y": 1402.40625,
+            "right": 2472,
+            "bottom": 1415.203125,
+            "width": 222.4375,
+            "height": 12.796875
+          }
+        ],
+        "overflow": false,
+        "heroComplete": false,
+        "logoSources": [
+          "/icon.svg",
+          "https://res.cloudinary.com/dunacoujw/image/upload/v1792601186/logo1_y3d5u2.svg"
+        ]
+      },
+      "state": {
+        "documentToken": "0.t0r7qi8yxf",
+        "phases": [
+          {
+            "state": "none",
+            "at": 1475.4000000022352
+          },
+          {
+            "state": "preparing",
+            "at": 1623.300000000745
+          },
+          {
+            "state": "revealing",
+            "at": 7508.10000000149
+          },
+          {
+            "state": "complete",
+            "at": 11421.800000000745
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 1475.7000000029802
+          },
+          {
+            "state": "capturing",
+            "at": 6105
+          },
+          {
+            "state": "swinging",
+            "at": 7508.10000000149
+          },
+          {
+            "state": "pulling",
+            "at": 8547.300000000745
+          },
+          {
+            "state": "idle",
+            "at": 11421.900000002235
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 7507.60000000149
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 11370
+          }
+        ],
+        "lockedAt": 3509.300000000745,
+        "unlockedAt": 11421.900000002235,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 1642.6000000014901
+          },
+          {
+            "value": "01",
+            "at": 3520.10000000149
+          },
+          {
+            "value": "03",
+            "at": 3531.10000000149
+          },
+          {
+            "value": "27",
+            "at": 3572.900000002235
+          },
+          {
+            "value": "75",
+            "at": 3796.2000000029802
+          },
+          {
+            "value": "77",
+            "at": 3854.5
+          },
+          {
+            "value": "80",
+            "at": 4766.400000002235
+          },
+          {
+            "value": "82",
+            "at": 5599.60000000149
+          },
+          {
+            "value": "83",
+            "at": 5603.70000000298
+          },
+          {
+            "value": "84",
+            "at": 5616.300000000745
+          },
+          {
+            "value": "85",
+            "at": 5625.5
+          },
+          {
+            "value": "89",
+            "at": 5655.5
+          },
+          {
+            "value": "91",
+            "at": 5674.400000002235
+          },
+          {
+            "value": "94",
+            "at": 5699.800000000745
+          },
+          {
+            "value": "96",
+            "at": 5728.20000000298
+          },
+          {
+            "value": "97",
+            "at": 5749.5
+          },
+          {
+            "value": "99",
+            "at": 5771.800000000745
+          },
+          {
+            "value": "100",
+            "at": 5795.10000000149
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      }
+    },
+    {
+      "name": "noncritical-image-phase-diagnostic",
+      "state": {
+        "documentToken": "0.z45dcntvee",
+        "phases": [
+          {
+            "state": "none",
+            "at": 222.5
+          },
+          {
+            "state": "preparing",
+            "at": 273
+          },
+          {
+            "state": "revealing",
+            "at": 3935.199999999255
+          },
+          {
+            "state": "complete",
+            "at": 8075.60000000149
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 222.5
+          },
+          {
+            "state": "capturing",
+            "at": 2933.89999999851
+          },
+          {
+            "state": "swinging",
+            "at": 3935.199999999255
+          },
+          {
+            "state": "pulling",
+            "at": 5198.39999999851
+          },
+          {
+            "state": "idle",
+            "at": 8075.60000000149
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 3935
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 8037.39999999851
+          }
+        ],
+        "lockedAt": 1503,
+        "unlockedAt": 8075.60000000149,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 275.80000000074506
+          },
+          {
+            "value": "01",
+            "at": 1509.8999999985099
+          },
+          {
+            "value": "03",
+            "at": 1515.3999999985099
+          },
+          {
+            "value": "16",
+            "at": 1535
+          },
+          {
+            "value": "24",
+            "at": 1548.3999999985099
+          },
+          {
+            "value": "87",
+            "at": 1734.199999999255
+          },
+          {
+            "value": "92",
+            "at": 1777.3999999985099
+          },
+          {
+            "value": "100",
+            "at": 2416.199999999255
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      },
+      "warnings": []
+    },
+    {
+      "name": "noncritical-image",
+      "duration": 6534.39999999851,
+      "state": {
+        "documentToken": "0.z45dcntvee",
+        "phases": [
+          {
+            "state": "none",
+            "at": 222.5
+          },
+          {
+            "state": "preparing",
+            "at": 273
+          },
+          {
+            "state": "revealing",
+            "at": 3935.199999999255
+          },
+          {
+            "state": "complete",
+            "at": 8075.60000000149
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 222.5
+          },
+          {
+            "state": "capturing",
+            "at": 2933.89999999851
+          },
+          {
+            "state": "swinging",
+            "at": 3935.199999999255
+          },
+          {
+            "state": "pulling",
+            "at": 5198.39999999851
+          },
+          {
+            "state": "idle",
+            "at": 8075.60000000149
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 3935
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 8037.39999999851
+          }
+        ],
+        "lockedAt": 1503,
+        "unlockedAt": 8075.60000000149,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 275.80000000074506
+          },
+          {
+            "value": "01",
+            "at": 1509.8999999985099
+          },
+          {
+            "value": "03",
+            "at": 1515.3999999985099
+          },
+          {
+            "value": "16",
+            "at": 1535
+          },
+          {
+            "value": "24",
+            "at": 1548.3999999985099
+          },
+          {
+            "value": "87",
+            "at": 1734.199999999255
+          },
+          {
+            "value": "92",
+            "at": 1777.3999999985099
+          },
+          {
+            "value": "100",
+            "at": 2416.199999999255
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      }
+    },
+    {
+      "name": "reduced-motion",
+      "state": {
+        "documentToken": "0.u71kixqpdce",
+        "phases": [
+          {
+            "state": "none",
+            "at": 117.19999999925494
+          },
+          {
+            "state": "preparing",
+            "at": 154
+          },
+          {
+            "state": "complete",
+            "at": 1701.6000000014901
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 117.19999999925494
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 1700.800000000745
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 1701.5
+          }
+        ],
+        "lockedAt": 1394.9000000022352,
+        "unlockedAt": 1701.6000000014901,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 155.60000000149012
+          },
+          {
+            "value": "80",
+            "at": 1406.199999999255
+          },
+          {
+            "value": "90",
+            "at": 1673.1000000014901
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      }
+    },
+    {
+      "name": "motion-preference-change",
+      "state": {
+        "documentToken": "0.5scuk70ewei",
+        "phases": [
+          {
+            "state": "none",
+            "at": 98.90000000223517
+          },
+          {
+            "state": "preparing",
+            "at": 131.60000000149012
+          },
+          {
+            "state": "complete",
+            "at": 1602.5
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 98.90000000223517
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 1602.4000000022352
+          }
+        ],
+        "lockedAt": 1427.6000000014901,
+        "unlockedAt": 1602.6000000014901,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 133.40000000223517
+          },
+          {
+            "value": "02",
+            "at": 1440
+          },
+          {
+            "value": "13",
+            "at": 1458.5
+          },
+          {
+            "value": "18",
+            "at": 1467.300000000745
+          },
+          {
+            "value": "62",
+            "at": 1602.5
+          }
+        ],
+        "loading": false,
+        "inert": false,
+        "busy": null,
+        "overflow": false,
+        "scrollLock": "visible",
+        "spiderCovered": false,
+        "spiderInert": false
+      }
+    },
+    {
+      "name": "no-javascript",
+      "visible": true
+    },
+    {
+      "name": "admin-excluded:/secret-admin"
+    },
+    {
+      "name": "admin-excluded:/secret-admin/login"
+    },
+    {
+      "name": "navigation-back",
+      "state": {
+        "documentToken": "0.p7z609cvmk",
+        "phases": [
+          {
+            "state": "none",
+            "at": 86.19999999925494
+          },
+          {
+            "state": "preparing",
+            "at": 123.89999999850988
+          },
+          {
+            "state": "revealing",
+            "at": 4244.5
+          },
+          {
+            "state": "complete",
+            "at": 8296.699999999255
+          }
+        ],
+        "spiderPhases": [
+          {
+            "state": "idle",
+            "at": 86.19999999925494
+          },
+          {
+            "state": "capturing",
+            "at": 3129.599999997765
+          },
+          {
+            "state": "swinging",
+            "at": 4244.5
+          },
+          {
+            "state": "pulling",
+            "at": 5384.199999999255
+          },
+          {
+            "state": "idle",
+            "at": 8296.699999999255
+          },
+          {
+            "state": "capturing",
+            "at": 9348.39999999851
+          },
+          {
+            "state": "swinging",
+            "at": 10255.89999999851
+          },
+          {
+            "state": "pulling",
+            "at": 11466.800000000745
+          },
+          {
+            "state": "idle",
+            "at": 14487.599999997765
+          },
+          {
+            "state": "capturing",
+            "at": 14590.89999999851
+          },
+          {
+            "state": "swinging",
+            "at": 15557.800000000745
+          },
+          {
+            "state": "pulling",
+            "at": 16912.800000000745
+          },
+          {
+            "state": "idle",
+            "at": 19831.300000000745
+          },
+          {
+            "state": "capturing",
+            "at": 20400.699999999255
+          },
+          {
+            "state": "swinging",
+            "at": 21136.199999999255
+          },
+          {
+            "state": "pulling",
+            "at": 22396.39999999851
+          },
+          {
+            "state": "idle",
+            "at": 25370.599999997765
+          }
+        ],
+        "events": [
+          {
+            "name": "portfolio:preloader-reveal",
+            "at": 4244.39999999851
+          },
+          {
+            "name": "portfolio:preloader-complete",
+            "at": 8250.800000000745
+          }
+        ],
+        "lockedAt": 1103.199999999255,
+        "unlockedAt": 8296.699999999255,
+        "seenLoader": true,
+        "progress": [
+          {
+            "value": "00",
+            "at": 125.80000000074506
+          },
+          {
+            "value": "02",
+            "at": 1115.199999999255
+          },
+          {
+            "value": "16",
+            "at": 1135.300000000745
+          },
+          {
+            "value": "17",
+            "at": 1136.0999999977648
+          },
+          {
+            "value": "23",
+            "at": 1147.199999999255
+          },
+          {
+            "value": "87",
+            "at": 1335.0999999977648
+          },
+          {
+            "value": "91",
+            "at": 1374
+          },
+          {
+            "value": "100",
+            "at": 2022.0999999977648
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    "browserType.launch: Timeout 180000ms exceeded.\nCall log:\n\u001b[2m  - <launching> C:\\Users\\hp\\AppData\\Local\\ms-playwright\\firefox-1555\\firefox\\firefox.exe -no-remote -headless -profile C:\\Users\\hp\\AppData\\Local\\Temp\\playwright_firefoxdev_profile-O683xc -juggler-pipe -silent\u001b[22m\n\u001b[2m  - <launched> pid=33400\u001b[22m\n\u001b[2m  - [pid=33400][err] *** You are running in headless mode.\u001b[22m\n\n    at C:\\Users\\hp\\portfolio\\scripts\\preloader-browser.mjs:534:43"
+  ]
+}

@@ -21,6 +21,14 @@ import {
 } from "./spider-transition/motion";
 import "./spider-transition/transition.css";
 
+const INTRO_PREPARATION_TIMEOUT_MS = 3000;
+
+export type PreloaderExitDetail = {
+  surface: HTMLElement;
+  onComplete: () => void;
+  onCovered?: () => void;
+};
+
 type Flight = {
   controller: AbortController;
   from: string;
@@ -32,6 +40,7 @@ type Flight = {
   timeout: number;
   sawPending: boolean;
   focusBefore: HTMLElement | null;
+  intro?: PreloaderExitDetail & { covered: boolean };
 };
 
 /** One global flight. Next retains ownership of routing, redirects and history. */
@@ -126,7 +135,7 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
         );
     }
 
-    function finish(focus = true) {
+    function finish(focus = true, reason = "interrupted") {
       const flight = active;
       if (!flight) return;
       active = undefined;
@@ -138,15 +147,162 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
       layer.hidden = true;
       screen.style.visibility = "hidden";
       frozen.replaceChildren();
+      delete root.dataset.spiderTransition;
+      scene?.clear();
+      if (flight.intro) {
+        root.dataset.preloaderTransitionResult = reason;
+        // The preloader owns its outer inert wrapper and loading lifecycle.
+        // Releasing this visual must not synthesize a route change or focus jump.
+        try {
+          if (!flight.intro.covered) flight.intro.onCovered?.();
+        } finally {
+          flight.intro.onComplete();
+        }
+        return;
+      }
       surface.inert = false;
       surface.removeAttribute("aria-busy");
       root.classList.remove("portfolio-transitioning");
-      delete root.dataset.spiderTransition;
-      scene?.clear();
       window.dispatchEvent(new Event("portfolio:transition-end"));
       if (focus && flight.committed) focusDestination();
       else if (!flight.committed && flight.focusBefore?.isConnected)
         flight.focusBefore.focus({ preventScroll: true });
+    }
+
+    function playFlight(
+      flight: Flight,
+      engine: TransitionScene,
+      width: number,
+      height: number,
+    ) {
+      clearTimeout(flight.timeout);
+      flight.timeout = window.setTimeout(
+        () => finish(true, "playback-timeout"),
+        (DURATION / PLAYBACK_RATE) * 1000 + 2000,
+      );
+      // Refresh the hidden buffer before replacing the live or frozen source.
+      engine.render(0, 0, 0);
+      layer.hidden = false;
+      screen.style.visibility = "visible";
+      frozen.replaceChildren();
+      root.dataset.spiderTransition = "swinging";
+      if (flight.intro) {
+        root.dataset.preloaderTransitionResult = "playing";
+        flight.intro.covered = true;
+        flight.intro.onCovered?.();
+      } else {
+        sound.begin(width, height);
+      }
+      let previous = performance.now(),
+        time = 0;
+      const tick = (now: number) => {
+        if (active !== flight) return;
+        try {
+          const frameDt = Math.max(0, (now - previous) / 1000);
+          const dt = Math.min(frameDt, 1 / 30) * PLAYBACK_RATE;
+          previous = now;
+          // Both entry points share the exact rig, cloth and wall-time motion.
+          time = Math.min(time + frameDt * PLAYBACK_RATE, DURATION);
+          const phase = time < CONTACT_TIME ? "swinging" : "pulling";
+          if (root.dataset.spiderTransition !== phase)
+            root.dataset.spiderTransition = phase;
+          engine.render(time, dt, frameDt);
+          if (!flight.intro) sound.update(time);
+          if (time >= DURATION) {
+            finish(true, "complete");
+            return;
+          }
+          flight.frame = requestAnimationFrame(tick);
+        } catch (error) {
+          console.warn(
+            "[Spider transition] Animation released after render failure.",
+            error,
+          );
+          failed = true;
+          finish(true, "render-error");
+        }
+      };
+      flight.frame = requestAnimationFrame(tick);
+    }
+
+    async function exitPreloader(detail: PreloaderExitDetail) {
+      if (active) {
+        // A duplicate request cannot restart a running intro or replace routing.
+        if (active.intro?.surface === detail.surface) return;
+        try {
+          detail.onCovered?.();
+        } finally {
+          detail.onComplete();
+        }
+        return;
+      }
+      let markReady!: () => void;
+      const ready = new Promise<void>((resolve) => {
+        markReady = resolve;
+      });
+      const flight: Flight = {
+        controller: new AbortController(),
+        from: latestKey.current,
+        committed: false,
+        ready,
+        markReady,
+        frame: 0,
+        readinessFrame: 0,
+        timeout: 0,
+        sawPending: false,
+        focusBefore: null,
+        intro: { ...detail, covered: false },
+      };
+      flight.controller.signal.addEventListener("abort", markReady, {
+        once: true,
+      });
+      active = flight;
+      if (reduced.matches || failed || disposed || document.hidden) {
+        finish(
+          false,
+          reduced.matches ? "reduced-motion" : document.hidden ? "hidden" : "unavailable",
+        );
+        return;
+      }
+
+      root.dataset.spiderTransition = "capturing";
+      root.dataset.preloaderTransitionResult = "preparing";
+      // A cold shader, font embedding or rasterization may fail; never retain
+      // the introduction while waiting indefinitely for the optional effect.
+      flight.timeout = window.setTimeout(
+        () => finish(false, "preparation-timeout"),
+        INTRO_PREPARATION_TIMEOUT_MS,
+      );
+      try {
+        const snapshot = freezeViewport(
+          detail.surface,
+          getTransitionResolution(
+            innerWidth,
+            innerHeight,
+            devicePixelRatio || 1,
+            navigator.hardwareConcurrency || 8,
+            (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
+          ).captureRatio,
+        );
+        const prepared = await Promise.race([
+          Promise.all([prepare(), snapshot.render(flight.controller.signal)]),
+          // Abort releases this asynchronous task even if a shared font/scene
+          // preparation promise finishes later. It cannot revive the old flight.
+          ready.then(() => null),
+        ]);
+        if (!prepared || active !== flight || flight.controller.signal.aborted)
+          return;
+        const [engine, texture] = prepared;
+        engine.begin(texture, snapshot.width, snapshot.height);
+        playFlight(flight, engine, snapshot.width, snapshot.height);
+      } catch (error) {
+        if (active !== flight) return;
+        console.warn(
+          "[Spider transition] Introduction released; capture/3D unavailable.",
+          error,
+        );
+        finish(false, "capture-error");
+      }
     }
 
     async function readyAfterCommit(flight: Flight) {
@@ -184,6 +340,10 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
 
     commit.current = (key) => {
       const flight = active;
+      if (flight?.intro) {
+        if (key !== flight.from) finish(false);
+        return;
+      }
       if (flight && key !== flight.from) {
         flight.committed = true;
         // A committed redirect (e.g. /experience -> /about) is equally ready.
@@ -195,7 +355,7 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
     };
 
     settlement.current = (pending) => {
-      if (!active) return;
+      if (!active || active.intro) return;
       if (pending) active.sawPending = true;
       else if (active.sawPending && !active.committed) finish(false);
     };
@@ -291,49 +451,7 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
         // can be revealed, then play the entire swing without a readiness stop.
         await flight.ready;
         if (active !== flight || flight.controller.signal.aborted) return;
-        clearTimeout(flight.timeout);
-        flight.timeout = window.setTimeout(
-          () => finish(),
-          (DURATION / PLAYBACK_RATE) * 1000 + 2000,
-        );
-        // WebGL may discard a hidden drawing buffer while the route loads.
-        // Refresh the uploaded page immediately before replacing the cover.
-        engine.render(0, 0, 0);
-        screen.style.visibility = "visible";
-        frozen.replaceChildren();
-        root.dataset.spiderTransition = "swinging";
-        sound.begin(snapshot.width, snapshot.height);
-        let previous = performance.now(),
-          time = 0;
-        const tick = (now: number) => {
-          if (active !== flight) return;
-          try {
-            const frameDt = Math.max(0, (now - previous) / 1000);
-            const dt = Math.min(frameDt, 1 / 30) * PLAYBACK_RATE;
-            previous = now;
-            // Choreography follows wall time at every refresh rate. Only the
-            // numerical cloth integrator needs a bounded timestep.
-            time = Math.min(time + frameDt * PLAYBACK_RATE, DURATION);
-            const phase = time < CONTACT_TIME ? "swinging" : "pulling";
-            if (root.dataset.spiderTransition !== phase)
-              root.dataset.spiderTransition = phase;
-            engine.render(time, dt, frameDt);
-            sound.update(time);
-            if (time >= DURATION) {
-              finish();
-              return;
-            }
-            flight.frame = requestAnimationFrame(tick);
-          } catch (error) {
-            console.warn(
-              "[Spider transition] Animation released after render failure.",
-              error,
-            );
-            failed = true;
-            finish();
-          }
-        };
-        flight.frame = requestAnimationFrame(tick);
+        playFlight(flight, engine, snapshot.width, snapshot.height);
       } catch (error) {
         if (active !== flight) return;
         console.warn(
@@ -411,6 +529,39 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
     const visibility = () => {
       if (document.hidden) interrupt();
     };
+    const preloaderExit = (event: Event) => {
+      const detail = (event as CustomEvent<PreloaderExitDetail>).detail;
+      if (
+        !detail ||
+        !(detail.surface instanceof HTMLElement) ||
+        typeof detail.onComplete !== "function"
+      )
+        return;
+      // A cancelable request lets the caller detect a not-yet-mounted listener.
+      event.preventDefault();
+      void exitPreloader(detail);
+    };
+    const preloaderComplete = () => {
+      if (active?.intro) finish(false, "external-release");
+    };
+    const preloaderPrepare = () => {
+      if (
+        !root.classList.contains("portfolio-loading") ||
+        active ||
+        reduced.matches ||
+        failed ||
+        disposed ||
+        document.hidden
+      )
+        return;
+      const intro = document.querySelector<HTMLElement>(".site-preloader");
+      if (!intro) return;
+      // Warm the capture's font embedding and logo bytes as well as shaders.
+      // Waiting until handoff used to spend the short deadline fetching fonts
+      // that were not needed by the first viewport's live text.
+      warmCaptureAssets(intro, { includePendingImages: true });
+      void prepare().catch(() => {});
+    };
     document.addEventListener("click", click, true);
     document.addEventListener("pointerover", warm, { passive: true });
     document.addEventListener("focusin", warm);
@@ -418,11 +569,20 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
     window.addEventListener("resize", interrupt);
     window.addEventListener("pagehide", interrupt);
     window.addEventListener("keydown", keydown);
+    window.addEventListener("portfolio:preloader-exit", preloaderExit);
+    window.addEventListener("portfolio:preloader-prepare", preloaderPrepare);
+    window.addEventListener("portfolio:preloader-complete", preloaderComplete);
     document.addEventListener("visibilitychange", visibility);
     screen.addEventListener("webglcontextlost", lost);
     reduced.addEventListener("change", interrupt);
+    // This also covers an early prepare event dispatched before this component
+    // hydrated. The ready signal lets a pending caller retry its actual handoff.
+    preloaderPrepare();
+    root.dataset.preloaderControllerReady = "true";
+    window.dispatchEvent(new Event("portfolio:preloader-controller-ready"));
     return () => {
       disposed = true;
+      delete root.dataset.preloaderControllerReady;
       finish(false);
       commit.current = () => {};
       settlement.current = () => {};
@@ -433,6 +593,9 @@ function PublicPageTransition({ children }: { children: ReactNode }) {
       window.removeEventListener("resize", interrupt);
       window.removeEventListener("pagehide", interrupt);
       window.removeEventListener("keydown", keydown);
+      window.removeEventListener("portfolio:preloader-exit", preloaderExit);
+      window.removeEventListener("portfolio:preloader-prepare", preloaderPrepare);
+      window.removeEventListener("portfolio:preloader-complete", preloaderComplete);
       document.removeEventListener("visibilitychange", visibility);
       screen.removeEventListener("webglcontextlost", lost);
       reduced.removeEventListener("change", interrupt);

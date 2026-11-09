@@ -4,6 +4,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SiteNav, Footer } from "@/components/shell";
 import PageTransition from "@/components/animations/page-transition";
+import SitePreloader from "@/components/animations/site-preloader";
+import { PRELOADER_BOOTSTRAP } from "@/lib/preloader-bootstrap";
 import { publicSocials, published, repos } from "@/lib/db";
 import SiteAnalytics from "@/components/site-analytics";
 import SeoJsonLd from "@/components/seo-json-ld";
@@ -58,18 +60,33 @@ export default async function RootLayout({
     publicSocials(),
   ]);
   return (
-    <html lang="en" className={`${poppins.variable} ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`${poppins.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
       <body id="top" className="font-body bg-spidey-dark-900 text-spidey-paper">
+        <script
+          id="portfolio-preloader-boot"
+          dangerouslySetInnerHTML={{ __html: PRELOADER_BOOTSTRAP }}
+        />
         <SeoJsonLd data={globalGraph(profile, socials)} />
-        <a className="skip-link" href="#main">
-          Skip to content
-        </a>
-        <SiteAnalytics />
-        <PageTransition>
-          <SiteNav socials={socials} />
-          <main id="main">{children}</main>
-          <Footer name={profile?.name} email={profile?.email} />
-        </PageTransition>
+        <SitePreloader
+          name={profile?.name || "Tanmay Tiwari"}
+          location={profile?.location || "New Delhi, India"}
+          role={profile?.role || "Creative Developer & Community Builder"}
+        />
+        <div data-preloader-page>
+          <a className="skip-link" href="#main">
+            Skip to content
+          </a>
+          <SiteAnalytics />
+          <PageTransition>
+            <SiteNav socials={socials} />
+            <main id="main">{children}</main>
+            <Footer name={profile?.name} email={profile?.email} />
+          </PageTransition>
+        </div>
       </body>
     </html>
   );

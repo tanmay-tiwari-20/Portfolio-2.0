@@ -253,6 +253,38 @@ try {
   });
   assert.deepEqual(dynamic, [], "dynamic capture regression");
   console.log("Dynamic CSS, pseudo-element, canvas, SVG mask, password and cancellation passed");
+
+  // The introduction is itself a fixed viewport surface, rather than a normal
+  // page containing fixed children. It must survive extraction and later removal.
+  const fixedRoot = await page.evaluate(async () => {
+    const root = document.createElement("div");
+    root.dataset.fixedRoot = "true";
+    root.style.cssText = "position:fixed;inset:0;background:rgb(22,30,40);color:white";
+    root.innerHTML = '<div style="position:absolute;left:80px;top:80px;width:100px;height:100px;background:rgb(239,70,62)"></div><p style="position:absolute;left:220px;top:80px;margin:0;font:700 80px/1 Arial">100%</p>';
+    document.body.append(root);
+    const snapshot = window.captureViewport(root, 1);
+    const host = document.createElement("div");
+    host.style.cssText = "position:fixed;inset:0;z-index:2147483000";
+    host.attachShadow({ mode: "open" }).append(snapshot.preview);
+    document.body.append(host);
+    const copy = snapshot.preview.querySelector("[data-fixed-root]");
+    const bounds = copy?.getBoundingClientRect();
+    const errors = [];
+    if (!bounds || bounds.x !== 0 || bounds.y !== 0 || bounds.width !== innerWidth || bounds.height !== innerHeight)
+      errors.push("Fixed root did not preserve its viewport bounds");
+    root.remove();
+    const canvas = await snapshot.render(new AbortController().signal);
+    const context = canvas.getContext("2d");
+    for (const [x, y, rgb] of [[8, 8, [22, 30, 40]], [100, 100, [239, 70, 62]]]) {
+      const actual = [...context.getImageData(x, y, 1, 1).data];
+      if (!rgb.every((value, index) => Math.abs(value - actual[index]) <= 2) || actual[3] !== 255)
+        errors.push(`Fixed root raster at ${x},${y}: expected ${rgb}, got ${actual}`);
+    }
+    host.remove();
+    return errors;
+  });
+  assert.deepEqual(fixedRoot, [], "fixed introduction root capture regression");
+  console.log("Fixed introduction viewport preview and raster survive source removal");
 } finally {
   await browser.close();
 }
