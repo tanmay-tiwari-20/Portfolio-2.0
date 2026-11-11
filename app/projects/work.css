@@ -141,6 +141,105 @@
   }
 }
 
+/* Case studies keep the desk palette, with quieter framing around the work. */
+.project-case-study .project-screenshot-trigger {
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: inherit;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.project-case-study .project-screenshot-print {
+  padding: 12px 12px 5px;
+  border: 1px solid #fffdf8;
+  border-radius: 16px;
+  background: #fffaf1;
+  box-shadow:
+    0 4px 8px #553b320a,
+    0 22px 48px -24px #553b3259;
+  transition: box-shadow 220ms ease;
+}
+
+.project-case-study .project-screenshot-print [data-work-image] {
+  border: 1px solid #72554e1a;
+  border-radius: 9px;
+}
+
+.project-case-study .project-screenshot-print > div:last-child {
+  min-height: 42px;
+  padding-inline: 6px;
+}
+
+.project-case-study .project-screenshot-trigger:focus-visible {
+  outline: 2px solid #a52e2b;
+  outline-offset: 5px;
+}
+
+.project-case-study
+  .project-screenshot-trigger:hover
+  .project-screenshot-print {
+  box-shadow:
+    0 4px 8px #553b3212,
+    0 28px 52px -24px #553b3280;
+}
+
+.project-case-study .project-section-index nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--work-muted);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.project-case-study
+  :is(.project-section-index nav a, .project-browse-button):hover {
+  color: #a52e2b;
+}
+
+.project-case-study
+  :is(.project-section-index nav a, .project-browse-button):focus-visible {
+  outline: 2px solid #a52e2b;
+  outline-offset: 4px;
+}
+
+.project-case-study .work-sheet {
+  border-color: #72554e1a;
+  border-radius: 16px;
+  box-shadow:
+    0 4px 8px #553b3206,
+    0 18px 36px -24px #553b3233;
+}
+
+.project-case-study :is(#project-features, #project-stack) {
+  scroll-margin-top: 7rem;
+}
+
+@media (max-width: 639px) {
+  .project-case-study .project-screenshot-print {
+    padding: 7px 7px 2px;
+    border-radius: 12px;
+  }
+
+  .project-case-study .project-screenshot-expand {
+    top: 16px;
+    right: 16px;
+  }
+
+  .project-case-study .project-section-index {
+    gap: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-case-study .project-screenshot-print {
+    transition: none;
+  }
+}
+
 /* Keep the existing navigation legible over the paper desk, without changing
    its open-menu appearance or other routes. */
 body:has([data-work-desk-hero], [data-work-paper-hero])

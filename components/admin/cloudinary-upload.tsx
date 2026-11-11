@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { ImagePlus, LoaderCircle, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  ImagePlus,
+  LoaderCircle,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import type { ImageAsset } from "@/lib/validators/schemas";
 
 type UploadItem = ImageAsset & {
@@ -14,12 +21,18 @@ export default function CloudinaryUpload({
   section = "projects",
   multiple = false,
   initialAssets = [],
+  reorder = false,
+  allowUrl = false,
+  uploadLabel,
   onUploadingChange,
   onChange,
 }: {
   section?: string;
   multiple?: boolean;
   initialAssets?: ImageAsset[];
+  reorder?: boolean;
+  allowUrl?: boolean;
+  uploadLabel?: string;
   onUploadingChange?: (uploading: boolean) => void;
   onChange: (assets: ImageAsset[]) => void;
 }) {
@@ -40,6 +53,9 @@ export default function CloudinaryUpload({
   );
   const current = useRef<UploadItem[]>(items);
   const [error, setError] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageAlt, setImageAlt] = useState("");
+  const [urlError, setUrlError] = useState("");
 
   useEffect(() => {
     mounted.current = true;
@@ -280,6 +296,51 @@ export default function CloudinaryUpload({
     }
   }
 
+  function move(localId: string, direction: -1 | 1) {
+    if (busy.current) return;
+    const next = [...current.current];
+    const index = next.findIndex((item) => item.localId === localId);
+    const destination = index + direction;
+    if (index < 0 || destination < 0 || destination >= next.length) return;
+    [next[index], next[destination]] = [next[destination], next[index]];
+    update(next);
+  }
+
+  function addImageUrl() {
+    if (busy.current) return;
+    let url: URL;
+    try {
+      url = new URL(imageUrl.trim());
+      if (
+        url.protocol !== "https:" ||
+        !["res.cloudinary.com", "images.unsplash.com"].includes(url.hostname) ||
+        url.username ||
+        url.password
+      )
+        throw new Error();
+    } catch {
+      setUrlError("Enter an HTTPS image URL from Cloudinary or Unsplash.");
+      return;
+    }
+    if (current.current.some((item) => item.url === url.href)) {
+      setUrlError("This image is already in the screenshots.");
+      return;
+    }
+    update([
+      ...current.current,
+      {
+        url: url.href,
+        alt: imageAlt.trim(),
+        localId: crypto.randomUUID(),
+        progress: 100,
+        saved: true,
+      },
+    ]);
+    setImageUrl("");
+    setImageAlt("");
+    setUrlError("");
+  }
+
   return (
     <div className="upload-box" aria-busy={uploading}>
       <input
@@ -310,7 +371,8 @@ export default function CloudinaryUpload({
         )}
         {uploading
           ? "Uploading image…"
-          : `${!multiple && items.length ? "Replace" : "Choose"} image${multiple ? "s" : ""}`}
+          : uploadLabel ||
+            `${!multiple && items.length ? "Replace" : "Choose"} image${multiple ? "s" : ""}`}
       </button>
       <p className="form-help-text">
         JPEG, PNG, WebP, GIF or AVIF · up to 5 MB each.
@@ -320,8 +382,72 @@ export default function CloudinaryUpload({
           {error}
         </p>
       )}
-      <div className="upload-previews">
-        {items.map((item) => (
+      {allowUrl && (
+        <details className="upload-url-option">
+          <summary>Or add an image URL</summary>
+          <div className="upload-url-fields">
+            <label className="form-label" htmlFor={`${inputId}-url`}>
+              Image URL
+              <input
+                id={`${inputId}-url`}
+                className="form-input"
+                type="text"
+                inputMode="url"
+                value={imageUrl}
+                placeholder="https://res.cloudinary.com/..."
+                disabled={uploading}
+                onChange={(event) => {
+                  setImageUrl(event.target.value);
+                  setUrlError("");
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    addImageUrl();
+                  }
+                }}
+                aria-invalid={Boolean(urlError)}
+                aria-describedby={urlError ? `${inputId}-url-error` : undefined}
+              />
+            </label>
+            <label className="form-label" htmlFor={`${inputId}-url-alt`}>
+              Image description
+              <input
+                id={`${inputId}-url-alt`}
+                className="form-input"
+                value={imageAlt}
+                maxLength={300}
+                disabled={uploading}
+                onChange={(event) => setImageAlt(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    addImageUrl();
+                  }
+                }}
+                placeholder="e.g. Dashboard overview"
+              />
+            </label>
+            <button
+              type="button"
+              className="filter-chip inline-flex items-center gap-2"
+              disabled={uploading || !imageUrl.trim()}
+              onClick={addImageUrl}
+            >
+              <Plus size={14} aria-hidden="true" /> Add screenshot
+            </button>
+            {urlError && (
+              <p id={`${inputId}-url-error`} className="form-note" role="alert">
+                {urlError}
+              </p>
+            )}
+          </div>
+        </details>
+      )}
+      <div
+        className={`upload-previews${reorder ? " upload-previews-reorder" : ""}`}
+      >
+        {items.map((item, index) => (
           <div key={item.localId} className="min-w-0">
             {/* Local blob previews cannot use Next's image optimizer. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -366,6 +492,35 @@ export default function CloudinaryUpload({
                     ? `${item.progress}% uploaded`
                     : "Finishing upload…"}
                 </span>
+              </div>
+            )}
+            {reorder && (
+              <div
+                className="upload-order-controls"
+                role="group"
+                aria-label={`Order screenshot ${index + 1}`}
+              >
+                <span className="form-help-text">Screenshot {index + 1}</span>
+                <div>
+                  <button
+                    type="button"
+                    className="admin-order-button admin-icon-button"
+                    aria-label={`Move screenshot ${index + 1} earlier`}
+                    disabled={uploading || index === 0}
+                    onClick={() => move(item.localId, -1)}
+                  >
+                    <ArrowUp size={16} aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    className="admin-order-button admin-icon-button"
+                    aria-label={`Move screenshot ${index + 1} later`}
+                    disabled={uploading || index === items.length - 1}
+                    onClick={() => move(item.localId, 1)}
+                  >
+                    <ArrowDown size={16} aria-hidden="true" />
+                  </button>
+                </div>
               </div>
             )}
             <button

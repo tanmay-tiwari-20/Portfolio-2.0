@@ -562,6 +562,83 @@
   background: #101012;
 }
 
+.admin-workspace .project-screenshots-editor {
+  min-width: 0;
+  margin-block: 8px;
+  padding-block: 18px;
+  border-block: 1px solid var(--admin-border);
+}
+.admin-workspace .project-screenshots-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-workspace .project-screenshots-heading h3 {
+  margin: 0;
+}
+.admin-workspace .project-screenshots-editor > .form-help-text {
+  margin-block: 8px 16px;
+  line-height: 1.7;
+}
+.admin-workspace .upload-url-option {
+  margin-block: 12px 6px;
+  font-size: 12px;
+}
+.admin-workspace .upload-url-option summary {
+  width: fit-content;
+  min-height: 36px;
+  cursor: pointer;
+  color: #bdbac5;
+  line-height: 36px;
+}
+.admin-workspace .upload-url-fields {
+  display: grid;
+  gap: 12px;
+  padding-block: 8px 12px;
+}
+.admin-workspace .upload-url-fields > button {
+  justify-self: start;
+}
+.admin-workspace .upload-previews-reorder > div {
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  padding-block: 16px;
+  border-top: 1px solid var(--admin-border);
+}
+.admin-workspace .upload-previews-reorder img {
+  grid-column: 1;
+  grid-row: 1 / span 3;
+  width: 120px;
+  height: 110px;
+}
+.admin-workspace .upload-previews-reorder > div > label {
+  grid-column: 2;
+  grid-row: 1;
+}
+.admin-workspace .upload-previews-reorder > div > p {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+}
+.admin-workspace .upload-previews-reorder > div > .grid {
+  grid-column: 2;
+  grid-row: 3;
+}
+.admin-workspace .upload-order-controls {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: right;
+}
+.admin-workspace .upload-order-controls > div {
+  display: flex;
+  justify-content: flex-end;
+}
+.admin-workspace .upload-previews-reorder > div > button {
+  grid-column: 3;
+  grid-row: 2;
+  justify-self: end;
+}
+
 /* Native dialogs and the existing event dialog use the same treatment. */
 .admin-workspace .admin-modal-overlay {
   padding: 16px;
@@ -943,6 +1020,29 @@
     grid-row: span 2;
     width: 64px;
     height: 86px;
+  }
+  .admin-workspace .upload-previews-reorder > div {
+    grid-template-columns: 80px minmax(0, 1fr);
+  }
+  .admin-workspace .upload-previews-reorder img {
+    grid-row: 1 / span 3;
+    width: 80px;
+  }
+  .admin-workspace .upload-previews-reorder .upload-order-controls {
+    grid-column: 2;
+    grid-row: 3;
+    text-align: left;
+  }
+  .admin-workspace .upload-previews-reorder .upload-order-controls > div {
+    justify-content: flex-start;
+  }
+  .admin-workspace .upload-previews-reorder > div > button {
+    grid-column: 2;
+    grid-row: 4;
+    justify-self: start;
+  }
+  .admin-workspace .upload-previews-reorder > div > .grid {
+    grid-row: 5;
   }
   .admin-workspace .admin-toast {
     right: 16px;

@@ -31,6 +31,7 @@ import {
 import SortableList from "@/components/admin/sortable-list";
 import AboutGalleryEditor from "@/components/admin/about-gallery-editor";
 import EventEditor from "@/components/admin/event-editor";
+import ProjectScreenshotsEditor from "@/components/admin/project-screenshots-editor";
 import { prepareEventPatch } from "@/lib/event-admin";
 import type {
   Project,
@@ -97,6 +98,8 @@ export default function AdminDashboard() {
   const [editingProject, setEditingProject] = useState<Partial<Project> | null>(
     null,
   );
+  const [projectUploading, setProjectUploading] = useState(false);
+  const projectUploadBusy = useRef(false);
   const [editingExperience, setEditingExperience] =
     useState<Partial<Experience> | null>(null);
   const [editingHackathon, setEditingHackathon] =
@@ -132,6 +135,8 @@ export default function AdminDashboard() {
   function clearEditors() {
     setFormError("");
     setEditingProject(null);
+    projectUploadBusy.current = false;
+    setProjectUploading(false);
     setEditingExperience(null);
     setEditingHackathon(null);
     setEditingEvent(null);
@@ -140,7 +145,7 @@ export default function AdminDashboard() {
     setTempAchievement("");
   }
   async function closeEditor() {
-    if (mutation.current) return;
+    if (mutation.current || projectUploadBusy.current) return;
     if (
       draftText !== initialDraft.current &&
       !(await ask(
@@ -1666,7 +1671,7 @@ export default function AdminDashboard() {
                 <EditorDialog
                   title={editingProject.id ? "Edit Project" : "Add Project"}
                   onClose={() => void closeEditor()}
-                  busy={loading}
+                  busy={loading || projectUploading}
                 >
                   {formError && (
                     <p
@@ -1679,6 +1684,7 @@ export default function AdminDashboard() {
                   <form
                     onSubmit={async (e) => {
                       e.preventDefault();
+                      if (projectUploadBusy.current) return;
                       const isNew = !editingProject.id;
                       const success = await saveItem(
                         "projects",
@@ -1687,7 +1693,7 @@ export default function AdminDashboard() {
                       );
                       if (success) setEditingProject(null);
                     }}
-                    aria-busy={loading}
+                    aria-busy={loading || projectUploading}
                   >
                     <fieldset
                       disabled={loading}
@@ -1851,6 +1857,20 @@ export default function AdminDashboard() {
                           </div>
                         )}
                       </div>
+
+                      <ProjectScreenshotsEditor
+                        key={editingProject.id || "new-project"}
+                        assets={editingProject.gallery || []}
+                        onUploadingChange={(uploading) => {
+                          projectUploadBusy.current = uploading;
+                          setProjectUploading(uploading);
+                        }}
+                        onChange={(gallery) =>
+                          setEditingProject((current) =>
+                            current ? { ...current, gallery } : null,
+                          )
+                        }
+                      />
 
                       {/* Tags Manager */}
                       <div>
@@ -2032,16 +2052,21 @@ export default function AdminDashboard() {
                         <button
                           type="button"
                           onClick={() => void closeEditor()}
+                          disabled={loading || projectUploading}
                           className="button button-secondary"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
-                          disabled={loading}
+                          disabled={loading || projectUploading}
                           className="button button-primary"
                         >
-                          {loading ? "Saving..." : "Save Project"}{" "}
+                          {loading
+                            ? "Saving..."
+                            : projectUploading
+                              ? "Uploading screenshots..."
+                              : "Save Project"}{" "}
                           <Check size={16} />
                         </button>
                       </div>

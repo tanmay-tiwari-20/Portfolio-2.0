@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { ArrowDown, ArrowLeft, ArrowUpRight, Maximize2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUpRight,
+  Images,
+  Maximize2,
+} from "lucide-react";
 import type { ImageAsset, Project } from "@/lib/validators/schemas";
-import { getOptimizedUrl } from "@/lib/cloudinary/urls";
 import {
   getProjectArtDirection,
   getProjectNeighbors,
@@ -12,12 +17,16 @@ import {
   ProjectImage,
   ProjectLinks,
 } from "@/components/work/project-primitives";
+import {
+  ProjectScreenshotProvider,
+  ProjectScreenshotTrigger,
+} from "@/components/work/project-screenshot-viewer";
 
 const shell = "mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-14";
 const label =
   "text-[10px] font-medium uppercase tracking-[0.16em] text-[var(--work-muted,#72554e)]";
 const title = "font-display font-semibold leading-[1.05] tracking-[-0.065em]";
-const heroSection = `${shell} pb-10 pt-3 sm:pb-12`;
+const heroSection = `${shell} pb-8 pt-4 sm:pb-10 sm:pt-6`;
 const sectionHeading = "text-[clamp(2rem,min(3.6vw,6.5svh),3.6rem)]";
 const accent = {
   scarlet: "text-[#a52e2b]",
@@ -74,6 +83,7 @@ function Screenshot({
   className = "",
   sizes = "(max-width: 700px) 100vw, 90vw",
   viewport,
+  number = 1,
 }: {
   project: Project;
   asset?: ImageAsset;
@@ -81,17 +91,15 @@ function Screenshot({
   className?: string;
   sizes?: string;
   viewport?: "hero" | "wide" | "split";
+  number?: number;
 }) {
   const image = asset || project.cover;
   return (
-    <figure className={`m-0 min-w-0 ${className}`}>
-      <a
-        href={getOptimizedUrl(image.url, 2400)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative block rounded-sm focus-visible:outline-offset-8"
-        aria-label={`Open ${image.alt || project.title} screenshot at full size (opens in a new tab)`}
-        data-work-link
+    <figure className={`project-screenshot m-0 min-w-0 ${className}`}>
+      <ProjectScreenshotTrigger
+        imageUrl={image.url}
+        className="project-screenshot-trigger group relative block w-full text-left"
+        ariaLabel={`View ${image.alt || project.title} screenshot`}
       >
         <ProjectImage
           project={project}
@@ -100,17 +108,30 @@ function Screenshot({
           hero={hero}
           sizes={sizes}
           viewport={viewport}
-          annotation={hero ? "clip" : "tape"}
+          annotation="none"
+          caption={
+            hero
+              ? `${project.title} · Project preview`
+              : image.alt || `${project.title} · Screenshot ${number}`
+          }
+          className="project-screenshot-print"
         />
         <span
-          className="absolute right-4 bottom-12 flex h-9 w-9 items-center justify-center rounded-full bg-[#613d38]/90 text-[#fffaf7] shadow-sm transition-colors group-hover:bg-[#a52e2b]"
+          className="project-screenshot-expand absolute right-5 top-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-[#361e22]/90 px-3 text-[11px] font-medium text-[#fffaf7] shadow-sm transition-colors group-hover:bg-[#a52e2b]"
           aria-hidden="true"
         >
-          <Maximize2 size={14} data-work-arrow />
+          <Maximize2 size={14} />
+          <span className="hidden sm:inline">View screenshot</span>
         </span>
-      </a>
-      <figcaption className="mt-2 text-right text-[10px] leading-normal tracking-[0.06em] text-(--work-muted,#72554e)">
-        Open full image <span aria-hidden="true">↗</span>
+      </ProjectScreenshotTrigger>
+      <figcaption className="mt-3 flex items-center justify-between gap-4 text-[10px] leading-normal tracking-[0.08em] text-(--work-muted,#72554e)">
+        <span className="font-mono">
+          {String(number).padStart(2, "0")} /{" "}
+          {hero ? "PROJECT PREVIEW" : "SCREENSHOT"}
+        </span>
+        <span>
+          Click to explore <span aria-hidden="true">＋</span>
+        </span>
       </figcaption>
     </figure>
   );
@@ -404,33 +425,53 @@ function ProjectGallery({ project }: { project: Project }) {
       className={`${shell} py-9 sm:py-12`}
       aria-labelledby="project-gallery-title"
     >
-      <div className="mb-8" data-work-reveal>
-        <p className={`${label} m-0 mb-3`}>In detail</p>
-        <h2
-          id="project-gallery-title"
-          className={`${title} ${sectionHeading} m-0`}
+      <div
+        className="mb-8 flex flex-wrap items-end justify-between gap-5"
+        data-work-reveal
+      >
+        <div>
+          <p className={`${label} m-0 mb-3`}>A closer look</p>
+          <h2
+            id="project-gallery-title"
+            className={`${title} ${sectionHeading} m-0 scroll-mt-28`}
+          >
+            Project{" "}
+            <em className="font-[Georgia,serif] font-normal text-[#a52e2b]">
+              screenshots.
+            </em>
+          </h2>
+          <p className="mt-4 mb-0 max-w-[45ch] text-sm leading-relaxed text-(--work-muted)">
+            Explore the screens and details. Select any image for a closer look.
+          </p>
+        </div>
+        <ProjectScreenshotTrigger
+          imageUrl={images[0].url}
+          className="project-browse-button inline-flex min-h-11 items-center gap-3 rounded-full border border-(--work-line) bg-[#fffaf1] px-5 text-xs font-medium"
+          ariaLabel={`Browse all ${images.length + 1} screenshots of ${project.title}`}
         >
-          Project{" "}
-          <em className="font-[Georgia,serif] font-normal text-[#a52e2b]">
-            screenshots.
-          </em>
-        </h2>
+          <Images size={15} aria-hidden="true" />
+          Browse all{" "}
+          <span className="text-(--work-muted)">
+            {String(images.length + 1).padStart(2, "0")}
+          </span>
+        </ProjectScreenshotTrigger>
       </div>
-      <div className="grid items-start gap-x-8 gap-y-10 md:grid-cols-12">
+      <div className="grid items-start gap-x-7 gap-y-9 md:grid-cols-2">
         {images.map((asset, index) => (
           <Screenshot
             key={asset.url}
             project={project}
             asset={asset}
+            number={index + 2}
             className={
-              index % 3 === 0
-                ? "md:col-span-12"
-                : index % 3 === 1
-                  ? "md:col-span-7"
-                  : "md:col-span-5 md:mt-12"
+              images.length % 2 === 1 && index === 0 ? "md:col-span-2" : ""
             }
-            sizes={index % 3 === 0 ? "90vw" : "(max-width: 767px) 90vw, 55vw"}
-            viewport={index % 3 === 0 ? "wide" : "split"}
+            sizes={
+              images.length % 2 === 1 && index === 0
+                ? "90vw"
+                : "(max-width: 767px) 90vw, 44vw"
+            }
+            viewport={images.length % 2 === 1 && index === 0 ? "wide" : "split"}
           />
         ))}
       </div>
@@ -600,57 +641,94 @@ export default function ProjectCaseStudy({
   projects: Project[];
 }) {
   const art = getProjectArtDirection(project);
+  const screenshots = [project.cover, ...project.gallery].filter(
+    (image, index, all) =>
+      all.findIndex((item) => item.url === image.url) === index,
+  );
   return (
-    <WorkMotion
+    <ProjectScreenshotProvider
       key={project.slug}
-      className="work-desk-surface relative isolate min-w-0 overflow-x-clip"
+      images={screenshots}
+      title={project.title}
     >
-      <div data-work-paper-hero>
-        <div
-          className={`${shell} flex flex-wrap items-center justify-between gap-4 pt-24 lg:pt-22.5`}
-        >
-          <nav aria-label="Breadcrumb">
-            <ol className="m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1 p-0 text-xs text-(--work-muted,#72554e)">
-              <li>
-                <Link
-                  href="/"
-                  className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
-                >
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link
-                  href="/projects"
-                  className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
-                >
-                  Work
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li aria-current="page" className="max-w-[32ch] break-words">
-                {project.title}
-              </li>
-            </ol>
-          </nav>
-          <a
-            href="#project-overview"
-            className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
-            data-work-link
+      <WorkMotion
+        key={project.slug}
+        className="work-desk-surface project-case-study relative isolate min-w-0 overflow-x-clip"
+      >
+        <div data-work-paper-hero>
+          <div
+            className={`${shell} flex flex-wrap items-center justify-between gap-4 pt-24 lg:pt-22.5`}
           >
-            Read the notes{" "}
-            <ArrowDown size={14} data-work-arrow aria-hidden="true" />
-          </a>
+            <nav aria-label="Breadcrumb">
+              <ol className="m-0 flex list-none flex-wrap items-center gap-x-3 gap-y-1 p-0 text-xs text-(--work-muted,#72554e)">
+                <li>
+                  <Link
+                    href="/"
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
+                  >
+                    Home
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li>
+                  <Link
+                    href="/projects"
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-[#a52e2b]"
+                  >
+                    Work
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                <li aria-current="page" className="max-w-[32ch] break-words">
+                  {project.title}
+                </li>
+              </ol>
+            </nav>
+            <a
+              href="#project-overview"
+              className="inline-flex min-h-11 items-center gap-3 text-xs text-(--work-muted,#72554e) transition-colors hover:text-[#a52e2b]"
+              data-work-link
+            >
+              Read the notes{" "}
+              <ArrowDown size={14} data-work-arrow aria-hidden="true" />
+            </a>
+          </div>
+          <ProjectHero project={project} art={art} />
         </div>
-        <ProjectHero project={project} art={art} />
-      </div>
-      <ProjectOverview project={project} />
-      <ProjectFeatures art={art} project={project} />
-      <ProjectGallery project={project} />
-      <ProjectStack art={art} />
-      <ProjectNavigation project={project} projects={projects} />
-      <MotionLayer />
-    </WorkMotion>
+        <div className={`${shell} mb-3 sm:mb-6`}>
+          <div className="project-section-index flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-y border-(--work-line) py-3">
+            <nav
+              aria-label="On this project"
+              className="flex flex-wrap gap-x-6 gap-y-1 text-xs font-medium"
+            >
+              <a href="#project-overview">Overview</a>
+              {screenshots.length > 1 && (
+                <a href="#project-gallery-title">Screenshots</a>
+              )}
+              {art.features.length > 0 && (
+                <a href="#project-features">Experience</a>
+              )}
+              {art.stack.length > 0 && <a href="#project-stack">Tech stack</a>}
+            </nav>
+            <ProjectScreenshotTrigger
+              imageUrl={project.cover.url}
+              className="project-browse-button inline-flex min-h-11 items-center gap-2 text-xs font-medium text-[#a52e2b]"
+              ariaLabel={`Browse screenshots of ${project.title}`}
+            >
+              <Images size={15} aria-hidden="true" />
+              {screenshots.length}{" "}
+              {screenshots.length === 1 ? "screenshot" : "screenshots"}
+              <Maximize2 size={12} aria-hidden="true" />
+            </ProjectScreenshotTrigger>
+          </div>
+        </div>
+        <ProjectOverview project={project} />
+        <ProjectGallery project={project} />
+        <ProjectFeatures art={art} project={project} />
+        <ProjectStack art={art} />
+        <ProjectNavigation project={project} projects={projects} />
+        <MotionLayer />
+      </WorkMotion>
+    </ProjectScreenshotProvider>
   );
 }

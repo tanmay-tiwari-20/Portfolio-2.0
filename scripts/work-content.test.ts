@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createRequire } from "node:module";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { ImageConfigContext } from "next/dist/shared/lib/image-config-context.shared-runtime";
 import { imageConfigDefault } from "next/dist/shared/lib/image-config";
 import nextConfig from "../next.config";
 import sourceProjects from "../data/projects.json";
-import ProjectCaseStudy from "../components/work/project-case-study";
 import { projectSchema, type Project } from "../lib/validators/schemas";
 import { getOptimizedUrl } from "../lib/cloudinary/urls";
 import {
@@ -14,6 +14,17 @@ import {
   getProjectLinks,
   getProjectNeighbors,
 } from "../lib/work-content";
+
+// CSS modules are bundled by Next; the static renderer only checks markup.
+const require = createRequire(import.meta.url);
+require.extensions[".css"] = (module) => {
+  module.exports = {
+    __esModule: true,
+    default: new Proxy({}, { get: (_, name) => String(name) }),
+  };
+};
+const ProjectCaseStudy =
+  require("../components/work/project-case-study").default;
 
 const projects = sourceProjects.map((project) => projectSchema.parse(project));
 const first = projects[0];
@@ -305,4 +316,16 @@ test("a supplied gallery preserves the image and caption without repeating dupli
   );
   assert.ok(html.includes('id="project-gallery-title"'));
   assert.ok(html.includes(escapeHtml(asset.alt)));
+  assert.ok(!html.includes("Open full image"));
+  const imageButtons = [
+    ...html.matchAll(/<button\b[^>]*aria-haspopup="dialog"[\s\S]*?<\/button>/g),
+  ].filter(([markup]) => markup.includes("<img"));
+  assert.equal(
+    imageButtons.length,
+    2,
+    "cover and gallery images open a dialog",
+  );
+  assert.ok(
+    !html.includes(`href="${escapeHtml(getOptimizedUrl(asset.url, 2400))}"`),
+  );
 });

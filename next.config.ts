@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; img-src 'self' data: https://res.cloudinary.com https://images.unsplash.com; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://res.cloudinary.com https://images.unsplash.com https://api.cloudinary.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+              "default-src 'self'; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com; font-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://res.cloudinary.com https://images.unsplash.com https://api.cloudinary.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
           },
           ...(process.env.VERCEL_ENV === "preview"
             ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }]
