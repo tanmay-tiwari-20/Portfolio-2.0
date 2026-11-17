@@ -6,26 +6,26 @@ the dynamic website, brand kit, or local implementation has been visually tested
 
 ## Official website coverage
 
-- [Home](https://www.hackshastra.in/): identifies HackShastra as a creator-led
+- [Home](https://hack-shastra.vercel.app/): identifies HackShastra as a creator-led
   student technology community connecting academic learning with practical
   building. Established in 2024. Activities include national hackathons,
   campus chapters, industry collaboration, developer grants and campus talent
   recruitment. These last two are presented as partnership opportunities,
   not independently demonstrated outcomes. The page links to About, Events,
   Gallery and Contact; founders and history links resolve to About.
-- [About](https://www.hackshastra.in/about): origin in November 2024; first
+- [About](https://hack-shastra.vercel.app/about): origin in November 2024; first
   Pre-Meetup in July 2025; first national hackathon in September 2025; campus
   chapter expansion in October 2025; national community expansion by January
   2026. The five named founders/architects are Tanmay Tiwari, Jai Chawla,
   Sumit Rathore, Uday Sharma and Md Imran. Core-team/chapter headings exist,
   but their detailed dynamic records were not exposed to this tool.
-- [Events](https://www.hackshastra.in/events): accessible title and introductory
+- [Events](https://hack-shastra.vercel.app/events): accessible title and introductory
   text; the dynamic event list was not available in the text response. Event
   facts below were therefore checked on organizer-published event platforms.
-- [Gallery](https://www.hackshastra.in/gallery): only the gallery loading text
+- [Gallery](https://hack-shastra.vercel.app/gallery): only the gallery loading text
   was exposed. Homepage photo links were accessible; this does not constitute
   inspection of the complete gallery.
-- [Contact](https://www.hackshastra.in/contact): public community invitation,
+- [Contact](https://hack-shastra.vercel.app/contact): public community invitation,
   official email, New Delhi location, social links and contact form were read.
   No form was submitted or community joined.
 - No additional privacy/terms pages were found through exposed navigation or
@@ -68,7 +68,7 @@ over as live information. Existing repository artwork is stored in
 | Event | Verified date and place | Role and supported description | Primary source |
 | --- | --- | --- | --- |
 | HackShastra Pre-Meetup | 27 July 2025; IIIT Delhi | Hosted by Tanmay Tiwari and HackShastra; technical talks, idea discussions, team formation and networking | [Organizer Luma page](https://luma.com/n17f71yg) |
-| HackShastra 2025 / repository title HackShastra 1.0 | September 2025; ThoughtWorks Office, Gurugram | HackShastra's hybrid hackathon. See exact-day caveat below | [Official HackShastra LinkedIn announcement](https://www.linkedin.com/posts/hackshastraa_hackshastra-hackathon2025-hybridhackathon-activity-7366235994062266369-OhYU) and [About timeline](https://www.hackshastra.in/about) |
+| HackShastra 2025 / repository title HackShastra 1.0 | September 2025; ThoughtWorks Office, Gurugram | HackShastra's hybrid hackathon. See exact-day caveat below | [Official HackShastra LinkedIn announcement](https://www.linkedin.com/posts/hackshastraa_hackshastra-hackathon2025-hybridhackathon-activity-7366235994062266369-OhYU) and [About timeline](https://hack-shastra.vercel.app/about) |
 | HackShastra IPEC Orientation (HI-O) | 30 October 2025; IPEC, Ghaziabad | Hosted by HackShastra and HackShastra IPEC; introducing the campus community | [Organizer Luma page](https://luma.com/6vc2jiem) |
 | SnowHackIPEC | 31 January–1 February 2026; IPEC, Ghaziabad | First hackathon under HackShastra's IPEC Student Chapter; winter edition, 24-hour finale, online shortlisting and mentorship | [Organizer Unstop AMP page](https://unstop.com/hackathons/snowhackipec-hackshastra-1613746/amp); [IPEC official date announcement](https://www.linkedin.com/posts/ipec030_snowhackipec-ipec-inderprasthaengineeringcollege-activity-7414233737233666048-xfoh) |
 | TEXPO'26 | 26 February 2026; SRM University–AP | Organized by HackShastra SRM–AP Chapter; official chapter launch, student MVP showcase and industry technology expo. HackShastra and Infinitus committees jointly shortlist entries | [University-published Unstop AMP page](https://unstop.com/competitions/texpo-2026-student-innovation-and-industry-technology-expo-srm-university-srmap-andhra-pradesh-1638340/amp) |
@@ -126,7 +126,7 @@ do not promote location credits into general brand partnerships.
 ## Visual assets and limitations
 
 The homepage links its primary visible logo to
-https://www.hackshastra.in/logo2.svg. The text tool identifies the SVG URL but
+https://hack-shastra.vercel.app/logo2.svg. The text tool identifies the SVG URL but
 does not expose its artwork. The existing portfolio references
 https://res.cloudinary.com/dunacoujw/image/upload/v1792601186/logo1_y3d5u2.svg.
 These are distinct references; do not claim a brand-kit inspection or infer

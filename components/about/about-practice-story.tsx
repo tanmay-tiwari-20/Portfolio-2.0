@@ -378,7 +378,7 @@ function PracticeChapter({
         {index === 2 && (
           <Link
             className={styles.communityLink}
-            href="https://hackshastra.in"
+            href="https://hack-shastra.vercel.app/"
             target="_blank"
             rel="noreferrer"
           >

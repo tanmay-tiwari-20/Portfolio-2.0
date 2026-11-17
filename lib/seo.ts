@@ -11,7 +11,7 @@ import {
 
 const personId = `${SITE_URL}/#person`;
 const websiteId = `${SITE_URL}/#website`;
-const organizationId = "https://www.hackshastra.in/#organization";
+const organizationId = "https://hack-shastra.vercel.app/#organization";
 
 export function summarize(text: string, limit = 165) {
   const clean = text.replace(/\s+/g, " ").trim();
@@ -179,7 +179,7 @@ export function pageGraph(key: PublicPage) {
       "@type": "Organization",
       "@id": organizationId,
       name: "HackShastra",
-      url: "https://www.hackshastra.in/",
+      url: "https://hack-shastra.vercel.app/",
       description:
         "A student builder community bringing people together through hackathons, campus chapters and community events.",
       founder: { "@id": personId },

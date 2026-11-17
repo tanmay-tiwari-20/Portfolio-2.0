@@ -4,9 +4,9 @@ import type { HackShastraEvent } from "@/components/hackshastra/event-archive";
 // Research enriches unchanged event copy via lib/hackshastra-content.ts while
 // preserving the published records and later edits in the existing event editor.
 export const hackshastra = {
-  website: "https://www.hackshastra.in/",
-  about: "https://www.hackshastra.in/about",
-  contact: "https://www.hackshastra.in/contact",
+  website: "https://hack-shastra.vercel.app/",
+  about: "https://hack-shastra.vercel.app/about",
+  contact: "https://hack-shastra.vercel.app/contact",
   email: "thehackshastra@gmail.com",
   instagram: "https://instagram.com/hackshastra",
   linkedin: "https://www.linkedin.com/company/hackshastraa",

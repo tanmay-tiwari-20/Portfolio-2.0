@@ -21,7 +21,7 @@ Focused public searches covered `"Tanmay Tiwari" "HackShastra"`,
 `"takneekitanmay" portfolio`, and `"Tanmay Tiwari" "Unoverse"`.
 They surfaced the following useful primary evidence:
 
-- [HackShastra About](https://www.hackshastra.in/about) names Tanmay Tiwari
+- [HackShastra About](https://hack-shastra.vercel.app/about) names Tanmay Tiwari
   among the five founders/architects and explains the community's development.
 - [Tanmay's LinkedIn profile](https://in.linkedin.com/in/tanmay-tiwari20)
   connects the same name, Delhi location, HackShastra and education. Repository

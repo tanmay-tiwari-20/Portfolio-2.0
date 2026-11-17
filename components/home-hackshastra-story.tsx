@@ -293,7 +293,7 @@ export default function HomeHackShastraStory({
               unoptimized
               onError={(event) => {
                 event.currentTarget.src =
-                  "https://www.hackshastra.in/logo1.svg";
+                  "https://hack-shastra.vercel.app/logo1.svg";
               }}
             />
             <span className="hackshastra-story-brand-copy">
@@ -520,7 +520,7 @@ export default function HomeHackShastraStory({
             </Link>
             <a
               className="hackshastra-story-link"
-              href="https://www.hackshastra.in/"
+              href="https://hack-shastra.vercel.app/"
               target="_blank"
               rel="noreferrer"
             >

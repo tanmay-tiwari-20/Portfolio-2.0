@@ -96,7 +96,7 @@ export default async function AboutPage() {
                 <span className="whitespace-nowrap">
                   co-founder of{" "}
                   <a
-                    href="https://hackshastra.in"
+                    href="https://hack-shastra.vercel.app/"
                     target="_blank"
                     rel="noreferrer"
                     className={`${styles.highlight} ${styles.company} underline decoration-[#edbd83]/60 underline-offset-4 transition-colors duration-200 hover:text-[#edbd83] focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#edbd83]`}

@@ -366,7 +366,7 @@ export default function EventArchive({
 
   if (!selected)
     return (
-      <BrandLink href="https://www.hackshastra.in/events">
+      <BrandLink href="https://hack-shastra.vercel.app/events">
         Explore the official event archive
       </BrandLink>
     );
@@ -556,7 +556,7 @@ export default function EventArchive({
         <p className="hs-mono text-[var(--hs-dim)]">
           People. Places. A reason to build.
         </p>
-        <BrandLink href="https://www.hackshastra.in/events" className="text-xs">
+        <BrandLink href="https://hack-shastra.vercel.app/events" className="text-xs">
           The complete event archive
         </BrandLink>
       </div>

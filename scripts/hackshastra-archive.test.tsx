@@ -95,7 +95,7 @@ test("missing artwork and optional metadata have an honest usable fallback", () 
 
 test("empty archives offer the official destination without broken controls", () => {
   const html = render([]);
-  assert.ok(html.includes('href="https://www.hackshastra.in/events"'));
+  assert.ok(html.includes('href="https://hack-shastra.vercel.app/events"'));
   assert.ok(html.includes('rel="noopener noreferrer"'));
   assert.ok(!html.includes("<button"));
 });

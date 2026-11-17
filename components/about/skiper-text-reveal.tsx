@@ -34,7 +34,7 @@ export default function SkiperTextReveal({
   highlight = "HackShastra",
   highlightTextClass = "!text-[#ff7a6b] font-black",
   highlightBgClass = "!bg-[#ef463e]/20 border border-[#ef463e]/50 shadow-[0_0_18px_rgba(239,70,62,0.35)]",
-  highlightLink = "https://hackshastra.in",
+  highlightLink = "https://hack-shastra.vercel.app/",
   className = "",
   duration = 1.8,
 }: SkiperTextRevealProps) {

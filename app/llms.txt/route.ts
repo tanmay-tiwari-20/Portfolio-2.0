@@ -31,8 +31,8 @@ export async function GET() {
     "",
     "## Official profiles and community",
     ...socials.map((social) => `- [${plain(social.label)}](${social.href})`),
-    "- [HackShastra](https://www.hackshastra.in/): Official student builder community website.",
-    "- [HackShastra team](https://www.hackshastra.in/about): Official community and co-founder information.",
+    "- [HackShastra](https://hack-shastra.vercel.app/): Official student builder community website.",
+    "- [HackShastra team](https://hack-shastra.vercel.app/about): Official community and co-founder information.",
     "",
   ].join("\n");
   return new Response(content, {

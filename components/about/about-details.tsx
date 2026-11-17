@@ -105,7 +105,7 @@ export default function AboutDetails({
               <p>{content.community.body}</p>
               <Link
                 className={styles.textLink}
-                href="https://hackshastra.in"
+                href="https://hack-shastra.vercel.app/"
                 target="_blank"
                 rel="noreferrer"
               >

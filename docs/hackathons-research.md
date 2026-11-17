@@ -42,7 +42,7 @@ that mentoring every listed event involved a particular technical track.
 
 | Milestone | Evidence | Safe use |
 | --- | --- | --- |
-| November 2024 — HackShastra begins | [Official About timeline and founder section](https://www.hackshastra.in/about), local experience record | Co-founding a student-builder community; no personal participation origin story |
+| November 2024 — HackShastra begins | [Official About timeline and founder section](https://hack-shastra.vercel.app/about), local experience record | Co-founding a student-builder community; no personal participation origin story |
 | 27 July 2025 — Pre-Meetup | [Organizer Luma page](https://luma.com/n17f71yg) explicitly lists Tanmay and HackShastra as hosts, IIIT Delhi | A documented first community gathering, not Tanmay's first ever event |
 | November 2025 — hackCBS 8.0 | [Official Devfolio overview](https://hackcbs-8.devfolio.co/) and [lineup](https://hackcbs-8.devfolio.co/lineup), local mentor record, indexed own post | Mentor; event ran 8–9 November in New Delhi |
 | January 2026 — Hack4Delhi | [IEEE event page](https://events.vtools.ieee.org/m/527107), local mentor record, indexed own post | Mentor at a civic/governance technology event; finale 12 January at Civic Centre, New Delhi |
@@ -173,7 +173,7 @@ documented as a hackathon winner or as built during a listed event.
 | --- | --- | --- |
 | Unoverse | Real-time 3D multiplayer, server-authoritative game engine, Socket.IO, WebRTC, Next.js/TypeScript | `/projects/unoverse`; [live](https://unoverse-3d.vercel.app/) |
 | Spools | MERN social platform, interest-based Circles, shared series, real-time chat | `/projects/spools`; [repository](https://github.com/tanmay-tiwari-20/Spools) |
-| HackShastra Website | Community/event platform using Next.js, TypeScript, MongoDB and motion | `/projects/hackshastra-website`; [live](https://hackshastra.in) |
+| HackShastra Website | Community/event platform using Next.js, TypeScript, MongoDB and motion | `/projects/hackshastra-website`; [live](https://hack-shastra.vercel.app/) |
 | Baithak | Meetings, scheduling, personal rooms, history/recordings with Stream Video and Clerk | `/projects/baithak`; [repository](https://github.com/tanmay-tiwari-20/Baithak) |
 
 Suitable expertise labels are full-stack development, real-time applications,

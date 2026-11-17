@@ -149,7 +149,7 @@ test("person and page entities connect to stable identities and actual profile l
   const community = pageGraph("hackshastra")["@graph"].find(
     (node) => node["@type"] === "Organization",
   )!;
-  assert.equal(community.url, "https://www.hackshastra.in/");
+  assert.equal(community.url, "https://hack-shastra.vercel.app/");
   assert.deepEqual(community.founder, { "@id": `${SITE_URL}/#person` });
 });
 
