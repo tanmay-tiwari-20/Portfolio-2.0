@@ -53,13 +53,6 @@ The GitHub contribution city has a daily refresh workflow at `.github/workflows/
 
 Change the palette and type in `app/globals.css`. All artwork is original CSS/SVG web geometry and abstract illustration. Motion uses Lenis with GSAP ScrollTrigger and honors `prefers-reduced-motion`; avoid adding movement that blocks reading or navigation.
 
-## Contact form
-
-Set `NEXT_PUBLIC_WEB3FORMS_KEY` from Web3Forms. For Docker, pass it as a build argument (Compose reads it from the invoking environment or `.env`) because Next.js embeds public keys at build time. Without it, the form clearly reports delivery unavailable and directs visitors to email.
-
-
-
-
 
 ## SEO and search readiness
 
